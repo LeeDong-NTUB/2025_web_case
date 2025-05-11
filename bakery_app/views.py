@@ -41,28 +41,51 @@ def lastestNewsPage(request, id):
 def product_list(request):
     return render(request, 'pages/product_list.html', {'products': products, 'categories': categories})
 
+
 def checkout(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        
-        # 創建訂單
-        order = Order.objects.create(
-            name=data['name'],
-            phone=data['phone'],
-            total_price=data['total_price']
-        )
-        
-        # 創建訂單項目
-        for item in data['items']:
-            product = Product.objects.get(id=item['id'])
-            OrderItem.objects.create(
-                order=order,
-                product=product,
-                quantity=item['quantity'],
-                price=item['price'] * item['quantity']
+        try:
+            data = json.loads(request.body)
+            
+            # 創建訂單
+            order = Order.objects.create(
+                name=data.get('name', ''),
+                phone=data.get('phone', ''),
+                total_price=data.get('total_price', 0)
             )
-        
-    return render(request, 'pages/product_list.html' , {'products': products, 'categories': categories})
+            
+            # 創建訂單項目
+            for item in data.get('items', []):
+                product = Product.objects.get(id=item.get('id'))
+                OrderItem.objects.create(
+                    order=order,
+                    product=product,
+                    quantity=item.get('quantity', 1),
+                    price=item.get('price', 0) * item.get('quantity', 1)
+                )
+            
+            # 回傳成功的 JSON 回應
+            return JsonResponse({
+                'success': True,
+                'order_id': order.id,
+                'message': '訂單已成功提交'
+            })
+        except json.JSONDecodeError:
+            return JsonResponse({
+                'success': False,
+                'error': '無效的 JSON 數據'
+            }, status=400)
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'error': str(e)
+            }, status=500)
+    
+    # 如果是 GET 請求，也回傳 JSON（而不是 HTML）
+    return JsonResponse({
+        'success': False,
+        'error': '僅接受 POST 請求'
+    }, status=405)
 
 def contact(request):
     return render(request, 'pages/contact.html')

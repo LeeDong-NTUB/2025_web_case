@@ -229,39 +229,41 @@ document.addEventListener('DOMContentLoaded', function() {
             items: cart
         };
         
-        fetch('/checkout', {
+        fetch('/checkout/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}' // Ensure CSRF token is included for Django
+                'X-CSRFToken': '{{ csrf_token }}'
             },
             body: JSON.stringify(orderData)
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('提交訂單失敗');
+                return response.json().then(data => {
+                    throw new Error(data.error || '提交訂單失敗');
+                });
             }
             return response.json();
         })
         .then(data => {
             console.log('訂單提交成功:', data);
+            // 清空購物車
+            cart = [];
+            localStorage.removeItem('cart');
+            updateCartDisplay();
+            
+            // 關閉彈窗
+            document.getElementById('checkout-modal').classList.add('hidden');
+            document.getElementById('cart-page').classList.add('hidden');
+            
+            // 顯示成功消息
+            showNotification(data.message || '訂單已成功提交！');
         })
         .catch(error => {
             console.error('訂單提交錯誤:', error);
-            showNotification('訂單提交失敗，請稍後再試');
+            showNotification('訂單提交失敗：' + error.message);
         });
         
-        // 演示用：直接清空購物車並顯示成功消息
-        cart = [];
-        localStorage.removeItem('cart');
-        updateCartDisplay();
-        
-        // 關閉彈窗
-        document.getElementById('checkout-modal').classList.add('hidden');
-        document.getElementById('cart-page').classList.add('hidden');
-        
-        // 顯示成功消息
-        showNotification('訂單已成功提交！');
     });
 
     // 篩選產品類別
