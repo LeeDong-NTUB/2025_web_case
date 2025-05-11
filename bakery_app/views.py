@@ -14,6 +14,9 @@ from .fake_data import news_list, slides, products
 # 在導入後立即處理新聞資料
 processed_news_list = News.process_news_data(news_list)
 
+# 提取產品類別
+categories = [product['product_type'] for product in products]
+
 def home(request):
     filtered_news = processed_news_list.copy()
     if len(filtered_news) > 4:
@@ -36,7 +39,6 @@ def lastestNewsPage(request, id):
     return render(request, 'pages/latest-news/page.html', {'news': news})
 
 def product_list(request):
-    categories = [product.type for product in products]
     return render(request, 'pages/product_list.html', {'products': products, 'categories': categories})
 
 def checkout(request):
@@ -60,9 +62,7 @@ def checkout(request):
                 price=item['price'] * item['quantity']
             )
         
-        return JsonResponse({'success': True, 'order_id': order.id})
-    
-    return render(request, 'shop/checkout.html')
+    return render(request, 'pages/product_list.html' , {'products': products, 'categories': categories})
 
 def contact(request):
     return render(request, 'pages/contact.html')

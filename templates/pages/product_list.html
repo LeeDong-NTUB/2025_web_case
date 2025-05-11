@@ -22,7 +22,7 @@
     <div class="container mx-auto mt-6 px-4">
         <div class="flex space-x-4 overflow-x-auto py-2 mb-4">
             <button class="category-btn whitespace-nowrap bg-primary text-white px-6 py-2 rounded-full text-sm font-medium" data-category="all">全部</button>
-            {%% for category in categories %}
+            {% for category in categories %}
                 <button class="category-btn whitespace-nowrap bg-secondary text-white px-6 py-2 rounded-full text-sm font-medium" data-category="{{ category }}">{{ category }}</button>
             {% endfor %}
         </div>
@@ -32,7 +32,7 @@
     <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="products-container">
             {% for product in products %}
-            <div class="product-card bg-paper rounded-lg shadow-md overflow-hidden transition-shadow duration-300 hover:shadow-lg" data-id="{{ product.id }}" data-type="{{ product.type }}">
+            <div class="product-card bg-paper rounded-lg shadow-md overflow-hidden transition-shadow duration-300 hover:shadow-lg" data-id="{{ product.id }}" data-type="{{ product.product_type }}">
                 <div class="relative">
                     <img src="{{ product.image }}" alt="{{ product.name }}" class="w-full h-40 object-cover">
                     <div class="product-quantity absolute top-2 right-2 bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold hidden">0</div>
@@ -131,7 +131,7 @@ const sampleProducts = [
         price: {{ product.price }},
         description: "{{ product.description }}",
         image: "{{ product.image }}",
-        type: "{{ product.type }}"
+        type: "{{ product.product_type }}"
     },
     {% endfor %}
 ];
@@ -214,6 +214,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const name = document.getElementById('name').value;
         const phone = document.getElementById('phone').value;
         const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const items = cart.map(item => ({
+            id: item.id,
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+        }));
         
         // 提交訂單到後端（這裡只是示例）
         const orderData = {
