@@ -72,3 +72,36 @@ news_list = [
         "release_date": "2025-08-01T09:00:00"
     }
 ]
+
+slides = [
+    {
+        'src': "https://picsum.photos/1920/1080?random=1",
+        'link': "/products",
+        'title': "每天現蒸",
+        'sub_title': "用心好味"
+    },
+    {
+    'src': "https://picsum.photos/1920/1080?random=2",
+        'link': "/special-events",
+        'title': "香菜祭開跑",
+        'sub_title': "限定商品85折"
+    },
+    {
+        'src': "https://picsum.photos/1920/1080?random=3",
+        'link': "/gluten-free",
+        'title': "無麩質系列",
+        'sub_title': "輕盈健康新選擇"
+    },
+    {
+        'src': "https://picsum.photos/1920/1080?random=4",
+        'link': "/member-benefits",
+        'title': "五月會員日",
+        'sub_title': "全品項9折優惠"
+    },
+    {
+        'src': "https://picsum.photos/1920/1080?random=5",
+        'link': "/stores",
+        'title': "大安新門市",
+        'sub_title': "開幕限定活動"
+    }
+]

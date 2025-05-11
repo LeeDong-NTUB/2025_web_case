@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 from web_case_2025.models.News import News
-from .fake_data import news_list
+from .fake_data import news_list, slides
 
 # 在導入後立即處理新聞資料
 processed_news_list = News.process_news_data(news_list)
@@ -10,7 +10,7 @@ def home(request):
     filtered_news = processed_news_list.copy()
     if len(filtered_news) > 4:
         filtered_news = filtered_news[:4]
-    return render(request, 'pages/home.html', {'news_list': filtered_news})
+    return render(request, 'pages/home.html', {'news_list': filtered_news, 'slides': slides})
 
 def lastestNewsList(request):
     filtered_news = processed_news_list.copy()
@@ -26,3 +26,6 @@ def lastestNewsPage(request, id):
             break
     
     return render(request, 'pages/latest-news/page.html', {'news': news})
+
+def contact(request):
+    return render(request, 'pages/contact.html')
