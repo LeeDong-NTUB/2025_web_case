@@ -1,0 +1,26 @@
+<div
+  class="bg-cream rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
+>
+  <div class="flex items-start p-6 flex-col md:flex-row gap-4 md:gap-6">
+    <div
+      class="w-16 h-16 flex flex-col items-center justify-center bg-secondary text-white rounded-lg flex-shrink-0"
+    >
+      <span class="text-lg font-bold"
+        >{{ news.month }}<span class="ml-1">月</span></span
+      >
+      <span class="text-sm">{{ news.year }}</span>
+    </div>
+    <div>
+      <span class="text-secondary text-sm font-medium mb-1 block"
+        >{{ news.category }}</span
+      >
+      <h3 class="text-xl font-bold mb-3 text-primary">{{ news.title }}</h3>
+      <p class="text-gray-700 mb-3">{{ news.summary }}</p>
+      <a
+        href="{% url 'latest-news-page' news.id %}"
+        class="inline-block text-secondary hover:text-primary-light font-medium"
+        >閱讀更多 &rarr;</a
+      >
+    </div>
+  </div>
+</div>

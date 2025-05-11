@@ -24,74 +24,14 @@
         </h2>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <!-- 消息項目 1 -->
-            <div class="bg-cream rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
-                <div class="flex items-start p-6">
-                    <div class="w-16 h-16 flex flex-col items-center justify-center bg-secondary text-white rounded-lg mr-5 flex-shrink-0">
-                        <span class="text-lg font-bold">05</span>
-                        <span class="text-sm">2025</span>
-                    </div>
-                    <div>
-                        <span class="text-secondary text-sm font-medium mb-1 block">活動公告</span>
-                        <h3 class="text-xl font-bold mb-3 text-primary">香菜祭開跑！本月新品限時優惠</h3>
-                        <p class="text-gray-700 mb-3">香菜控必看！5月限定香菜卷買二送一，還有新品香菜花捲上市。</p>
-                        <a href="#" class="inline-block text-secondary hover:text-primary-light font-medium">閱讀更多 &rarr;</a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 消息項目 2 -->
-            <div class="bg-cream rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
-                <div class="flex items-start p-6">
-                    <div class="w-16 h-16 flex flex-col items-center justify-center bg-secondary text-white rounded-lg mr-5 flex-shrink-0">
-                        <span class="text-lg font-bold">01</span>
-                        <span class="text-sm">2025</span>
-                    </div>
-                    <div>
-                        <span class="text-secondary text-sm font-medium mb-1 block">門市消息</span>
-                        <h3 class="text-xl font-bold mb-3 text-primary">大安新店開幕，首週全品項9折</h3>
-                        <p class="text-gray-700 mb-3">宏農·手工之家大安店正式開幕！首週來店消費享9折優惠，再送限量環保袋。</p>
-                        <a href="#" class="inline-block text-secondary hover:text-primary-light font-medium">閱讀更多 &rarr;</a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 消息項目 3 -->
-            <div class="bg-cream rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
-                <div class="flex items-start p-6">
-                    <div class="w-16 h-16 flex flex-col items-center justify-center bg-secondary text-white rounded-lg mr-5 flex-shrink-0">
-                        <span class="text-lg font-bold">04</span>
-                        <span class="text-sm">2025</span>
-                    </div>
-                    <div>
-                        <span class="text-secondary text-sm font-medium mb-1 block">產品更新</span>
-                        <h3 class="text-xl font-bold mb-3 text-primary">全新無麩質系列產品上市</h3>
-                        <p class="text-gray-700 mb-3">專為麩質過敏者設計的無麩質饅頭系列，健康美味，不含添加物。</p>
-                        <a href="#" class="inline-block text-secondary hover:text-primary-light font-medium">閱讀更多 &rarr;</a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 消息項目 4 -->
-            <div class="bg-cream rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
-                <div class="flex items-start p-6">
-                    <div class="w-16 h-16 flex flex-col items-center justify-center bg-secondary text-white rounded-lg mr-5 flex-shrink-0">
-                        <span class="text-lg font-bold">03</span>
-                        <span class="text-sm">2025</span>
-                    </div>
-                    <div>
-                        <span class="text-secondary text-sm font-medium mb-1 block">合作消息</span>
-                        <h3 class="text-xl font-bold mb-3 text-primary">攜手在地小農，推出季節限定口味</h3>
-                        <p class="text-gray-700 mb-3">與宜蘭小農合作的「春季野菜包」，使用當季新鮮蔬菜，健康美味。</p>
-                        <a href="#" class="inline-block text-secondary hover:text-primary-light font-medium">閱讀更多 &rarr;</a>
-                    </div>
-                </div>
-            </div>
+            {% for news_item in news_list %}
+                {% include 'includes/the-news.html' with news=news_item %}
+            {% endfor %}
         </div>
         
         <!-- 查看更多按鈕 -->
         <div class="text-center mt-10">
-            <a href="#" class="inline-block bg-secondary hover:bg-primary-light text-white font-bold py-3 px-6 rounded-lg transition-colors">
+            <a href="{% url 'latest-news-list' %}" class="inline-block bg-secondary hover:bg-primary-light text-white font-bold py-3 px-6 rounded-lg transition-colors">
                 查看全部消息
             </a>
         </div>

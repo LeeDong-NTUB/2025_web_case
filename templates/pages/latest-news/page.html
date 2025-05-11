@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ news.title }} - 宏農·手工之家{% endblock %}
+
+{% block content %}
+<!-- 最新消息詳細頁面 -->
+<section class="py-12 bg-cream">
+    <div class="container mx-auto px-4">
+        <!-- 返回上一頁按鈕 -->
+        <div class="mb-8">
+            <a href="{% url 'latest-news-list' %}" class="inline-flex items-center text-primary hover:text-primary-light transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                <span class="font-medium">返回最新消息列表</span>
+            </a>
+        </div>
+        
+        <!-- 文章主體 -->
+        <div class="bg-paper rounded-xl shadow-md overflow-hidden max-w-4xl mx-auto">
+            <!-- 文章頭部 -->
+            <div class="p-6 md:p-8 border-b border-gray-200">
+                <div class="flex items-center space-x-4 mb-4">
+                    <div class="bg-secondary text-white px-3 py-1 rounded-full text-sm font-medium tracking-wide">
+                        {{ news.category }}
+                    </div>
+                    <div class="text-gray-500 text-sm">
+                        {{ news.year }}年{{ news.month }}月
+                    </div>
+                </div>
+                <h1 class="text-2xl md:text-3xl font-bold text-primary leading-snug tracking-normal mb-4">
+                    {{ news.title|default:"未命名的消息" }}
+                </h1>
+            </div>
+            
+            <!-- 文章內容 -->
+            <div class="p-6 md:p-8">
+                <div class="prose prose-lg max-w-none">
+                    {% if news.content %}
+                        <p class="text-lg leading-relaxed mb-6">{{ news.content }}</p>
+                    {% else %}
+                        <p class="text-lg leading-relaxed mb-6 text-gray-500">目前沒有可顯示的內容。</p>
+                    {% endif %}
+                </div>
+                
+                <!-- 分享按鈕 -->
+                <div class="mt-10 pt-6 border-t border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm text-gray-500">
+                            分享這則消息
+                        </div>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-primary hover:text-primary-light">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="text-primary hover:text-primary-light">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723 10.055 10.055 0 01-3.127 1.195 4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="text-primary hover:text-primary-light">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M24 4.5v15c0 .85-.65 1.5-1.5 1.5H21V7.387l-9 6.463-9-6.463V21H1.5C.649 21 0 20.35 0 19.5v-15c0-.425.162-.8.431-1.068C.7 3.16 1.076 3 1.5 3H2l10 7.25L22 3h.5c.425 0 .8.162 1.069.432.27.268.431.643.431 1.068z"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 其他推薦 -->
+        {% comment %} <div class="mt-16 max-w-4xl mx-auto">
+            <h3 class="text-xl font-bold text-primary mb-6">其他最新消息</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-paper rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow p-5">
+                    <span class="text-secondary text-sm font-medium mb-1 block">活動公告</span>
+                    <h4 class="text-lg font-bold mb-2 text-primary">夏日清涼系列上市，買三送一</h4>
+                    <p class="text-gray-600 mb-3 line-clamp-2">炎炎夏日推出薄荷口味及檸檬口味冰心饅頭，消暑又解渴，本月買三送一。</p>
+                    <a href="#" class="text-secondary hover:text-primary-light font-medium inline-block">閱讀更多 &rarr;</a>
+                </div>
+                <div class="bg-paper rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow p-5">
+                    <span class="text-secondary text-sm font-medium mb-1 block">門市消息</span>
+                    <h4 class="text-lg font-bold mb-2 text-primary">大安新店開幕，首週全品項9折</h4>
+                    <p class="text-gray-600 mb-3 line-clamp-2">宏農·手工之家大安店正式開幕！首週來店消費享9折優惠，再送限量環保袋。</p>
+                    <a href="#" class="text-secondary hover:text-primary-light font-medium inline-block">閱讀更多 &rarr;</a>
+                </div>
+            </div>
+        </div> {% endcomment %}
+    </div>
+</section>
+{% endblock %}
