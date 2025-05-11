@@ -1,5 +1,5 @@
 {% load static %}
-<header class="bg-[#552b1a] text-white shadow-md">
+<header class="bg-primary text-white shadow-md">
     <div class="container mx-auto px-4 py-3">
         <div class="flex justify-between items-center">
             <div class="flex items-center">
@@ -16,15 +16,15 @@
             </div>
             
             <nav class="hidden md:flex space-x-8">
-                <a href="{% url 'home' %}" class="font-medium hover:text-[#f0e6d2] transition-colors">首頁</a>
-                <a href="#" class="font-medium hover:text-[#f0e6d2] transition-colors">最新消息</a>
-                <a href="#" class="font-medium hover:text-[#f0e6d2] transition-colors">產品系列</a>
-                <a href="#" class="font-medium hover:text-[#f0e6d2] transition-colors">聯絡我們</a>
-                <a href="#" class="font-medium hover:text-[#f0e6d2] transition-colors">購物車</a>
+                <a href="{% url 'home' %}" class="font-medium hover:text-cream-dark transition-colors">首頁</a>
+                <a href="{% url 'latest-news' %}" class="font-medium hover:text-cream-dark transition-colors">最新消息</a>
+                <a href="#" class="font-medium hover:text-cream-dark transition-colors">產品系列</a>
+                <a href="#" class="font-medium hover:text-cream-dark transition-colors">聯絡我們</a>
+                <a href="#" class="font-medium hover:text-cream-dark transition-colors">購物車</a>
             </nav>
             
             <div class="md:hidden">
-                <button type="button" class="text-white hover:text-[#f0e6d2] focus:outline-none" id="mobile-menu-button">
+                <button type="button" class="text-white hover:text-cream-dark focus:outline-none" id="mobile-menu-button">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
@@ -32,12 +32,12 @@
             </div>
         </div>
         
-        <div class="hidden md:hidden mt-2 pt-2 border-t border-[#8c6a56]" id="mobile-menu">
+        <div class="hidden md:hidden mt-2 pt-2 border-t border-secondary" id="mobile-menu">
             <div class="flex flex-col space-y-2">
-                <a href="{% url 'home' %}" class="py-2 font-medium hover:text-[#f0e6d2] transition-colors">首頁</a>
-                <a href="#" class="py-2 font-medium hover:text-[#f0e6d2] transition-colors">產品系列</a>
-                <a href="#" class="py-2 font-medium hover:text-[#f0e6d2] transition-colors">關於我們</a>
-                <a href="#" class="py-2 font-medium hover:text-[#f0e6d2] transition-colors">購物車</a>
+                <a href="{% url 'home' %}" class="py-2 font-medium hover:text-cream-dark transition-colors">首頁</a>
+                <a href="#" class="py-2 font-medium hover:text-cream-dark transition-colors">產品系列</a>
+                <a href="#" class="py-2 font-medium hover:text-cream-dark transition-colors">關於我們</a>
+                <a href="#" class="py-2 font-medium hover:text-cream-dark transition-colors">購物車</a>
             </div>
         </div>
     </div>

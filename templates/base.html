@@ -6,6 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}宏農·手工之家{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': {
+                            DEFAULT: '#552b1a',  // 主要深棕色
+                            'light': '#6d5241'   // 主要深棕色的亮色調
+                        },
+                        'secondary': {
+                            DEFAULT: '#8c6a56',  // 次要棕色
+                            'light': '#a08776'   // 次要棕色的亮色調
+                        },
+                        'cream': {
+                            DEFAULT: '#f9f3e8',  // 奶油色背景
+                            'dark': '#f0e6d2'    // 深奶油色
+                        },
+                        'paper': '#ffffff'       // 純白色
+                    }
+                }
+            }
+        }
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&display=swap');
         body {
@@ -15,7 +38,7 @@
     </style>
     {% block extra_css %}{% endblock %}
 </head>
-<body class="flex flex-col min-h-screen">
+<body class="flex flex-col min-h-screen ">
     {% include 'includes/header.html' %}
     
     <main class="flex-grow">
