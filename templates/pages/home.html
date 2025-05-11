@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}宏農·手工之家 - 每天現蒸，用心好味{% endblock %}
+
+{% block content %}
+<!-- 主圖區域 -->
+<section class="relative bg-cover bg-center h-96" style="background-image: url('https://via.placeholder.com/1920x600');">
+    <div class="absolute inset-0 bg-black opacity-30"></div>
+    <div class="container mx-auto px-4 h-full flex items-center justify-start relative z-10">
+        <div class="text-left text-white ml-4 md:ml-12">
+            <h1 class="text-4xl md:text-5xl font-bold mb-5">
+                <span class="block">每天現蒸</span>
+                <span class="block mt-4">用心好味</span>
+            </h1>
+        </div>
+    </div>
+</section>
+<!-- 最新消息區塊 -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 text-[#552b1a] relative">
+            <span class="inline-block pb-2 border-b-2 border-[#8c6a56]">最新消息</span>
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <!-- 消息項目 1 -->
+            <div class="bg-[#f9f3e8] rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                <div class="flex items-start p-6">
+                    <div class="w-16 h-16 flex flex-col items-center justify-center bg-[#8c6a56] text-white rounded-lg mr-5 flex-shrink-0">
+                        <span class="text-lg font-bold">05</span>
+                        <span class="text-sm">2025</span>
+                    </div>
+                    <div>
+                        <span class="text-[#8c6a56] text-sm font-medium mb-1 block">活動公告</span>
+                        <h3 class="text-xl font-bold mb-3 text-[#552b1a]">香菜祭開跑！本月新品限時優惠</h3>
+                        <p class="text-gray-700 mb-3">香菜控必看！5月限定香菜卷買二送一，還有新品香菜花捲上市。</p>
+                        <a href="#" class="inline-block text-[#8c6a56] hover:text-[#6d5241] font-medium">閱讀更多 &rarr;</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 消息項目 2 -->
+            <div class="bg-[#f9f3e8] rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                <div class="flex items-start p-6">
+                    <div class="w-16 h-16 flex flex-col items-center justify-center bg-[#8c6a56] text-white rounded-lg mr-5 flex-shrink-0">
+                        <span class="text-lg font-bold">01</span>
+                        <span class="text-sm">2025</span>
+                    </div>
+                    <div>
+                        <span class="text-[#8c6a56] text-sm font-medium mb-1 block">門市消息</span>
+                        <h3 class="text-xl font-bold mb-3 text-[#552b1a]">大安新店開幕，首週全品項9折</h3>
+                        <p class="text-gray-700 mb-3">宏農·手工之家大安店正式開幕！首週來店消費享9折優惠，再送限量環保袋。</p>
+                        <a href="#" class="inline-block text-[#8c6a56] hover:text-[#6d5241] font-medium">閱讀更多 &rarr;</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 消息項目 3 -->
+            <div class="bg-[#f9f3e8] rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                <div class="flex items-start p-6">
+                    <div class="w-16 h-16 flex flex-col items-center justify-center bg-[#8c6a56] text-white rounded-lg mr-5 flex-shrink-0">
+                        <span class="text-lg font-bold">04</span>
+                        <span class="text-sm">2025</span>
+                    </div>
+                    <div>
+                        <span class="text-[#8c6a56] text-sm font-medium mb-1 block">產品更新</span>
+                        <h3 class="text-xl font-bold mb-3 text-[#552b1a]">全新無麩質系列產品上市</h3>
+                        <p class="text-gray-700 mb-3">專為麩質過敏者設計的無麩質饅頭系列，健康美味，不含添加物。</p>
+                        <a href="#" class="inline-block text-[#8c6a56] hover:text-[#6d5241] font-medium">閱讀更多 &rarr;</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 消息項目 4 -->
+            <div class="bg-[#f9f3e8] rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                <div class="flex items-start p-6">
+                    <div class="w-16 h-16 flex flex-col items-center justify-center bg-[#8c6a56] text-white rounded-lg mr-5 flex-shrink-0">
+                        <span class="text-lg font-bold">03</span>
+                        <span class="text-sm">2025</span>
+                    </div>
+                    <div>
+                        <span class="text-[#8c6a56] text-sm font-medium mb-1 block">合作消息</span>
+                        <h3 class="text-xl font-bold mb-3 text-[#552b1a]">攜手在地小農，推出季節限定口味</h3>
+                        <p class="text-gray-700 mb-3">與宜蘭小農合作的「春季野菜包」，使用當季新鮮蔬菜，健康美味。</p>
+                        <a href="#" class="inline-block text-[#8c6a56] hover:text-[#6d5241] font-medium">閱讀更多 &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 查看更多按鈕 -->
+        <div class="text-center mt-10">
+            <a href="#" class="inline-block bg-[#8c6a56] hover:bg-[#6d5241] text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                查看全部消息
+            </a>
+        </div>
+    </div>
+</section>
+<!-- 產品系列 -->
+<section id="products" class="py-16 bg-[#f9f3e8]">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 text-[#552b1a]">產品系列</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- 包子系列 -->
+            <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                <img src="https://via.placeholder.com/400x300" alt="包子系列" class="w-full h-64 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-3 text-[#552b1a]">包子系列</h3>
+                    <p class="text-gray-700 mb-4">精選食材，手工製作，多種口味滿足您的味蕾。</p>
+                    <a href="#" class="text-[#8c6a56] hover:text-[#6d5241] font-medium">查看更多 &rarr;</a>
+                </div>
+            </div>
+            
+            <!-- 饅頭系列 -->
+            <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                <img src="https://via.placeholder.com/400x300" alt="饅頭系列" class="w-full h-64 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-3 text-[#552b1a]">饅頭系列</h3>
+                    <p class="text-gray-700 mb-4">柔軟口感，經典風味，每一口都是美味記憶。</p>
+                    <a href="#" class="text-[#8c6a56] hover:text-[#6d5241] font-medium">查看更多 &rarr;</a>
+                </div>
+            </div>
+            
+            <!-- 籠麵 -->
+            <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                <img src="https://via.placeholder.com/400x300" alt="籠麵" class="w-full h-64 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-3 text-[#552b1a]">籠麵</h3>
+                    <p class="text-gray-700 mb-4">Q彈有勁，搭配特製醬料，獨特風味不容錯過。</p>
+                    <a href="#" class="text-[#8c6a56] hover:text-[#6d5241] font-medium">查看更多 &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- 特色區域 -->
+<section class="py-16 bg-[#f0e6d2]">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 text-[#552b1a] relative">
+            <span class="inline-block pb-2 border-b-2 border-[#8c6a56]">我們的特色</span>
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- 手工製作 -->
+            <div class="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                <div class="flex items-start">
+                    <div class="w-16 h-16 mr-4 p-3 bg-[#f9f3e8] rounded-full text-[#8c6a56] flex-shrink-0">
+                        <svg class="w-full h-full" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9.5 4.5L9.5 6.5L10.5 6.5L10.5 18.5L13.5 18.5L13.5 6.5L14.5 6.5L14.5 4.5L9.5 4.5ZM3.5 7.5L3.5 9.5L4.5 9.5L4.5 18.5L7.5 18.5L7.5 9.5L8.5 9.5L8.5 7.5L3.5 7.5ZM15.5 10.5L15.5 12.5L16.5 12.5L16.5 18.5L19.5 18.5L19.5 12.5L20.5 12.5L20.5 10.5L15.5 10.5Z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-left">
+                        <h3 class="text-xl font-bold mb-3 text-[#552b1a]">手工製作</h3>
+                        <p class="text-gray-700">每一個產品都經過匠人細心手工製作，堅持傳統工藝，保留食物原味。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 本地食材 -->
+            <div class="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                <div class="flex items-start">
+                    <div class="w-16 h-16 mr-4 p-3 bg-[#f9f3e8] rounded-full text-[#8c6a56] flex-shrink-0">
+                        <svg class="w-full h-full" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.5 5.6L5 7L5 20L19 20L19 7L16.5 5.6L16.5 3C16.5 2.4 16.1 2 15.5 2L8.5 2C7.9 2 7.5 2.4 7.5 3L7.5 5.6ZM15 7L15 5L9 5L9 7L15 7Z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-left">
+                        <h3 class="text-xl font-bold mb-3 text-[#552b1a]">使用本地食材</h3>
+                        <p class="text-gray-700">精選當地新鮮食材，支持在地農業，讓您品嚐最純正的味道。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 無防腐劑 -->
+            <div class="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                <div class="flex items-start">
+                    <div class="w-16 h-16 mr-4 p-3 bg-[#f9f3e8] rounded-full text-[#8c6a56] flex-shrink-0">
+                        <svg class="w-full h-full" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2L4 5V11C4 16.5 7.8 21.7 12 23C16.2 21.7 20 16.5 20 11V5L12 2ZM16 13H8V11H16V13Z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-left">
+                        <h3 class="text-xl font-bold mb-3 text-[#552b1a]">無防腐劑</h3>
+                        <p class="text-gray-700">不添加人工色素和防腐劑，讓您吃得健康，吃得安心。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- 熱銷排行榜 -->
+<section class="py-16 bg-[#f9f3e8]">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 text-[#552b1a]">熱銷排行榜</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                <img src="https://via.placeholder.com/300x300" alt="熱銷產品1" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <h3 class="text-lg font-bold text-[#552b1a]">傳統肉包</h3>
+                    <p class="text-[#8c6a56] font-medium">NT$ 35</p>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                <img src="https://via.placeholder.com/300x300" alt="熱銷產品2" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <h3 class="text-lg font-bold text-[#552b1a]">香菜卷</h3>
+                    <p class="text-[#8c6a56] font-medium">NT$ 40</p>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                <img src="https://via.placeholder.com/300x300" alt="熱銷產品3" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <h3 class="text-lg font-bold text-[#552b1a]">花捲饅頭</h3>
+                    <p class="text-[#8c6a56] font-medium">NT$ 30</p>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                <img src="https://via.placeholder.com/300x300" alt="熱銷產品4" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <h3 class="text-lg font-bold text-[#552b1a]">法式牛角麵包</h3>
+                    <p class="text-[#8c6a56] font-medium">NT$ 45</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

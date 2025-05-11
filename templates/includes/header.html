@@ -1,0 +1,55 @@
+{% load static %}
+<header class="bg-[#552b1a] text-white shadow-md">
+    <div class="container mx-auto px-4 py-3">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="{% url 'home' %}" class="flex items-center">
+                    <div class="mr-2">
+                        <svg class="w-10 h-10" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M30 10C17.5 10 10 20 10 30C10 40 17.5 50 30 50C42.5 50 50 40 50 30C50 20 42.5 10 30 10Z" fill="#f0e6d2" stroke="#8c6a56" stroke-width="2"/>
+                            <path d="M30 15C25 15 20 20 20 25V35C20 40 25 45 30 45C35 45 40 40 40 35V25C40 20 35 15 30 15Z" fill="#f0e6d2" stroke="#8c6a56" stroke-width="1.5"/>
+                            <path d="M25 30C25 32.5 27.5 35 30 35C32.5 35 35 32.5 35 30" stroke="#8c6a56" stroke-width="1.5"/>
+                        </svg>
+                    </div>
+                    <div class="text-xl font-bold">宏農·手工之家</div>
+                </a>
+            </div>
+            
+            <nav class="hidden md:flex space-x-8">
+                <a href="{% url 'home' %}" class="font-medium hover:text-[#f0e6d2] transition-colors">首頁</a>
+                <a href="#" class="font-medium hover:text-[#f0e6d2] transition-colors">最新消息</a>
+                <a href="#" class="font-medium hover:text-[#f0e6d2] transition-colors">產品系列</a>
+                <a href="#" class="font-medium hover:text-[#f0e6d2] transition-colors">聯絡我們</a>
+                <a href="#" class="font-medium hover:text-[#f0e6d2] transition-colors">購物車</a>
+            </nav>
+            
+            <div class="md:hidden">
+                <button type="button" class="text-white hover:text-[#f0e6d2] focus:outline-none" id="mobile-menu-button">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <div class="hidden md:hidden mt-2 pt-2 border-t border-[#8c6a56]" id="mobile-menu">
+            <div class="flex flex-col space-y-2">
+                <a href="{% url 'home' %}" class="py-2 font-medium hover:text-[#f0e6d2] transition-colors">首頁</a>
+                <a href="#" class="py-2 font-medium hover:text-[#f0e6d2] transition-colors">產品系列</a>
+                <a href="#" class="py-2 font-medium hover:text-[#f0e6d2] transition-colors">關於我們</a>
+                <a href="#" class="py-2 font-medium hover:text-[#f0e6d2] transition-colors">購物車</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+        });
+    });
+</script>
