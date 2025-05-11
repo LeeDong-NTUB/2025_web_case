@@ -1,0 +1,459 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}宏農·手工之家 - 每天現蒸，用心好味{% endblock %}
+
+{% block content %}
+<div class="bg-cream min-h-screen pb-10">
+    <!-- 頂部導航 -->
+    <nav class="bg-primary text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">甜點小舖</h1>
+            <div class="relative" id="cart-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <span id="cart-count" class="absolute -top-2 -right-2 bg-secondary-light text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">0</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 產品類別選擇 -->
+    <div class="container mx-auto mt-6 px-4">
+        <div class="flex space-x-4 overflow-x-auto py-2 mb-4">
+            <button class="category-btn whitespace-nowrap bg-primary text-white px-6 py-2 rounded-full text-sm font-medium" data-category="all">全部</button>
+            {%% for category in categories %}
+                <button class="category-btn whitespace-nowrap bg-secondary text-white px-6 py-2 rounded-full text-sm font-medium" data-category="{{ category }}">{{ category }}</button>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- 產品列表 -->
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="products-container">
+            {% for product in products %}
+            <div class="product-card bg-paper rounded-lg shadow-md overflow-hidden transition-shadow duration-300 hover:shadow-lg" data-id="{{ product.id }}" data-type="{{ product.type }}">
+                <div class="relative">
+                    <img src="{{ product.image }}" alt="{{ product.name }}" class="w-full h-40 object-cover">
+                    <div class="product-quantity absolute top-2 right-2 bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold hidden">0</div>
+                </div>
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-primary truncate">{{ product.name }}</h3>
+                    <p class="text-gray-600 text-sm mb-2 h-10 overflow-hidden">{{ product.description }}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-primary font-bold">NT${{ product.price }}</span>
+                        <button class="add-to-cart bg-secondary hover:bg-secondary-light text-white px-3 py-1 rounded-full text-sm">加入購物車</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- 前往結帳按鈕 -->
+        <button id="cart-open-btn" class="mt-5 bg-primary hover:bg-primary-light text-white px-8 py-3 rounded-md inline-block transition duration-300 text-lg font-medium">
+            前往查看購物車
+        </button>
+    </div>
+
+
+    <!-- 購物車頁面 -->
+    <div id="cart-page" class="fixed inset-0 bg-cream flex flex-col z-50 hidden opactiy-0 transition-opacity duration-300">
+        <nav class="bg-primary text-white p-4 shadow-md">
+            <div class="container mx-auto flex justify-between items-center">
+                <h1 class="text-2xl font-bold">購物車</h1>
+                <button id="close-cart-page" class="text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </nav>
+        
+        <div class="container mx-auto px-4 py-6 flex-grow overflow-auto" id="cart-items-container">
+            <!-- 購物車項目將在這裡動態生成 -->
+            <div id="empty-cart-message" class="text-center py-10 text-gray-500">
+                購物車是空的
+            </div>
+        </div>
+        
+        <div class="bg-white p-6 border-t border-gray-200">
+            <div class="container mx-auto">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                    <h3 class="font-bold text-primary text-lg">訂單摘要</h3>
+                    <div class="flex justify-between text-primary w-full max-w-xs py-3">
+                        <span>小計</span>
+                        <span id="cart-subtotal" class="font-bold">NT$0</span>
+                    </div>
+                </div>
+
+                <div class="w-full mb-3 h-0.5 bg-gray-300"></div>
+                
+                <button id="checkout-btn-page" class="w-full bg-secondary hover:bg-secondary-light text-white py-3 rounded-md font-medium text-lg">
+                    進行結帳
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 結帳彈窗 -->
+    <div id="checkout-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-paper p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h2 class="text-xl font-bold text-primary mb-4">結帳資訊</h2>
+            <form id="checkout-form">
+                <div class="mb-4">
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">姓名</label>
+                    <input type="text" id="name" name="name" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                </div>
+                <div class="mb-6">
+                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">電話號碼</label>
+                    <input type="tel" id="phone" name="phone" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" id="cancel-checkout" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md">取消</button>
+                    <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md">確認訂單</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// 初始化購物車
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+updateCartDisplay();
+
+// 產品數據
+const sampleProducts = [
+    {% for product in products %}
+    {
+        id: {{ product.id }},
+        name: "{{ product.name }}",
+        price: {{ product.price }},
+        description: "{{ product.description }}",
+        image: "{{ product.image }}",
+        type: "{{ product.type }}"
+    },
+    {% endfor %}
+];
+
+// 加入購物車
+document.addEventListener('DOMContentLoaded', function() {
+    // 加入購物車按鈕事件
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', function() {
+            const productCard = this.closest('.product-card');
+            const productId = parseInt(productCard.dataset.id);
+            
+            const product = sampleProducts.find(p => p.id === productId)
+            
+            if (product) {
+                // 檢查購物車中是否已有此產品
+                const existingItemIndex = cart.findIndex(item => item.id === productId);
+                
+                if (existingItemIndex > -1) {
+                    // 增加數量
+                    cart[existingItemIndex].quantity += 1;
+                } else {
+                    // 添加新項目
+                    cart.push({
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        quantity: 1,
+                        type: product.type,
+                        image: product.image
+                    });
+                }
+                
+                // 更新localStorage
+                localStorage.setItem('cart', JSON.stringify(cart));
+                
+                // 更新UI
+                updateCartDisplay();
+                
+                // 顯示添加到購物車的通知
+                showNotification(`${product.name} 已加入購物車`);
+            }
+        });
+    });
+
+
+    const cartPage = document.getElementById('cart-page');
+    // 購物車按鈕事件
+    document.getElementById('cart-icon').addEventListener('click', openCartPage);
+    document.getElementById('cart-open-btn').addEventListener('click', openCartPage);
+    
+    function openCartPage() {
+        cartPage.classList.remove('hidden');
+        renderCartPage();
+    }
+
+    // 關閉購物車頁面按鈕事件
+    document.getElementById('close-cart-page').addEventListener('click', function() {
+        cartPage.classList.add('hidden');
+    });
+
+    // 結帳按鈕事件
+    document.getElementById('checkout-btn-page').addEventListener('click', function() {
+        if (cart.length > 0) {
+            document.getElementById('checkout-modal').classList.remove('hidden');
+        } else {
+            showNotification('購物車是空的，請先添加商品');
+        }
+    });
+
+    // 取消結帳
+    document.getElementById('cancel-checkout').addEventListener('click', function() {
+        document.getElementById('checkout-modal').classList.add('hidden');
+    });
+
+    // 提交訂單
+    document.getElementById('checkout-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('name').value;
+        const phone = document.getElementById('phone').value;
+        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        
+        // 提交訂單到後端（這裡只是示例）
+        const orderData = {
+            name: name,
+            phone: phone,
+            total_price: total,
+            items: cart
+        };
+        
+        fetch('/checkout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}' // Ensure CSRF token is included for Django
+            },
+            body: JSON.stringify(orderData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('提交訂單失敗');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('訂單提交成功:', data);
+        })
+        .catch(error => {
+            console.error('訂單提交錯誤:', error);
+            showNotification('訂單提交失敗，請稍後再試');
+        });
+        
+        // 演示用：直接清空購物車並顯示成功消息
+        cart = [];
+        localStorage.removeItem('cart');
+        updateCartDisplay();
+        
+        // 關閉彈窗
+        document.getElementById('checkout-modal').classList.add('hidden');
+        document.getElementById('cart-page').classList.add('hidden');
+        
+        // 顯示成功消息
+        showNotification('訂單已成功提交！');
+    });
+
+    // 篩選產品類別
+    document.querySelectorAll('.category-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const category = this.dataset.category;
+            
+            // 更新按鈕樣式
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('bg-primary');
+                btn.classList.add('bg-secondary');
+            });
+            this.classList.remove('bg-secondary');
+            this.classList.add('bg-primary');
+            
+            // 篩選產品
+            document.querySelectorAll('.product-card').forEach(card => {
+                const cardType = card.dataset.type;
+                
+                if (category === 'all' || cardType === category) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+
+
+    // 監聽返回上一頁的動作
+    const handleBackButton = function(event) {        
+        // 檢查購物車是否開啟（假設有active或open類表示開啟狀態）
+        if (cartPage && !cartPage.classList.contains('hidden')) {
+        // 阻止默認的返回行為
+        history.pushState(null, '', window.location.pathname);
+        
+        // 關閉購物車
+        cartPage.classList.add('hidden');
+        
+        event.preventDefault();
+        return false;
+        }
+    };
+
+    // 監聽popstate事件（當用戶點擊返回按鈕時觸發）
+    window.addEventListener('popstate', handleBackButton);
+    
+    // 在頁面加載時添加一個歷史狀態，這樣返回按鈕才能被捕獲
+    history.pushState(null, '', window.location.pathname);
+    
+});
+
+// 更新購物車顯示
+function updateCartDisplay() {
+    const cartCountElement = document.getElementById('cart-count');
+    
+    // 更新購物車計數
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    cartCountElement.textContent = totalItems;
+    
+    // 更新產品卡片上的數量指示器
+    document.querySelectorAll('.product-card').forEach(card => {
+        const productId = parseInt(card.dataset.id);
+        const quantityElement = card.querySelector('.product-quantity');
+        const cartItem = cart.find(item => item.id === productId);
+        
+        if (cartItem && cartItem.quantity > 0) {
+            quantityElement.textContent = cartItem.quantity;
+            quantityElement.classList.remove('hidden');
+        } else {
+            quantityElement.classList.add('hidden');
+        }
+    });
+}
+
+// 渲染購物車頁面
+function renderCartPage() {
+    const cartItemsContainer = document.getElementById('cart-items-container');
+    const emptyCartMessage = document.getElementById('empty-cart-message');
+    const cartSubtotal = document.getElementById('cart-subtotal');
+    
+    // 清空容器
+    cartItemsContainer.innerHTML = '';
+    
+    if (cart.length === 0) {
+        cartItemsContainer.appendChild(emptyCartMessage);
+    } else {
+        // 隱藏空購物車消息
+        if(emptyCartMessage) {
+            emptyCartMessage.classList.remove('hidden');
+        }
+        
+        // 遍歷購物車項目
+        cart.forEach(item => {
+            const cartItemElement = document.createElement('div');
+            cartItemElement.className = 'flex flex-col bg-white mb-4 rounded-lg overflow-hidden max-w-3xl mx-auto shadow-md';
+            cartItemElement.innerHTML = `
+                <div class="p-2 md:p-4 border-b border-gray-200 flex flex-col md:flex-row items-center md:items-start gap-2 md:gap-4">
+                    <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-md">
+                    <div class="text-primary flex-grow grid grid-cols-3 grid-rows-3 justify-items-center gap-3 md:gap-4">
+                        <h2 class="text-lg md:text-xl font-bold text-primary">${item.name}</h2>
+                        <div class="md:text-lg">數量</div>
+                        <div class="md:text-lg">小計</div>
+                        <div class="md:text-lg">NT$${item.price}</div>
+                        <div class="flex items-center">
+                            <button class="cart-decrease bg-gray-200 text-gray-700 w-8 h-8 rounded-l-md flex items-center justify-center" data-id="${item.id}">−</button>
+                            <span class="w-10 h-8 bg-white border-t border-b border-gray-200 flex items-center justify-center">${item.quantity}</span>
+                            <button class="cart-increase bg-gray-200 text-gray-700 w-8 h-8 rounded-r-md flex items-center justify-center" data-id="${item.id}">+</button>
+                        </div>
+                        <div class="md:text-lg font-bold">NT$${item.price * item.quantity}</div>
+                        <div class="w-full col-span-3 flex justify-end items-center">
+                            <button class="cart-remove text-red-500" data-id="${item.id}">移除</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            cartItemsContainer.appendChild(cartItemElement);
+        });
+        
+        // 計算總計
+        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        cartSubtotal.textContent = `NT$${total}`;
+        
+        // 添加購物車項目事件監聽器
+        document.querySelectorAll('.cart-increase').forEach(button => {
+            button.addEventListener('click', function() {
+                increaseQuantity(parseInt(this.dataset.id));
+                renderCartPage();
+            });
+        });
+        
+        document.querySelectorAll('.cart-decrease').forEach(button => {
+            button.addEventListener('click', function() {
+                decreaseQuantity(parseInt(this.dataset.id));
+                renderCartPage();
+            });
+        });
+        
+        document.querySelectorAll('.cart-remove').forEach(button => {
+            button.addEventListener('click', function() {
+                removeItem(parseInt(this.dataset.id));
+                renderCartPage();
+            });
+        });
+    }
+}
+
+// 增加數量
+function increaseQuantity(productId) {
+    const itemIndex = cart.findIndex(item => item.id === productId);
+    if (itemIndex > -1) {
+        cart[itemIndex].quantity += 1;
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartDisplay();
+    }
+}
+
+// 減少數量
+function decreaseQuantity(productId) {
+    const itemIndex = cart.findIndex(item => item.id === productId);
+    if (itemIndex > -1) {
+        if (cart[itemIndex].quantity > 1) {
+            cart[itemIndex].quantity -= 1;
+        } else {
+            cart.splice(itemIndex, 1);
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartDisplay();
+    }
+}
+
+// 移除項目
+function removeItem(productId) {
+    const itemIndex = cart.findIndex(item => item.id === productId);
+    if (itemIndex > -1) {
+        cart.splice(itemIndex, 1);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartDisplay();
+    }
+}
+
+// 通知功能
+function showNotification(message) {
+    // 創建通知元素
+    const notification = document.createElement('div');
+    notification.className = 'fixed bottom-4 left-4 bg-primary text-white px-4 py-2 rounded-md shadow-lg transition-opacity duration-300';
+    notification.textContent = message;
+    
+    // 添加到頁面
+    document.body.appendChild(notification);
+    
+    // 3秒後淡出
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 300);
+    }, 3000);
+}
+</script>
+{% endblock %}

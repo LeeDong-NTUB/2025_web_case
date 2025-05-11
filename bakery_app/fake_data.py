@@ -1,3 +1,37 @@
+
+slides = [
+    {
+        'src': "https://picsum.photos/1920/1080?random=1",
+        'link': "/products",
+        'title': "每天現蒸",
+        'sub_title': "用心好味"
+    },
+    {
+    'src': "https://picsum.photos/1920/1080?random=2",
+        'link': "/special-events",
+        'title': "香菜祭開跑",
+        'sub_title': "限定商品85折"
+    },
+    {
+        'src': "https://picsum.photos/1920/1080?random=3",
+        'link': "/gluten-free",
+        'title': "無麩質系列",
+        'sub_title': "輕盈健康新選擇"
+    },
+    {
+        'src': "https://picsum.photos/1920/1080?random=4",
+        'link': "/member-benefits",
+        'title': "五月會員日",
+        'sub_title': "全品項9折優惠"
+    },
+    {
+        'src': "https://picsum.photos/1920/1080?random=5",
+        'link': "/stores",
+        'title': "大安新門市",
+        'sub_title': "開幕限定活動"
+    }
+]
+
 news_list = [
     {
         "id": 1,
@@ -73,35 +107,11 @@ news_list = [
     }
 ]
 
-slides = [
-    {
-        'src': "https://picsum.photos/1920/1080?random=1",
-        'link': "/products",
-        'title': "每天現蒸",
-        'sub_title': "用心好味"
-    },
-    {
-    'src': "https://picsum.photos/1920/1080?random=2",
-        'link': "/special-events",
-        'title': "香菜祭開跑",
-        'sub_title': "限定商品85折"
-    },
-    {
-        'src': "https://picsum.photos/1920/1080?random=3",
-        'link': "/gluten-free",
-        'title': "無麩質系列",
-        'sub_title': "輕盈健康新選擇"
-    },
-    {
-        'src': "https://picsum.photos/1920/1080?random=4",
-        'link': "/member-benefits",
-        'title': "五月會員日",
-        'sub_title': "全品項9折優惠"
-    },
-    {
-        'src': "https://picsum.photos/1920/1080?random=5",
-        'link': "/stores",
-        'title': "大安新門市",
-        'sub_title': "開幕限定活動"
-    }
+products = [
+    { 'id': 1, 'name': "巧克力包子", 'type': "baozi", 'price': 35, 'image': "https://picsum.photos/300/200?radnom=1" },
+    { 'id': 2, 'name': "紅豆包子", 'type': "baozi", 'price': 30, 'image': "https://picsum.photos/300/200?radnom=2" },
+    { 'id': 3, 'name': "抹茶麻糬", 'type': "mochi", 'price': 40, 'image': "https://picsum.photos/300/200?radnom=3" },
+    { 'id': 4, 'name': "花生麻糬", 'type': "mochi", 'price': 40, 'image': "https://picsum.photos/300/200?radnom=4" },
+    { 'id': 5, 'name': "原味饅頭", 'type': "mantou", 'price': 25, 'image': "https://picsum.photos/300/200?radnom=5" },
+    { 'id': 6, 'name': "全麥饅頭", 'type': "mantou", 'price': 30, 'image': "https://picsum.photos/300/200?radnom=6" }
 ]
