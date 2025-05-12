@@ -2,14 +2,12 @@ from datetime import datetime  # 修正這一行
 from django.db import models
 
 class News(models.Model):
-    month = models.CharField(max_length=2, blank=False)
-    year = models.CharField(max_length=4, blank=False)
     category = models.CharField(max_length=50, blank=False)
     title = models.CharField(max_length=100, blank=False)
     summary = models.TextField(blank=False)
     content = models.TextField(blank=False)
-    link = models.URLField(max_length=200, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    release_date = models.DateTimeField(blank=False)
     
     class Meta:
         app_label = 'bakery_app'
