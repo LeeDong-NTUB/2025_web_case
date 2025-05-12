@@ -1,55 +1,131 @@
-{% extends 'base.html' %} {% load static %} {% block title %}宏農·手工之家 -
-每天現蒸，用心好味{% endblock %} {% block content %}
+{% extends 'base.html' %}
+{% load static %}
 
-<section class="bg-cream">
-  <div class="container mx-auto px-4 md:px-10 py-8 max-w-6xl">
-    <!-- 標題 -->
-    <h2 class="text-3xl font-bold mb-12 text-primary relative">
-      <span class="inline-block pb-2 border-b-2 border-secondary"
-        >產品系列</span
-      >
-    </h2>
-  </div>
+{% block title %}宏農·手工之家 - 每天現蒸，用心好味{% endblock %}
 
-  <!-- 產品分類區 -->
-  <div class="container mx-auto px-4 md:px-10 py-8 max-w-6xl">
-    <h3 class="text-2xl font-bold mb-4 text-primary">產品分類</h3>
-    <div class="flex flex-wrap">
-      <a
-        href="?"
-        class="bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full px-4 py-2 mr-2 mb-2"
-        >全部</a
-      >
-      {% for category in categories %}
-      <a
-        href="?category={{ category.name }}"
-        class="bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full px-4 py-2 mr-2 mb-2"
-        >{{ category.name }}</a
-      >
-      {% endfor %}
+{% block content %}
+
+<!-- 頂部裝飾橫條 -->
+<div class="h-2 bg-gradient-to-r from-primary via-secondary to-primary-light"></div>
+
+<section class="bg-cream py-12">
+  <div class="container mx-auto px-4 md:px-10 max-w-6xl">
+    <!-- 主標題區塊 - 使用設計元素和品牌顏色 -->
+    <div class="mb-12 text-center relative">
+      <h1 class="text-4xl font-bold text-primary mb-2">宏農·手工之家</h1>
+      <p class="text-secondary italic">每天現蒸，用心好味</p>
+      <div class="w-24 h-1 bg-secondary mx-auto mt-4"></div>
+      
+      <h2 class="text-3xl font-bold mt-10 mb-6 text-primary inline-block relative">
+        <span class="relative z-10">產品系列</span>
+        <span class="absolute bottom-1 left-0 w-full h-3 bg-cream-dark -z-0"></span>
+      </h2>
+      <p class="text-secondary-light max-w-2xl mx-auto">我們嚴選最優質的食材，堅持每日手工製作，只為帶給您最純粹的美味。</p>
     </div>
-  </div>
 
-  <!-- 產品展示區 -->
-  <div class="container mx-auto px-4 md:px-10 py-8 max-w-6xl">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- 產品分類區 - 使用更具吸引力的按鈕設計 -->
+    <div class="mb-12">
+      <h3 class="text-xl font-semibold mb-5 text-primary flex items-center">
+        <span class="w-1.5 h-6 bg-secondary rounded-full mr-2"></span>
+        產品分類
+      </h3>
+      <div class="flex flex-wrap">
+        <a href="?" class="bg-primary text-cream rounded-full px-6 py-2 mr-3 mb-3 transition-all duration-300 hover:bg-primary-light hover:shadow-md">
+          全部
+        </a>
+        {% for category in categories %}
+        <a href="?category={{ category.name }}" class="bg-cream-dark text-secondary-light hover:bg-secondary hover:text-cream rounded-full px-6 py-2 mr-3 mb-3 transition-all duration-300 hover:shadow-md">
+          {{ category.name }}
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- 產品展示區 - 精美的卡片設計帶有品牌元素 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {% for product in products %}
-      <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transform hover:scale-105 transition-transform duration-300">
-        <img
-          src="{{ product.image }}"
-          alt="{{ product.name }}"
-          class="w-full h-48 object-cover"
-        />
-        <div class="p-4">
-          <h3 class="text-lg font-semibold text-gray-800">
-            {{ product.name }}
-          </h3>
-          <p class="text-gray-600">${{ product.price }}</p>
-          <p class="text-gray-700">產品描述...</p>
+      <div class="bg-paper rounded-lg overflow-hidden shadow-md group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+        <!-- 產品圖片容器 -->
+        <div class="relative overflow-hidden">
+          <img src="{{ product.image }}" alt="{{ product.name }}" class="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-105" />
+          <!-- 價格標籤 -->
+          <div class="absolute top-4 right-4 bg-primary text-cream px-3 py-1 rounded-full font-medium">
+            ${{ product.price }}
+          </div>
+        </div>
+        
+        <!-- 產品資訊 -->
+        <div class="p-5 border-t-2 border-cream-dark">
+          <div class="flex justify-between items-start mb-3">
+            <h3 class="text-lg font-bold text-primary group-hover:text-secondary transition-colors duration-300">
+              {{ product.name }}
+            </h3>
+            <!-- 收藏按鈕 -->
+            {% comment %} <button class="text-secondary-light hover:text-primary transition-colors duration-300">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+              </svg>
+            </button> {% endcomment %}
+          </div>
+          
+          <p class="text-gray-600 mb-4 line-clamp-2">
+            {% if product.description %}
+              {{ product.description }}
+            {% else %}
+              精選優質食材，手工製作，每天新鮮出爐，讓您品嚐最道地的傳統風味。
+            {% endif %}
+          </p>
+          
+          <!-- 購買按鈕 -->
+          {% comment %} <div class="mt-4 flex space-x-2">
+            <button class="flex-1 bg-secondary hover:bg-secondary-light text-white py-2 px-4 rounded-md transition-colors duration-300 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-1">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+              </svg>
+              加入購物車
+            </button>
+            <button class="bg-primary hover:bg-primary-light text-white p-2 rounded-md transition-colors duration-300">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+              </svg>
+            </button>
+          </div> {% endcomment %}
         </div>
       </div>
       {% endfor %}
     </div>
+    
+    <!-- 分頁控制 -->
+    {% comment %} {% if products.has_other_pages %}
+    <div class="mt-12 flex justify-center">
+      <div class="inline-flex rounded-md shadow">
+        {% if products.has_previous %}
+        <a href="?page={{ products.previous_page_number }}" class="bg-paper text-primary px-4 py-2 rounded-l-md hover:bg-cream-dark transition-colors duration-300">上一頁</a>
+        {% else %}
+        <span class="bg-cream-dark text-secondary-light px-4 py-2 rounded-l-md cursor-not-allowed">上一頁</span>
+        {% endif %}
+        
+        {% for i in products.paginator.page_range %}
+          {% if products.number == i %}
+          <span class="bg-primary text-white px-4 py-2">{{ i }}</span>
+          {% else %}
+          <a href="?page={{ i }}" class="bg-paper text-primary px-4 py-2 hover:bg-cream-dark transition-colors duration-300">{{ i }}</a>
+          {% endif %}
+        {% endfor %}
+        
+        {% if products.has_next %}
+        <a href="?page={{ products.next_page_number }}" class="bg-paper text-primary px-4 py-2 rounded-r-md hover:bg-cream-dark transition-colors duration-300">下一頁</a>
+        {% else %}
+        <span class="bg-cream-dark text-secondary-light px-4 py-2 rounded-r-md cursor-not-allowed">下一頁</span>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %} {% endcomment %}
+    
   </div>
 </section>
+
+<!-- 底部裝飾橫條 -->
+<div class="h-2 bg-gradient-to-r from-secondary to-primary"></div>
+
 {% endblock %}

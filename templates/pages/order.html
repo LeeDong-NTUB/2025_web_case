@@ -2,115 +2,205 @@
 {% load static %}
 
 {% block title %}宏農·手工之家 - 每天現蒸，用心好味{% endblock %}
-
 {% block content %}
 <div class="bg-cream min-h-screen pb-10">
     <!-- 頂部導航 -->
-    <nav class="bg-primary text-white p-4 shadow-md">
+    <nav class="bg-gradient-to-r from-primary to-primary-light text-white p-4 shadow-lg relative">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold">甜點小舖</h1>
-            <div class="relative" id="cart-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            <!-- 標誌和品牌名稱 -->
+            <div class="flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15.9A11.971 11.971 0 0112 20c-5.78 0-10.79-4.09-11.82-9.75C.19 9.55.05 8.53 0 7.5h5.25a4.5 4.5 0 018.25-2.96A4.5 4.5 0 0119 7.5h5c-.14 1.61-.49 3.16-1 4.5" />
                 </svg>
-                <span id="cart-count" class="absolute -top-2 -right-2 bg-secondary-light text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">0</span>
+                <h1 class="text-2xl font-bold">甜點小舖</h1>
             </div>
+            
+            <!-- 購物車圖標 -->
+            <div class="relative" id="cart-icon">
+                <div class="bg-white bg-opacity-20 rounded-full p-2 hover:bg-opacity-30 transition-all duration-300 cursor-pointer transform hover:scale-105">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                </div>
+                <span id="cart-count" class="absolute -top-2 -right-2 bg-secondary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold shadow-md transform transition-transform duration-300 hover:scale-110">0</span>
+            </div>
+        </div>
+        
+        <!-- 裝飾曲線 -->
+        <div class="absolute -bottom-3 left-0 right-0 h-4 overflow-hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 48" class="absolute bottom-0 w-full h-auto fill-current text-cream">
+                <path d="M0,48L80,42.7C160,37,320,27,480,26.7C640,27,800,37,960,37.3C1120,37,1280,27,1360,21.3L1440,16L1440,48L1360,48C1280,48,1120,48,960,48C800,48,640,48,480,48C320,48,160,48,80,48L0,48Z"></path>
+            </svg>
         </div>
     </nav>
 
-    <!-- 產品類別選擇 -->
-    <div class="container mx-auto mt-6 px-4">
-        <div class="flex space-x-4 overflow-x-auto py-2 mb-4">
-            <button class="category-btn whitespace-nowrap bg-primary text-white px-6 py-2 rounded-full text-sm font-medium" data-category="all">全部</button>
+    <!-- 歡迎訊息區塊 -->
+    <div class="container mx-auto px-4 pt-10 pb-6">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-primary">今日手工甜點</h2>
+            <p class="text-secondary-light mt-2">每一口都是幸福的滋味</p>
+            <div class="w-24 h-1 bg-secondary mx-auto mt-3"></div>
+        </div>
+    </div>
+
+    <!-- 產品類別選擇 - 精美樣式 -->
+    <div class="container mx-auto px-4 mb-8">
+        <div class="bg-cream-dark rounded-xl p-2 shadow-inner flex space-x-3 overflow-x-auto scrollbar-hide">
+            <button class="category-btn whitespace-nowrap bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 transform hover:scale-105 shadow-md" data-category="all">全部</button>
             {% for category in categories %}
-                <button class="category-btn whitespace-nowrap bg-secondary text-white px-6 py-2 rounded-full text-sm font-medium" data-category="{{ category.id }}">{{ category.name }}</button>
+                <button class="category-btn whitespace-nowrap bg-secondary text-white px-6 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 transform hover:scale-105 shadow-md" data-category="{{ category.name }}">{{ category.name }}</button>
             {% endfor %}
         </div>
     </div>
 
     <!-- 產品列表 -->
     <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="products-container">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="products-container">
             {% for product in products %}
-            <div class="product-card bg-paper rounded-lg shadow-md overflow-hidden transition-shadow duration-300 hover:shadow-lg" data-id="{{ product.id }}" data-type="{{ product.product_type }}">
+            <div class="product-card bg-paper rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 transform" data-id="{{ product.id }}" data-type="{{ product.product_type }}">
                 <div class="relative">
-                    <img src="{{ product.image }}" alt="{{ product.name }}" class="w-full h-40 object-cover">
-                    <div class="product-quantity absolute top-2 right-2 bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold hidden">0</div>
+                    <img src="{{ product.image }}" alt="{{ product.name }}" class="w-full h-48 object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                    <div class="product-quantity absolute top-3 right-3 bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center text-sm font-bold hidden shadow-lg border-2 border-white">0</div>
                 </div>
-                <div class="p-4">
-                    <h3 class="text-lg font-semibold text-primary truncate">{{ product.name }}</h3>
-                    <p class="text-gray-600 text-sm mb-2 h-10 overflow-hidden">{{ product.description }}</p>
+                <div class="p-5">
+                    <h3 class="text-xl font-bold text-primary truncate">{{ product.name }}</h3>
+                    <div class="flex items-center mb-2">
+                        <div class="flex text-yellow-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path>
+                            </svg>
+                        </div>
+                        <span class="text-xs text-gray-500 ml-1">(25)</span>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-4 h-10 overflow-hidden">{{ product.description }}</p>
                     <div class="flex justify-between items-center">
-                        <span class="text-primary font-bold">NT${{ product.price }}</span>
-                        <button class="add-to-cart bg-secondary hover:bg-secondary-light text-white px-3 py-1 rounded-full text-sm">加入購物車</button>
+                        <span class="text-primary font-bold text-lg">NT${{ product.price }}</span>
+                        <button class="add-to-cart bg-secondary hover:bg-secondary-light text-white px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 transform hover:scale-105 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            加入購物車
+                        </button>
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
 
-        <!-- 前往結帳按鈕 -->
-        <button id="cart-open-btn" class="mt-5 bg-primary hover:bg-primary-light text-white px-8 py-3 rounded-md inline-block transition duration-300 text-lg font-medium">
-            前往查看購物車
-        </button>
+        <!-- 購物車按鈕 - 懸浮設計 -->
+        <div class="text-center mt-10">
+            <button id="cart-open-btn" class="bg-primary hover:bg-primary-light text-white px-8 py-3 rounded-full inline-flex items-center transition-all duration-300 transform hover:scale-105 shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <span class="font-medium text-lg">查看購物車</span>
+            </button>
+        </div>
     </div>
 
-
-    <!-- 購物車頁面 -->
-    <div id="cart-page" class="fixed inset-0 bg-cream flex flex-col z-50 hidden opactiy-0 transition-opacity duration-300">
-        <nav class="bg-primary text-white p-4 shadow-md">
+    <!-- 購物車頁面 - 重新設計 -->
+    <div id="cart-page" class="fixed inset-0 bg-cream flex flex-col z-50 hidden transition-opacity duration-300">
+        <!-- 購物車頁面頂部導航 -->
+        <nav class="bg-gradient-to-r from-primary to-primary-light text-white p-4 shadow-md relative">
             <div class="container mx-auto flex justify-between items-center">
-                <h1 class="text-2xl font-bold">購物車</h1>
-                <button id="close-cart-page" class="text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <h1 class="text-2xl font-bold flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    我的購物車
+                </h1>
+                <button id="close-cart-page" class="text-white bg-white bg-opacity-20 rounded-full p-2 hover:bg-opacity-30 transition-all duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
+            
+            <!-- 裝飾曲線 -->
+            <div class="absolute -bottom-3 left-0 right-0 h-4 overflow-hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 48" class="absolute bottom-0 w-full h-auto fill-current text-cream">
+                    <path d="M0,48L80,42.7C160,37,320,27,480,26.7C640,27,800,37,960,37.3C1120,37,1280,27,1360,21.3L1440,16L1440,48L1360,48C1280,48,1120,48,960,48C800,48,640,48,480,48C320,48,160,48,80,48L0,48Z"></path>
+                </svg>
+            </div>
         </nav>
         
-        <div class="container mx-auto px-4 py-6 flex-grow overflow-auto" id="cart-items-container">
-            <!-- 購物車項目將在這裡動態生成 -->
-            <div id="empty-cart-message" class="text-center py-10 text-gray-500">
-                購物車是空的
+        <!-- 購物車內容區 -->
+        <div class="container mx-auto px-4 py-8 flex-grow overflow-auto" id="cart-items-container">
+            <!-- 空購物車訊息 -->
+            <div id="empty-cart-message" class="text-center py-16 text-gray-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <p class="text-xl">購物車是空的</p>
+                <p class="mt-2 text-gray-400">快去選購喜愛的甜點吧！</p>
             </div>
+            
+            <!-- 購物車項目由JavaScript動態生成 -->
         </div>
         
-        <div class="bg-white p-6 border-t border-gray-200">
+        <!-- 訂單摘要和結帳按鈕 -->
+        <div class="bg-white p-6 border-t border-gray-200 shadow-lg">
             <div class="container mx-auto">
                 <div class="flex flex-col md:flex-row items-center justify-between">
-                    <h3 class="font-bold text-primary text-lg">訂單摘要</h3>
+                    <h3 class="font-bold text-primary text-xl">訂單摘要</h3>
                     <div class="flex justify-between text-primary w-full max-w-xs py-3">
-                        <span>小計</span>
-                        <span id="cart-subtotal" class="font-bold">NT$0</span>
+                        <span class="text-lg">小計</span>
+                        <span id="cart-subtotal" class="font-bold text-xl">NT$0</span>
                     </div>
                 </div>
 
-                <div class="w-full mb-3 h-0.5 bg-gray-300"></div>
+                <div class="w-full mb-4 h-0.5 bg-cream-dark"></div>
                 
-                <button id="checkout-btn-page" class="w-full bg-secondary hover:bg-secondary-light text-white py-3 rounded-md font-medium text-lg">
+                <button id="checkout-btn-page" class="w-full bg-secondary hover:bg-secondary-light text-white py-3 rounded-lg font-medium text-lg transition-all duration-300 transform hover:scale-101 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
                     進行結帳
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- 結帳彈窗 -->
-    <div id="checkout-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-paper p-6 rounded-lg shadow-lg w-full max-w-md">
-            <h2 class="text-xl font-bold text-primary mb-4">結帳資訊</h2>
-            <form id="checkout-form">
-                <div class="mb-4">
+    <!-- 結帳彈窗 - 優化設計 -->
+    <div id="checkout-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
+        <div class="bg-paper p-8 rounded-xl shadow-2xl w-full max-w-md transform transition-all duration-300 scale-100">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-primary">結帳資訊</h2>
+                <button id="cancel-checkout" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            
+            <form id="checkout-form" class="space-y-5">
+                <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-1">姓名</label>
-                    <input type="text" id="name" name="name" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                    <input type="text" id="name" name="name" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300">
                 </div>
-                <div class="mb-6">
+                
+                <div>
                     <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">電話號碼</label>
-                    <input type="tel" id="phone" name="phone" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                    <input type="tel" id="phone" name="phone" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300">
                 </div>
-                <div class="flex justify-end space-x-3">
-                    <button type="button" id="cancel-checkout" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md">取消</button>
-                    <button type="submit" class="px-4 py-2 bg-primary text-white rounded-md">確認訂單</button>
+                
+                <div class="pt-4">
+                    <button type="submit" class="w-full bg-primary hover:bg-primary-light text-white py-3 rounded-lg font-medium text-lg transition-all duration-300">
+                        確認訂單
+                    </button>
                 </div>
             </form>
         </div>
@@ -282,7 +372,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // 篩選產品
             document.querySelectorAll('.product-card').forEach(card => {
                 const cardType = card.dataset.type;
-                
+                console.log(cardType,category);
                 if (category === 'all' || cardType === category) {
                     card.style.display = '';
                 } else {
@@ -353,29 +443,48 @@ function renderCartPage() {
     } else {
         // 隱藏空購物車消息
         if(emptyCartMessage) {
-            emptyCartMessage.classList.remove('hidden');
+            emptyCartMessage.remove(); // 移除而不是隱藏，因為我們會重新創建新的購物車內容
         }
         
         // 遍歷購物車項目
         cart.forEach(item => {
             const cartItemElement = document.createElement('div');
-            cartItemElement.className = 'flex flex-col bg-white mb-4 rounded-lg overflow-hidden max-w-3xl mx-auto shadow-md';
+            cartItemElement.className = 'bg-white mb-4 rounded-xl overflow-hidden max-w-3xl mx-auto shadow-md transform transition-all duration-300 hover:shadow-lg';
             cartItemElement.innerHTML = `
-                <div class="p-2 md:p-4 border-b border-gray-200 flex flex-col md:flex-row items-center md:items-start gap-2 md:gap-4">
-                    <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-md">
-                    <div class="text-primary flex-grow grid grid-cols-3 grid-rows-3 justify-items-center gap-3 md:gap-4">
-                        <h2 class="text-lg md:text-xl font-bold text-primary">${item.name}</h2>
-                        <div class="md:text-lg">數量</div>
-                        <div class="md:text-lg">小計</div>
-                        <div class="md:text-lg">NT$${item.price}</div>
-                        <div class="flex items-center">
-                            <button class="cart-decrease bg-gray-200 text-gray-700 w-8 h-8 rounded-l-md flex items-center justify-center" data-id="${item.id}">−</button>
-                            <span class="w-10 h-8 bg-white border-t border-b border-gray-200 flex items-center justify-center">${item.quantity}</span>
-                            <button class="cart-increase bg-gray-200 text-gray-700 w-8 h-8 rounded-r-md flex items-center justify-center" data-id="${item.id}">+</button>
+                <div class="flex flex-col md:flex-row overflow-hidden">
+                    <div class="w-full md:w-1/4 p-4 flex justify-center items-center bg-cream-dark bg-opacity-20">
+                        <img src="${item.image}" alt="${item.name}" class="w-24 h-24 object-cover rounded-lg shadow-md">
+                    </div>
+                    <div class="w-full md:w-3/4 p-4 md:pl-4">
+                        <div class="flex justify-between items-start mb-3">
+                            <h2 class="text-xl font-bold text-primary">${item.name}</h2>
+                            <span class="text-primary font-bold">NT$${item.price}</span>
                         </div>
-                        <div class="md:text-lg font-bold">NT$${item.price * item.quantity}</div>
-                        <div class="w-full col-span-3 flex justify-end items-center">
-                            <button class="cart-remove text-red-500" data-id="${item.id}">移除</button>
+                        
+                        <div class="flex flex-wrap justify-between items-center mt-4">
+                            <div class="flex items-center space-x-1 bg-cream-dark bg-opacity-30 rounded-lg overflow-hidden">
+                                <button class="cart-decrease text-primary w-10 h-10 flex items-center justify-center hover:bg-cream-dark transition-colors duration-300" data-id="${item.id}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                                    </svg>
+                                </button>
+                                <span class="w-10 h-10 flex items-center justify-center text-primary font-medium">${item.quantity}</span>
+                                <button class="cart-increase text-primary w-10 h-10 flex items-center justify-center hover:bg-cream-dark transition-colors duration-300" data-id="${item.id}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    </svg>
+                                </button>
+                            </div>
+                            
+                            <div class="flex items-center mt-3 md:mt-0">
+                                <div class="text-primary font-medium mr-4">小計: <span class="font-bold">NT$${item.price * item.quantity}</span></div>
+                                <button class="cart-remove flex items-center text-red-500 hover:text-red-700 transition-colors duration-300" data-id="${item.id}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                    移除
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -449,8 +558,14 @@ function removeItem(productId) {
 function showNotification(message) {
     // 創建通知元素
     const notification = document.createElement('div');
-    notification.className = 'fixed bottom-4 left-4 bg-primary text-white px-4 py-2 rounded-md shadow-lg transition-opacity duration-300';
-    notification.textContent = message;
+    notification.className = 'fixed bottom-4 right-4 bg-primary text-white px-5 py-3 rounded-lg shadow-lg transform transition-all duration-500 translate-y-0 z-50 flex items-center';
+    
+    notification.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        ${message}
+    `;
     
     // 添加到頁面
     document.body.appendChild(notification);
@@ -458,9 +573,10 @@ function showNotification(message) {
     // 3秒後淡出
     setTimeout(() => {
         notification.style.opacity = '0';
+        notification.style.transform = 'translateY(20px)';
         setTimeout(() => {
             document.body.removeChild(notification);
-        }, 300);
+        }, 500);
     }, 3000);
 }
 </script>
