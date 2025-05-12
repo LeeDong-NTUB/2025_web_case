@@ -40,6 +40,16 @@ def lastestNewsPage(request, id):
 def order(request):
     return render(request, 'pages/order.html', {'products': products, 'categories': product_types})
 
+def product(request):
+    category_name = request.GET.get('category')
+    filtered_products = products
+    
+    if category_name:
+        filtered_products = [product for product in products if product['product_type'] == category_name]
+        # filtered_products = [product for product in products if product.get('type') == category_name]
+
+    return render(request, 'pages/product.html', {'products': filtered_products, 'categories': product_types})
+
 def checkout(request):
     if request.method == 'POST':
         try:
@@ -84,6 +94,8 @@ def checkout(request):
         'success': False,
         'error': '僅接受 POST 請求'
     }, status=405)
+
+
 
 def contact(request):
     return render(request, 'pages/contact.html')

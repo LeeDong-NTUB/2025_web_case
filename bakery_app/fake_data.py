@@ -108,12 +108,12 @@ news_list = [
 ]
 
 products = [
-    { 'id': 1, 'name': "巧克力包子", 'product_type': 1, 'price': 35, 'image': "https://picsum.photos/300/200?radnom=1" },
-    { 'id': 2, 'name': "紅豆包子", 'product_type': 1, 'price': 30, 'image': "https://picsum.photos/300/200?radnom=2" },
-    { 'id': 3, 'name': "抹茶麻糬", 'product_type': 2, 'price': 40, 'image': "https://picsum.photos/300/200?radnom=3" },
-    { 'id': 4, 'name': "花生麻糬", 'product_type': 2, 'price': 40, 'image': "https://picsum.photos/300/200?radnom=4" },
-    { 'id': 5, 'name': "原味饅頭", 'product_type': 3, 'price': 25, 'image': "https://picsum.photos/300/200?radnom=5" },
-    { 'id': 6, 'name': "全麥饅頭", 'product_type': 3, 'price': 30, 'image': "https://picsum.photos/300/200?radnom=6" }
+    { 'id': 1, 'name': "巧克力包子", 'product_type': '包子', 'price': 35, 'image': "https://picsum.photos/300/200?radnom=1" },
+    { 'id': 2, 'name': "紅豆包子", 'product_type': '包子', 'price': 30, 'image': "https://picsum.photos/300/200?radnom=2" },
+    { 'id': 3, 'name': "抹茶麻糬", 'product_type': '麻糬', 'price': 40, 'image': "https://picsum.photos/300/200?radnom=3" },
+    { 'id': 4, 'name': "花生麻糬", 'product_type': '麻糬', 'price': 40, 'image': "https://picsum.photos/300/200?radnom=4" },
+    { 'id': 5, 'name': "原味饅頭", 'product_type': '饅頭', 'price': 25, 'image': "https://picsum.photos/300/200?radnom=5" },
+    { 'id': 6, 'name': "全麥饅頭", 'product_type': '饅頭', 'price': 30, 'image': "https://picsum.photos/300/200?radnom=6" }
 ]
 
 
