@@ -9,13 +9,12 @@ from web_case_2025.models.OrderItem import OrderItem
 from web_case_2025.models.Product import Product
 
 # fake data
-from .fake_data import news_list, slides, products
+from .fake_data import news_list, slides, products, product_types
 
 # 在導入後立即處理新聞資料
 processed_news_list = News.process_news_data(news_list)
 
 # 提取產品類別
-categories = [product['product_type'] for product in products]
 
 def home(request):
     filtered_news = processed_news_list.copy()
@@ -38,9 +37,8 @@ def lastestNewsPage(request, id):
     
     return render(request, 'pages/latest-news/page.html', {'news': news})
 
-def product_list(request):
-    return render(request, 'pages/product_list.html', {'products': products, 'categories': categories})
-
+def order(request):
+    return render(request, 'pages/order.html', {'products': products, 'categories': product_types})
 
 def checkout(request):
     if request.method == 'POST':
