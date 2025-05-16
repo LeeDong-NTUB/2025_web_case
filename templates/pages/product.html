@@ -2,130 +2,214 @@
 {% load static %}
 
 {% block title %}宏農·手工之家 - 每天現蒸，用心好味{% endblock %}
-
 {% block content %}
-
-<!-- 頂部裝飾橫條 -->
-<div class="h-2 bg-gradient-to-r from-primary via-secondary to-primary-light"></div>
-
-<section class="bg-cream py-12">
-  <div class="container mx-auto px-4 md:px-10 max-w-6xl">
-    <!-- 主標題區塊 - 使用設計元素和品牌顏色 -->
-    <div class="mb-12 text-center relative">
-      <h1 class="text-4xl font-bold text-primary mb-2">宏農·手工之家</h1>
-      <p class="text-secondary italic">每天現蒸，用心好味</p>
-      <div class="w-24 h-1 bg-secondary mx-auto mt-4"></div>
-      
-      <h2 class="text-3xl font-bold mt-10 mb-6 text-primary inline-block relative">
-        <span class="relative z-10">產品系列</span>
-        <span class="absolute bottom-1 left-0 w-full h-3 bg-cream-dark -z-0"></span>
-      </h2>
-      <p class="text-secondary-light max-w-2xl mx-auto">我們嚴選最優質的食材，堅持每日手工製作，只為帶給您最純粹的美味。</p>
-    </div>
-
-    <!-- 產品分類區 - 使用更具吸引力的按鈕設計 -->
-    <div class="mb-12">
-      <h3 class="text-xl font-semibold mb-5 text-primary flex items-center">
-        <span class="w-1.5 h-6 bg-secondary rounded-full mr-2"></span>
-        產品分類
-      </h3>
-      <div class="flex flex-wrap">
-        <a href="?" class="bg-primary text-cream rounded-full px-6 py-2 mr-3 mb-3 transition-all duration-300 hover:bg-primary-light hover:shadow-md">
-          全部
-        </a>
-        {% for category in categories %}
-        <a href="?category={{ category.name }}" class="bg-cream-dark text-secondary-light hover:bg-secondary hover:text-cream rounded-full px-6 py-2 mr-3 mb-3 transition-all duration-300 hover:shadow-md">
-          {{ category.name }}
-        </a>
-        {% endfor %}
-      </div>
-    </div>
-
-    <!-- 產品展示區 - 精美的卡片設計帶有品牌元素 -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {% for product in products %}
-      <div class="bg-paper rounded-lg overflow-hidden shadow-md group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-        <!-- 產品圖片容器 -->
-        <div class="relative overflow-hidden">
-          <img src="{{ product.image }}" alt="{{ product.name }}" class="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-105" />
-          <!-- 價格標籤 -->
-          <div class="absolute top-4 right-4 bg-primary text-cream px-3 py-1 rounded-full font-medium">
-            ${{ product.price }}
-          </div>
+<div class="bg-cream min-h-screen pb-10">
+    <!-- 頂部導航 -->
+    <nav class="bg-gradient-to-r from-primary to-primary-light text-white p-4 shadow-lg relative">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- 標誌和品牌名稱 -->
+            <div class="flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15.9A11.971 11.971 0 0112 20c-5.78 0-10.79-4.09-11.82-9.75C.19 9.55.05 8.53 0 7.5h5.25a4.5 4.5 0 018.25-2.96A4.5 4.5 0 0119 7.5h5c-.14 1.61-.49 3.16-1 4.5" />
+                </svg>
+                <h1 class="text-2xl font-bold">甜點小舖</h1>
+            </div>
+            
+            <!-- 購物車圖標 -->
+            <a href="{% url 'order' %}">
+              <div class="relative" >
+                <div class="bg-white bg-opacity-20 rounded-full p-2 hover:bg-opacity-30 transition-all duration-300 cursor-pointer transform hover:scale-105">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+                <span id="cart-count" class="absolute -top-2 -right-2 bg-secondary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold shadow-md transform transition-transform duration-300 hover:scale-110">0</span>
+              </div>
+            </a>
         </div>
         
-        <!-- 產品資訊 -->
-        <div class="p-5 border-t-2 border-cream-dark">
-          <div class="flex justify-between items-start mb-3">
-            <h3 class="text-lg font-bold text-primary group-hover:text-secondary transition-colors duration-300">
-              {{ product.name }}
-            </h3>
-            <!-- 收藏按鈕 -->
-            {% comment %} <button class="text-secondary-light hover:text-primary transition-colors duration-300">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-              </svg>
-            </button> {% endcomment %}
-          </div>
-          
-          <p class="text-gray-600 mb-4 line-clamp-2">
-            {% if product.description %}
-              {{ product.description }}
-            {% else %}
-              精選優質食材，手工製作，每天新鮮出爐，讓您品嚐最道地的傳統風味。
-            {% endif %}
-          </p>
-          
-          <!-- 購買按鈕 -->
-          {% comment %} <div class="mt-4 flex space-x-2">
-            <button class="flex-1 bg-secondary hover:bg-secondary-light text-white py-2 px-4 rounded-md transition-colors duration-300 flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-1">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
-              </svg>
-              加入購物車
-            </button>
-            <button class="bg-primary hover:bg-primary-light text-white p-2 rounded-md transition-colors duration-300">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
-              </svg>
-            </button>
-          </div> {% endcomment %}
+        <!-- 裝飾曲線 -->
+        <div class="absolute -bottom-3 left-0 right-0 h-4 overflow-hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 48" class="absolute bottom-0 w-full h-auto fill-current text-cream">
+                <path d="M0,48L80,42.7C160,37,320,27,480,26.7C640,27,800,37,960,37.3C1120,37,1280,27,1360,21.3L1440,16L1440,48L1360,48C1280,48,1120,48,960,48C800,48,640,48,480,48C320,48,160,48,80,48L0,48Z"></path>
+            </svg>
         </div>
-      </div>
-      {% endfor %}
-    </div>
-    
-    <!-- 分頁控制 -->
-    {% comment %} {% if products.has_other_pages %}
-    <div class="mt-12 flex justify-center">
-      <div class="inline-flex rounded-md shadow">
-        {% if products.has_previous %}
-        <a href="?page={{ products.previous_page_number }}" class="bg-paper text-primary px-4 py-2 rounded-l-md hover:bg-cream-dark transition-colors duration-300">上一頁</a>
-        {% else %}
-        <span class="bg-cream-dark text-secondary-light px-4 py-2 rounded-l-md cursor-not-allowed">上一頁</span>
-        {% endif %}
-        
-        {% for i in products.paginator.page_range %}
-          {% if products.number == i %}
-          <span class="bg-primary text-white px-4 py-2">{{ i }}</span>
-          {% else %}
-          <a href="?page={{ i }}" class="bg-paper text-primary px-4 py-2 hover:bg-cream-dark transition-colors duration-300">{{ i }}</a>
-          {% endif %}
-        {% endfor %}
-        
-        {% if products.has_next %}
-        <a href="?page={{ products.next_page_number }}" class="bg-paper text-primary px-4 py-2 rounded-r-md hover:bg-cream-dark transition-colors duration-300">下一頁</a>
-        {% else %}
-        <span class="bg-cream-dark text-secondary-light px-4 py-2 rounded-r-md cursor-not-allowed">下一頁</span>
-        {% endif %}
-      </div>
-    </div>
-    {% endif %} {% endcomment %}
-    
-  </div>
-</section>
+    </nav>
 
-<!-- 底部裝飾橫條 -->
-<div class="h-2 bg-gradient-to-r from-secondary to-primary"></div>
+    <!-- 歡迎訊息區塊 -->
+    <div class="container mx-auto px-4 pt-10 pb-6">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-primary">今日手工甜點</h2>
+            <p class="text-secondary-light mt-2">每一口都是幸福的滋味</p>
+            <div class="w-24 h-1 bg-secondary mx-auto mt-3"></div>
+        </div>
+    </div>
+
+    <!-- 產品類別選擇 - 精美樣式 -->
+    <div class="container mx-auto px-4 mb-8">
+        <div class="bg-cream-dark rounded-xl p-2 shadow-inner flex space-x-3 overflow-x-auto scrollbar-hide">
+            <a href="?" class="{% if not request.GET.category %}bg-primary{% else %}bg-secondary{% endif %} text-white px-6 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 transform hover:scale-105 shadow-md inline-block whitespace-nowrap">全部</a>
+            {% for category in categories %}
+                <a href="?category={{ category.name }}" class="{% if request.GET.category == category.name %}bg-primary{% else %}bg-secondary{% endif %} text-white px-6 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 transform hover:scale-105 shadow-md inline-block whitespace-nowrap">
+                    {{ category.name }}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- 產品列表 -->
+    <div class="container mx-auto px-4">
+        {% if products %}
+        <!-- 有產品時顯示網格列表 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="products-container">
+            {% for product in products %}
+            <div class="product-card bg-paper rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 transform" data-id="{{ product.id }}" data-type="{{ product.product_type }}">
+                <div class="relative">
+                    <img src="{{ product.image }}" alt="{{ product.name }}" class="w-full h-48 object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                    <div class="product-quantity absolute top-3 right-3 bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center text-sm font-bold hidden shadow-lg border-2 border-white">0</div>
+                </div>
+                <div class="p-5">
+                    <h3 class="text-xl font-bold text-primary truncate">{{ product.name }}</h3>
+                    <p class="text-gray-600 text-sm mb-4 h-10 overflow-hidden">{{ product.description }}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-primary font-bold text-lg">NT${{ product.price }}</span>
+                        <button class="add-to-cart bg-secondary hover:bg-secondary-light text-white px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 transform hover:scale-105 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            加入購物車
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <!-- 沒有產品時顯示提示訊息 -->
+        <div class="bg-paper rounded-xl shadow-md p-10 text-center my-8">
+            <div class="flex flex-col items-center">
+                <div class="bg-cream-dark rounded-full p-5 mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-primary mb-4">目前沒有產品</h3>
+                <p class="text-secondary-light mb-6 max-w-md">抱歉，目前在此類別中沒有可用的產品。請選擇其他類別或稍後再回來查看。</p>
+                
+                {% if request.GET.category %}
+                <!-- 如果是篩選類別導致沒有產品，顯示返回全部類別的按鈕 -->
+                <a href="?" class="bg-primary hover:bg-primary-light text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 shadow-md inline-flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                    </svg>
+                    查看全部產品
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        <!-- 購物車按鈕 - 懸浮設計 -->
+        <div class="text-center mt-10">
+            <a href="{% url 'order' %}">
+                <button id="cart-open-btn" class="bg-primary hover:bg-primary-light text-white px-8 py-3 rounded-full inline-flex items-center transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <span class="font-medium text-lg">查看購物車</span>
+                </button>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/utils.js' %}"></script>
+<script src="{% static 'js/cart.js' %}"></script>
+<script>
+updateCartDisplay();
+
+// 產品數據
+const sampleProducts = [
+    {% for product in products %}
+    {
+        id: {{ product.id }},
+        name: "{{ product.name }}",
+        price: {{ product.price }},
+        description: "{{ product.description }}",
+        image: "{{ product.image }}",
+        type: "{{ product.product_type }}"
+    },
+    {% endfor %}
+];
+
+// 加入購物車
+document.addEventListener('DOMContentLoaded', function() {
+    // 加入購物車按鈕事件
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', function() {
+            const productCard = this.closest('.product-card');
+            const productId = parseInt(productCard.dataset.id);
+            
+            const product = sampleProducts.find(p => p.id === productId)
+            
+            if (product) {
+                // 檢查購物車中是否已有此產品
+                const existingItemIndex = cart.findIndex(item => item.id === productId);
+                
+                if (existingItemIndex > -1) {
+                    // 增加數量
+                    cart[existingItemIndex].quantity += 1;
+                } else {
+                    // 添加新項目
+                    cart.push({
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        quantity: 1,
+                        type: product.type,
+                        image: product.image
+                    });
+                }
+                
+                // 更新localStorage
+                localStorage.setItem('cart', JSON.stringify(cart));
+                
+                // 更新UI
+                updateCartDisplay();
+                
+                // 顯示添加到購物車的通知
+                showNotification(`${product.name} 已加入購物車`);
+            }
+        });
+    });
+
+
+});
+
+// 更新購物車顯示
+function updateCartDisplay() {
+    const cartCountElement = document.getElementById('cart-count');
+    
+    // 更新購物車計數
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    cartCountElement.textContent = totalItems;
+    
+    // 更新產品卡片上的數量指示器
+    document.querySelectorAll('.product-card').forEach(card => {
+        const productId = parseInt(card.dataset.id);
+        const quantityElement = card.querySelector('.product-quantity');
+        const cartItem = cart.find(item => item.id === productId);
+        
+        if (cartItem && cartItem.quantity > 0) {
+            quantityElement.textContent = cartItem.quantity;
+            quantityElement.classList.remove('hidden');
+        } else {
+            quantityElement.classList.add('hidden');
+        }
+    });
+}
+
+
+</script>
 
 {% endblock %}
