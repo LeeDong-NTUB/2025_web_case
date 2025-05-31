@@ -122,6 +122,15 @@
 <script src="{% static 'js/utils.js' %}"></script>
 <script src="{% static 'js/cart.js' %}"></script>
 <script>
+const products = {
+    {% for product in products %}
+        '{{ product.id }}': {
+            'name': '{{ product.name }}',
+            'price': {{ product.price }},
+            'image': '{{ product.image.url }}'
+        },
+    {% endfor %}
+}
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('checkout-btn-page').addEventListener('click', function () {
         if (cart.length > 0) {
@@ -147,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function () {
             product_id: item.id,
             quantity: item.quantity
         }));
-        const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const totalPrice = cart.reduce((sum, item) => sum + (products[item.id].price * item.quantity), 0);
         const orderData = { name, phone, total_price: totalPrice, items: itemsForBackend };
 
         fetch('/checkout/', {
@@ -187,20 +196,21 @@ function renderCartPage() {
     const cartSubtotal = document.getElementById('cart-subtotal');
     cartItemsContainer.innerHTML = '';
     emptyCartMessage.style.display = cart.length === 0 ? 'block' : 'none';
-    cartSubtotal.textContent = `NT$${cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)}`;
+    cartSubtotal.textContent = `NT$${cart.reduce((sum, item) => sum + (products[item.id].price * item.quantity), 0)}`;
 
     cart.forEach(item => {
         const cartItemElement = document.createElement('div');
         cartItemElement.className = 'bg-white mb-4 rounded-xl overflow-hidden max-w-3xl mx-auto shadow-md transform transition-all duration-300 hover:shadow-lg';
+        const product = products[item.id];
         cartItemElement.innerHTML = `
             <div class="flex flex-col md:flex-row overflow-hidden">
                 <div class="w-full md:w-1/4 p-4 flex justify-center items-center bg-cream-dark bg-opacity-20">
-                    <img src="${item.image}" alt="${item.name}" class="w-24 h-24 object-cover rounded-lg shadow-md">
+                    <img src="${product.image}" alt="${product.name}" class="w-24 h-24 object-cover rounded-lg shadow-md">
                 </div>
                 <div class="w-full md:w-3/4 p-4 md:pl-4">
                     <div class="flex justify-between items-start mb-3">
-                        <h2 class="text-xl font-bold text-primary">${item.name}</h2>
-                        <span class="text-primary font-bold">NT$${item.price}</span>
+                        <h2 class="text-xl font-bold text-primary">${product.name}</h2>
+                        <span class="text-primary font-bold">NT$${product.price}</span>
                     </div>
                     <div class="flex flex-wrap justify-between items-center mt-4">
                         <div class="flex items-center space-x-1 bg-cream-dark bg-opacity-30 rounded-lg overflow-hidden">
@@ -217,7 +227,7 @@ function renderCartPage() {
                             </button>
                         </div>
                         <div class="flex items-center mt-3 md:mt-0">
-                            <div class="text-primary font-medium mr-4">小計: <span class="font-bold">NT$${item.price * item.quantity}</span></div>
+                            <div class="text-primary font-medium mr-4">小計: <span class="font-bold">NT$${product.price * item.quantity}</span></div>
                             <button class="cart-remove flex items-center text-red-500 hover:text-red-700" data-id="${item.id}">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
