@@ -1,54 +1,57 @@
-from django.shortcuts import render
-from django.http import JsonResponse
 import json
-
-# models
+from django.shortcuts import get_object_or_404, render
+from django.http import JsonResponse
+from django.utils.timezone import now
 from web_case_2025.models.News import News
-from web_case_2025.models.Order import Order
-from web_case_2025.models.OrderItem import OrderItem
-from web_case_2025.models.Product import Product
-
-# fake data
-from .fake_data import news_list, slides, products, product_types
-
-# 在導入後立即處理新聞資料
-processed_news_list = News.process_news_data(news_list)
-
-# 提取產品類別
+from web_case_2025.models.Order import Order, OrderItem
+from web_case_2025.models.Product import Product, ProductType
+from web_case_2025.models.Slide import Slide
+from datetime import datetime
 
 def home(request):
-    filtered_news = processed_news_list.copy()
-    if len(filtered_news) > 4:
-        filtered_news = filtered_news[:4]
-    return render(request, 'pages/home.html', {'news_list': filtered_news, 'slides': slides})
+    news_qs = News.objects.filter(release_date__lte=now()).order_by('-release_date')[:4]
+    product_types = ProductType.objects.all()
+    slides = Slide.objects.all()
+    return render(request, 'pages/home.html', {
+        'news_list': news_qs,
+        'slides': slides,
+        'categories': product_types
+    })
 
 def lastestNewsList(request):
-    filtered_news = processed_news_list.copy()
-    if len(filtered_news) > 10:
-        filtered_news = filtered_news[:10]
-    return render(request, 'pages/latest-news/list.html', {'news_list': filtered_news})
+    news_qs = News.objects.filter(release_date__lte=datetime.now()).order_by('-release_date')[:10]
+    return render(request, 'pages/latest-news/list.html', {
+        'news_list': news_qs
+    })
 
-def lastestNewsPage(request, id):
-    news = {}
-    for news_item in processed_news_list:
-        if news_item.get('id') == id:
-            news = news_item
-            break
-    
+def latestNewsPage(request, id):
+    news = get_object_or_404(News, id=id)
     return render(request, 'pages/latest-news/page.html', {'news': news})
 
+from django.shortcuts import render
+
 def order(request):
-    return render(request, 'pages/order.html', {'products': products, 'categories': product_types})
+    products = Product.objects.all()
+    product_types = ProductType.objects.all()
+    return render(request, 'pages/order.html', {
+        'products': products,
+        'categories': product_types
+    })
 
 def product(request):
     category_name = request.GET.get('category')
-    filtered_products = products
-    
-    if category_name:
-        filtered_products = [product for product in products if product['product_type'] == category_name]
-        # filtered_products = [product for product in products if product.get('type') == category_name]
+    product_types = ProductType.objects.all()
 
-    return render(request, 'pages/product.html', {'products': filtered_products, 'categories': product_types})
+    if category_name:
+        filtered_products = Product.objects.filter(product_type__name=category_name)
+    else:
+        filtered_products = Product.objects.all()
+
+    return render(request, 'pages/product.html', {
+        'products': filtered_products,
+        'categories': product_types
+    })
+
 
 def checkout(request):
     if request.method == 'POST':

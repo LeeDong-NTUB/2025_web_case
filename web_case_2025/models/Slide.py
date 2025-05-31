@@ -1,18 +1,16 @@
 from django.db import models
+from bakery_app.utils.upload_file import upload_slide_image
 
 class Slide(models.Model):
-    """
-    Represents a slide for a carousel or similar component.
-    """
-    src = models.ImageField(upload_to='slides/')
-    link = models.CharField(max_length=255, help_text="點擊圖片後導向的連結")
-    title = models.CharField(max_length=100, help_text="幻燈片的標題", blank=True)
-    sub_title = models.CharField(max_length=255, help_text="幻燈片的副標題", blank=True)
+    image = models.ImageField("圖片", upload_to=upload_slide_image)
+    link = models.CharField("導向連結", max_length=1000, help_text="點擊圖片後導向的連結", blank=True)
+    title = models.CharField("標題", max_length=20, help_text="輪播圖的標題", blank=True)
+    sub_title = models.CharField("副標題", max_length=30, help_text="輪播圖的副標題", blank=True)
 
     def __str__(self):
-        return self.title
+        return self.title or "(無標題)"
 
     class Meta:
         app_label = "bakery_app"
-        verbose_name = "幻燈片"
-        verbose_name_plural = "幻燈片"
+        verbose_name = "輪播圖"
+        verbose_name_plural = "輪播圖"

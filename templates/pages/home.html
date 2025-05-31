@@ -4,14 +4,11 @@
 {% block title %}宏農·手工之家 - 每天現蒸，用心好味{% endblock %}
 
 {% block content %}
-<!-- 主圖區域 -->
 <section class="relative overflow-hidden">
-    <!-- 輪播容器 -->
     <div class="relative" id="slider-container">
-        <!-- 輪播項目 - 使用Django模板標籤動態生成 -->
         {% for slide in slides %}
         <div class="relative bg-cover bg-center h-96 w-full transition-opacity duration-500 ease-in-out hidden" 
-             style="background-image: url('{{ slide.src }}');" 
+             style="background-image: url('{{ slide.image.url }}');" 
              data-slide-index="{{ forloop.counter0 }}">
             <div class="absolute inset-0 bg-black opacity-30"></div>
             <div class="container mx-auto px-4 h-full flex items-center justify-start relative z-10">
@@ -28,7 +25,6 @@
         </div>
         {% endfor %}
         
-        <!-- 左右箭頭 -->
         <button class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-70 p-2 rounded-full shadow-md z-20 focus:outline-none" id="prev-button">
             <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"></path>
@@ -40,7 +36,6 @@
             </svg>
         </button>
         
-        <!-- 導航點 -->
         <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-20" id="slider-dots">
             {% for slide in slides %}
             <button class="w-3 h-3 rounded-full bg-white bg-opacity-50 hover:bg-opacity-100 transition-all duration-300" 
@@ -49,66 +44,27 @@
         </div>
     </div>
 </section>
-<!-- 最新消息區塊 -->
-<section class="py-16 bg-white">
-    <div class="container mx-auto px-4">
-        <h2 class="text-3xl font-bold text-center mb-12 text-primary relative">
-            <span class="inline-block pb-2 border-b-2 border-secondary">最新消息</span>
-        </h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {% for news_item in news_list %}
-                {% include 'includes/the-news.html' with news=news_item %}
-            {% endfor %}
-        </div>
-        
-        <!-- 查看更多按鈕 -->
-        <div class="text-center mt-10">
-            <a href="{% url 'latest-news-list' %}" class="inline-block bg-secondary hover:bg-primary-light text-white font-bold py-3 px-6 rounded-lg transition-colors">
-                查看全部消息
-            </a>
-        </div>
-    </div>
-</section>
+
 <!-- 產品系列 -->
 <section id="products" class="py-16 bg-cream">
-    <div class="container mx-auto px-4">
-        <h2 class="text-3xl font-bold text-center mb-12 text-primary">產品系列</h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- 包子系列 -->
-            <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
-                <img src="https://via.placeholder.com/400x300" alt="包子系列" class="w-full h-64 object-cover">
-                <div class="p-6">
-                    <h3 class="text-xl font-bold mb-3 text-primary">包子系列</h3>
-                    <p class="text-gray-700 mb-4">精選食材，手工製作，多種口味滿足您的味蕾。</p>
-                    <a href="#" class="text-secondary hover:text-primary-light font-medium">查看更多 &rarr;</a>
-                </div>
-            </div>
-            
-            <!-- 饅頭系列 -->
-            <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
-                <img src="https://via.placeholder.com/400x300" alt="饅頭系列" class="w-full h-64 object-cover">
-                <div class="p-6">
-                    <h3 class="text-xl font-bold mb-3 text-primary">饅頭系列</h3>
-                    <p class="text-gray-700 mb-4">柔軟口感，經典風味，每一口都是美味記憶。</p>
-                    <a href="#" class="text-secondary hover:text-primary-light font-medium">查看更多 &rarr;</a>
-                </div>
-            </div>
-            
-            <!-- 籠麵 -->
-            <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
-                <img src="https://via.placeholder.com/400x300" alt="籠麵" class="w-full h-64 object-cover">
-                <div class="p-6">
-                    <h3 class="text-xl font-bold mb-3 text-primary">籠麵</h3>
-                    <p class="text-gray-700 mb-4">Q彈有勁，搭配特製醬料，獨特風味不容錯過。</p>
-                    <a href="#" class="text-secondary hover:text-primary-light font-medium">查看更多 &rarr;</a>
-                </div>
-            </div>
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center mb-12 text-primary">產品系列</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {% for category in categories %}
+      <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+        <img src="{{ category.image.url }}" alt="{{ category.name }}" class="w-full h-64 object-cover">
+        <div class="p-6">
+          <h3 class="text-xl font-bold mb-3 text-primary">{{ category.name }}</h3>
+          <p class="text-gray-700 mb-4">{{ category.description }}</p>
+          <a href="{% url 'product' %}?category={{ category.name }}" class="text-secondary hover:text-primary-light font-medium">查看更多 &rarr;</a>
         </div>
+      </div>
+      {% endfor %}
     </div>
+  </div>
 </section>
-<!-- 特色區域 -->
+
 <section class="py-16 bg-cream-dark">
     <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold text-center mb-12 text-primary relative">
@@ -131,7 +87,6 @@
                 </div>
             </div>
             
-            <!-- 本地食材 -->
             <div class="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
                 <div class="flex items-start">
                     <div class="w-16 h-16 mr-4 p-3 bg-cream rounded-full text-secondary flex-shrink-0">
@@ -146,7 +101,6 @@
                 </div>
             </div>
             
-            <!-- 無防腐劑 -->
             <div class="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
                 <div class="flex items-start">
                     <div class="w-16 h-16 mr-4 p-3 bg-cream rounded-full text-secondary flex-shrink-0">
@@ -163,7 +117,7 @@
         </div>
     </div>
 </section>
-<!-- 熱銷排行榜 -->
+
 <section class="py-16 bg-cream">
     <div class="container mx-auto px-4">
         <h2 class="text-3xl font-bold text-center mb-12 text-primary">熱銷排行榜</h2>
@@ -204,6 +158,26 @@
     </div>
 </section>
 
+<section class="py-16 bg-cream-dark">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 text-primary relative">
+            <span class="inline-block pb-2 border-b-2 border-secondary">最新消息</span>
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {% for news_item in news_list %}
+                {% include 'includes/the-news.html' with news=news_item %}
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-10">
+            <a href="{% url 'latest-news-list' %}" class="inline-block bg-secondary hover:bg-primary-light text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                查看全部消息
+            </a>
+        </div>
+    </div>
+</section>
+
 <script>
     // 輪播功能
     document.addEventListener('DOMContentLoaded', function() {
@@ -214,36 +188,28 @@
         let currentIndex = 0;
         const slideCount = slides.length;
         
-        // 檢查是否有幻燈片
         if (slideCount === 0) return;
         
-        // 顯示特定幻燈片
         function showSlide(index) {
-            // 隱藏所有幻燈片
             slides.forEach(slide => {
                 slide.classList.add('hidden');
                 slide.classList.remove('block');
             });
             
-            // 更新所有導航點
             dots.forEach(dot => {
                 dot.classList.remove('bg-opacity-100');
                 dot.classList.add('bg-opacity-50');
             });
             
-            // 顯示目標幻燈片
             slides[index].classList.remove('hidden');
             slides[index].classList.add('block');
             
-            // 更新目標導航點
             dots[index].classList.remove('bg-opacity-50');
             dots[index].classList.add('bg-opacity-100');
             
-            // 更新當前索引
             currentIndex = index;
         }
         
-        // 下一個幻燈片
         function nextSlide() {
             showSlide((currentIndex + 1) % slideCount);
         }
