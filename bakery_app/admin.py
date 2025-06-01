@@ -42,8 +42,8 @@ class OrderItemInline(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
         'id',
-        'customer_name',  # 改正
-        'customer_phone',  # 改正
+        'customer_name',
+        'customer_phone',
         'customer_email',
         'created_at',
         'total_price',
@@ -93,4 +93,4 @@ class OrderAdmin(admin.ModelAdmin):
         return redirect(request.META.get('HTTP_REFERER', '/admin/'))
 
     def _send_notification(self, order):
-        print(f"[通知出貨] 訂單 #{order.id} - {order.name}")
+        print(f"[通知出貨] 訂單 #{order.id} - {order.customer_name}")

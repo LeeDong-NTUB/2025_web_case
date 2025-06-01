@@ -148,6 +148,7 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
         const name = document.getElementById('name').value.trim();
         const phone = document.getElementById('phone').value.trim();
+        const email = document.getElementById('email').value.trim();
         if (!name || !phone) {
             showNotification('請填寫姓名與電話');
             return;
@@ -157,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function () {
             quantity: item.quantity
         }));
         const totalPrice = cart.reduce((sum, item) => sum + (products[item.id].price * item.quantity), 0);
-        const orderData = { name, phone, total_price: totalPrice, items: itemsForBackend };
+        const orderData = { name, phone, email, total_price: totalPrice, items: itemsForBackend };
 
         fetch('/checkout/', {
             method: 'POST',
@@ -179,7 +180,6 @@ document.addEventListener('DOMContentLoaded', function () {
             localStorage.removeItem('cart');
             renderCartPage();
             document.getElementById('checkout-modal').classList.add('hidden');
-            document.getElementById('cart-page').classList.add('hidden');
         })
         .catch(error => {
             console.error('訂單提交錯誤:', error);

@@ -60,19 +60,20 @@ def checkout(request):
             
             # 創建訂單
             order = Order.objects.create(
-                name=data.get('name', ''),
-                phone=data.get('phone', ''),
+                customer_name=data.get('name', ''),
+                customer_phone=data.get('phone', ''),
+                customer_email=data.get('email', ''),
                 total_price=data.get('total_price', 0)
             )
             
             # 創建訂單項目
-            for item in data.get('items', []):
-                product = Product.objects.get(id=item.get('id'))
+            for item_data in data.get('items', []):
+                product = Product.objects.get(id=item_data.get('product_id'))
                 OrderItem.objects.create(
                     order=order,
                     product=product,
-                    quantity=item.get('quantity', 1),
-                    price=item.get('price', 0) * item.get('quantity', 1)
+                    quantity=item_data.get('quantity', 1),
+                    price=product.price
                 )
             
             # 回傳成功的 JSON 回應
