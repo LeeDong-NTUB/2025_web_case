@@ -22,6 +22,7 @@ class Product(models.Model):
     price = models.DecimalField("價格", max_digits=6, decimal_places=0)
     image = models.ImageField("商品圖片", upload_to=upload_product_image)
     created_at = models.DateTimeField("建立時間", auto_now_add=True)
+    is_hot = models.BooleanField("是否為熱銷產品", default=False)
 
     class Meta:
         app_label = 'bakery_app'

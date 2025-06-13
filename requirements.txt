@@ -1,0 +1,5 @@
+django-mathfilters
+django-simple-captcha
+djangorestframework-simplejwt
+django-cors-headers
+python-dotenv

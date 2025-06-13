@@ -86,7 +86,6 @@
             {% endfor %}
         </div>
         {% else %}
-        <!-- 沒有產品時顯示提示訊息 -->
         <div class="bg-paper rounded-xl shadow-md p-10 text-center my-8">
             <div class="flex flex-col items-center">
                 <div class="bg-cream-dark rounded-full p-5 mb-6">
@@ -98,7 +97,6 @@
                 <p class="text-secondary-light mb-6 max-w-md">抱歉，目前在此類別中沒有可用的產品。請選擇其他類別或稍後再回來查看。</p>
                 
                 {% if request.GET.category %}
-                <!-- 如果是篩選類別導致沒有產品，顯示返回全部類別的按鈕 -->
                 <a href="?" class="bg-primary hover:bg-primary-light text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 shadow-md inline-flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
@@ -109,7 +107,6 @@
             </div>
         </div>
         {% endif %}
-        <!-- 購物車按鈕 - 懸浮設計 -->
         <div class="text-center mt-10">
             <a href="{% url 'order' %}">
                 <button id="cart-open-btn" class="bg-primary hover:bg-primary-light text-white px-8 py-3 rounded-full inline-flex items-center transition-all duration-300 transform hover:scale-105 shadow-lg">
@@ -128,7 +125,6 @@
 <script>
 updateCartDisplay();
 
-// 產品數據
 const sampleProducts = [
     {% for product in products %}
     {
@@ -142,9 +138,7 @@ const sampleProducts = [
     {% endfor %}
 ];
 
-// 加入購物車
 document.addEventListener('DOMContentLoaded', function() {
-    // 加入購物車按鈕事件
     document.querySelectorAll('.add-to-cart').forEach(button => {
         button.addEventListener('click', function() {
             const productCard = this.closest('.product-card');
@@ -153,27 +147,19 @@ document.addEventListener('DOMContentLoaded', function() {
             const product = sampleProducts.find(p => p.id === productId)
             
             if (product) {
-                // 檢查購物車中是否已有此產品
                 const existingItemIndex = cart.findIndex(item => item.id === productId);
                 
                 if (existingItemIndex > -1) {
-                    // 增加數量
                     cart[existingItemIndex].quantity += 1;
                 } else {
-                    // 添加新項目
                     cart.push({
                         id: product.id,
                         quantity: 1,
                     });
                 }
                 
-                // 更新localStorage
                 localStorage.setItem('cart', JSON.stringify(cart));
-                
-                // 更新UI
                 updateCartDisplay();
-                
-                // 顯示添加到購物車的通知
                 showNotification(`${product.name} 已加入購物車`);
             }
         });

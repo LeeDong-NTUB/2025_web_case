@@ -1,21 +1,23 @@
 import json
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.http import JsonResponse
 from django.utils.timezone import now
 from web_case_2025.models.News import News
-from web_case_2025.models.Order import Order, OrderItem
 from web_case_2025.models.Product import Product, ProductType
+from web_case_2025.models.Accounting import AccountCategory, AccountEntry  # 根據實際路徑調整
 from web_case_2025.models.Slide import Slide
 from datetime import datetime
 
 def home(request):
     news_qs = News.objects.filter(release_date__lte=now()).order_by('-release_date')[:4]
     product_types = ProductType.objects.all()
+    hot_products = Product.objects.filter(is_hot=True)
     slides = Slide.objects.all()
     return render(request, 'pages/home.html', {
         'news_list': news_qs,
         'slides': slides,
-        'categories': product_types
+        'categories': product_types,
+        'hot_products': hot_products
     })
 
 def lastestNewsList(request):
@@ -53,53 +55,90 @@ def product(request):
     })
 
 
+from .form import ContactMessageForm, OrderForm, OrderItemFormSet
+
 def checkout(request):
     if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            
-            # 創建訂單
-            order = Order.objects.create(
-                customer_name=data.get('name', ''),
-                customer_phone=data.get('phone', ''),
-                customer_email=data.get('email', ''),
-                total_price=data.get('total_price', 0)
+        data = json.loads(request.body)
+        order_form = OrderForm({
+            'customer_name': data.get('name'),
+            'customer_phone': data.get('phone'),
+            'customer_email': data.get('email'),
+            'shipping_address': data.get('address'),
+            'payment_method': data.get('payment', 'cod'),
+        })
+
+        formset_data = {
+            'items-TOTAL_FORMS': str(len(data.get('items', []))),
+            'items-INITIAL_FORMS': '0',
+            'items-MIN_NUM_FORMS': '0',
+            'items-MAX_NUM_FORMS': '1000',
+        }
+
+        for i, item in enumerate(data.get('items', [])):
+            formset_data[f'items-{i}-product'] = item.get('product_id')
+            formset_data[f'items-{i}-quantity'] = item.get('quantity', 1)
+
+        order_item_formset = OrderItemFormSet(formset_data, prefix='items')
+
+        if order_form.is_valid() and order_item_formset.is_valid():
+            order = order_form.save(commit=False)
+            order.total_price = 0
+            order.save()
+
+            total_price = 0
+            for form in order_item_formset:
+                order_item = form.save(commit=False)
+                order_item.order = order
+                order_item.price = order_item.product.price
+                order_item.save()
+                total_price += order_item.price * order_item.quantity
+
+            order.total_price = total_price
+            order.save()
+
+            income_category, created = AccountCategory.objects.get_or_create(
+                name='訂單收入',
+                defaults={'is_income': True}
             )
             
-            # 創建訂單項目
-            for item_data in data.get('items', []):
-                product = Product.objects.get(id=item_data.get('product_id'))
-                OrderItem.objects.create(
-                    order=order,
-                    product=product,
-                    quantity=item_data.get('quantity', 1),
-                    price=product.price
-                )
+            AccountEntry.objects.create(
+                category=income_category,
+                subject=f"訂單編號 #{order.id} 收入",
+                amount=order.total_price,
+                source_type='Order',
+                source_id=str(order.id)
+            )
             
-            # 回傳成功的 JSON 回應
             return JsonResponse({
                 'success': True,
                 'order_id': order.id,
                 'message': '訂單已成功提交'
             })
-        except json.JSONDecodeError:
+        else:
             return JsonResponse({
                 'success': False,
-                'error': '無效的 JSON 數據'
+                'errors': order_form.errors,
+                'formset_errors': order_item_formset.errors
             }, status=400)
-        except Exception as e:
-            return JsonResponse({
-                'success': False,
-                'error': str(e)
-            }, status=500)
-    
-    # 如果是 GET 請求，也回傳 JSON（而不是 HTML）
-    return JsonResponse({
-        'success': False,
-        'error': '僅接受 POST 請求'
-    }, status=405)
-
 
 
 def contact(request):
-    return render(request, 'pages/contact.html')
+    success = None
+    if request.method == 'POST':
+        form = ContactMessageForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/contact/?success=1')
+        else:
+            return render(request, 'pages/contact.html', {
+                'form': form,
+            })
+    else:
+        form = ContactMessageForm()
+
+    success_param = request.GET.get('success')
+    return render(request, 'pages/contact.html', {
+        'form': form,
+        'success': success_param,
+    })
