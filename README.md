@@ -1,3 +1,9 @@
+## Python install
+https://www.python.org/
+
+## 開啟CMD
+cd 2025_web_case
+
 ## install
 pip install git+https://github.com/assem-ch/django-jet-reboot
 pip install -r requirements.txt
