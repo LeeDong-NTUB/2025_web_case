@@ -2,6 +2,7 @@ import json
 from django.shortcuts import get_object_or_404, redirect, render
 from django.http import JsonResponse
 from django.utils.timezone import now
+from web_case_2025.models import Order
 from web_case_2025.models.News import News
 from web_case_2025.models.Product import Product, ProductType
 from web_case_2025.models.Accounting import AccountCategory, AccountEntry  # 根據實際路徑調整
@@ -113,7 +114,8 @@ def checkout(request):
             return JsonResponse({
                 'success': True,
                 'order_id': order.id,
-                'message': '訂單已成功提交'
+                'message': '訂單已成功提交',
+                'redirect_url': f'/order/success/?id={order.id}'
             })
         else:
             return JsonResponse({
@@ -142,3 +144,8 @@ def contact(request):
         'form': form,
         'success': success_param,
     })
+
+def order_success(request):
+    order_id = request.GET.get("id")
+    order = get_object_or_404(Order, id=order_id)
+    return render(request, "pages/payment_success.html", {"order": order})

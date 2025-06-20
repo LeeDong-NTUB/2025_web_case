@@ -101,16 +101,6 @@
                                 <span class="font-medium text-gray-800">貨到付款</span>
                             </div>
                         </label>
-                        <!-- <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors duration-200 has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50">
-                            <input type="radio" name="payment" value="linepay" required 
-                                class="w-4 h-4 text-blue-600 focus:ring-blue-500 focus:ring-2">
-                            <div class="ml-3 flex items-center">
-                                <div class="w-5 h-5 bg-green-500 rounded-full mr-2 flex items-center justify-center">
-                                    <span class="text-white text-xs font-bold">L</span>
-                                </div>
-                                <span class="font-medium text-gray-800">Line Pay</span>
-                            </div>
-                        </label> -->
                     </div>
                 </div>
                 <div class="pt-4">
@@ -187,11 +177,8 @@ document.getElementById('checkout-form').addEventListener('submit', function (e)
         .then(response => response.json().then(data => ({ status: response.status, data })))
         .then(({ status, data }) => {
             if (status === 200 && data.success) {
-                showNotification(data.message || '訂單已成功提交！');
-                cart = [];
                 localStorage.removeItem('cart');
-                renderCartPage();
-                document.getElementById('checkout-modal').classList.add('hidden');
+                window.location.href = data.redirect_url;
             } else {
                 if (data.errors || data.formset_errors) {
                     let messages = [];
