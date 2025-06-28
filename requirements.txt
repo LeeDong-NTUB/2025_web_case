@@ -1,3 +1,4 @@
+django
 django-mathfilters
 django-simple-captcha
 djangorestframework-simplejwt

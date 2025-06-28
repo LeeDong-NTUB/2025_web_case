@@ -27,13 +27,6 @@
               </div>
             </a>
         </div>
-        
-        <!-- 裝飾曲線 -->
-        <div class="absolute -bottom-3 left-0 right-0 h-4 overflow-hidden">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 48" class="absolute bottom-0 w-full h-auto fill-current text-cream">
-                <path d="M0,48L80,42.7C160,37,320,27,480,26.7C640,27,800,37,960,37.3C1120,37,1280,27,1360,21.3L1440,16L1440,48L1360,48C1280,48,1120,48,960,48C800,48,640,48,480,48C320,48,160,48,80,48L0,48Z"></path>
-            </svg>
-        </div>
     </nav>
 
     <!-- 歡迎訊息區塊 -->
@@ -74,12 +67,15 @@
                     <p class="text-gray-600 text-sm mb-4 h-10 overflow-hidden">{{ product.description }}</p>
                     <div class="flex justify-between items-center">
                         <span class="text-primary font-bold text-lg">NT${{ product.price }}</span>
-                        <button class="add-to-cart bg-secondary hover:bg-secondary-light text-white px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 transform hover:scale-105 flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                            </svg>
+                        {% if product.stock <= 0 %}
+                        <button disabled class="bg-gray-300 text-white px-4 py-1.5 rounded-lg text-sm font-medium cursor-not-allowed">
+                            缺貨中
+                        </button>
+                        {% else %}
+                        <button class="add-to-cart bg-secondary hover:bg-secondary-light text-white px-4 py-1.5 rounded-lg text-sm font-medium">
                             加入購物車
                         </button>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -143,8 +139,11 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function() {
             const productCard = this.closest('.product-card');
             const productId = parseInt(productCard.dataset.id);
-            
             const product = sampleProducts.find(p => p.id === productId)
+            if (product.stock <= 0) {
+                showNotification(`${product.name} 缺貨中，無法加入購物車`);
+                return;
+            }
             
             if (product) {
                 const existingItemIndex = cart.findIndex(item => item.id === productId);

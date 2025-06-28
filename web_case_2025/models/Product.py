@@ -23,6 +23,7 @@ class Product(models.Model):
     image = models.ImageField("商品圖片", upload_to=upload_product_image)
     created_at = models.DateTimeField("建立時間", auto_now_add=True)
     is_hot = models.BooleanField("是否為熱銷產品", default=False)
+    stock = models.PositiveIntegerField("當前庫存數量(請謹慎維護)", default=0)
 
     class Meta:
         app_label = 'bakery_app'

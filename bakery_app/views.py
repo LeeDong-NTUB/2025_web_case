@@ -7,7 +7,7 @@ from web_case_2025.models.News import News
 from web_case_2025.models.Product import Product, ProductType
 from web_case_2025.models.Accounting import AccountCategory, AccountEntry  # 根據實際路徑調整
 from web_case_2025.models.Slide import Slide
-from datetime import datetime
+from django.core.paginator import Paginator
 
 def home(request):
     news_qs = News.objects.filter(release_date__lte=now()).order_by('-release_date')[:4]
@@ -21,10 +21,14 @@ def home(request):
         'hot_products': hot_products
     })
 
-def lastestNewsList(request):
-    news_qs = News.objects.filter(release_date__lte=datetime.now()).order_by('-release_date')[:10]
+def latestNewsList(request):
+    qs = News.objects.filter(release_date__lte=now())
+    paginator = Paginator(qs, 5)  # 每頁6筆
+    page = request.GET.get('page')
+    news_list = paginator.get_page(page)
+
     return render(request, 'pages/latest-news/list.html', {
-        'news_list': news_qs
+        'news_list': news_list
     })
 
 def latestNewsPage(request, id):
@@ -85,6 +89,16 @@ def checkout(request):
         if order_form.is_valid() and order_item_formset.is_valid():
             order = order_form.save(commit=False)
             order.total_price = 0
+
+            for form in order_item_formset:
+                product = form.cleaned_data['product']
+                quantity = form.cleaned_data['quantity']
+                if product.stock < quantity:
+                    return JsonResponse({
+                        'success': False,
+                        'error': f"商品 {product.name} 庫存不足，剩餘 {product.stock} 件"
+                    }, status=400)
+
             order.save()
 
             total_price = 0
@@ -94,6 +108,9 @@ def checkout(request):
                 order_item.price = order_item.product.price
                 order_item.save()
                 total_price += order_item.price * order_item.quantity
+
+                order_item.product.stock -= order_item.quantity
+                order_item.product.save()
 
             order.total_price = total_price
             order.save()

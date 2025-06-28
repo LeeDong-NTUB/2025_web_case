@@ -13,9 +13,7 @@
             </a>
         </div>
         
-        <!-- 文章主體 -->
         <div class="bg-paper rounded-2xl shadow-xl overflow-hidden max-w-4xl mx-auto border border-gray-100">
-            <!-- 文章標題區域 -->
             <div class="px-6 md:px-8 pt-6 md:pt-8 pb-2 md:pb-3 bg-white border-b border-gray-100">
                 <div class="flex items-center space-x-4 mb-3">
                     <div class="bg-gradient-to-r from-secondary to-secondary-light text-white px-4 py-2 rounded-full text-sm font-medium tracking-wide shadow-md">
@@ -34,7 +32,6 @@
                 <div class="w-20 h-1 bg-gradient-to-r from-secondary to-secondary-light rounded-full"></div>
             </div>
             
-            <!-- 文章內容 -->
             <div class="px-6 md:px-8 pt-3 md:pt-4 pb-10 md:pb-12">
                 {% if news.content %}
                     <div class="prose prose-lg max-w-none">
@@ -55,7 +52,115 @@
             </div>
         </div>
         
-        <!-- 回到頂部按鈕 -->
+        {% if news.images.all %}
+        <div class="mt-12 max-w-4xl mx-auto">
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+                <div class="bg-gradient-to-r from-primary to-primary-light px-6 py-4">
+                    <h3 class="text-xl font-bold text-white flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        相關圖片
+                        <span class="ml-2 bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm">{{ news.images.all|length }} 張</span>
+                    </h3>
+                </div>
+
+                <div class="relative group" id="image-carousel">
+                    <div class="relative h-96 md:h-[500px] overflow-hidden bg-gray-100">
+                        {% for img in news.images.all %}
+                        <div class="carousel-slide absolute inset-0 transition-opacity duration-500 {% if forloop.first %}opacity-100{% else %}opacity-0{% endif %}" data-slide="{{ forloop.counter0 }}">
+                            <img src="{{ img.image.url }}" alt="{{ img.caption }}" class="w-full h-full object-contain">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                            {% if img.caption %}
+                            <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                                <div class="bg-black/50 backdrop-blur-sm rounded-lg p-4">
+                                    <p class="text-lg font-medium leading-relaxed">{{ img.caption }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    {% if news.images.all|length > 1 %}
+                    <button id="prev-btn" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-3 rounded-full shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <button id="next-btn" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-3 rounded-full shadow-lg transition-all duration-300 opacity-0 group-hover:opacity-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                    {% endif %}
+                </div>
+
+                {% if news.images.all|length > 1 %}
+                <div class="px-6 py-4 bg-gray-50">
+                    <div class="flex items-center justify-center space-x-3 overflow-x-auto pb-2">
+                        {% for img in news.images.all %}
+                        <button class="thumbnail-btn flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-300 {% if forloop.first %}border-primary shadow-lg{% else %}border-gray-200{% endif %}" data-slide="{{ forloop.counter0 }}">
+                            <img src="{{ img.image.url }}" alt="{{ img.caption }}" class="w-full h-full object-cover">
+                        </button>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="text-center mt-3 text-sm text-gray-600">
+                        <span id="current-slide">1</span> / <span id="total-slides">{{ news.images.all|length }}</span>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <script>
+        const slides = document.querySelectorAll('.carousel-slide');
+        const thumbnails = document.querySelectorAll('.thumbnail-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const currentSlideSpan = document.getElementById('current-slide');
+        let currentSlide = 0;
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.style.opacity = i === index ? '1' : '0';
+            });
+
+            thumbnails.forEach((thumb, i) => {
+                if (i === index) {
+                    thumb.classList.add('border-primary', 'shadow-lg');
+                    thumb.classList.remove('border-gray-200');
+                } else {
+                    thumb.classList.remove('border-primary', 'shadow-lg');
+                    thumb.classList.add('border-gray-200');
+                }
+            });
+
+            currentSlide = index;
+            if (currentSlideSpan) currentSlideSpan.textContent = index + 1;
+        }
+
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                const prev = currentSlide === 0 ? slides.length - 1 : currentSlide - 1;
+                showSlide(prev);
+            });
+        }
+
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                const next = (currentSlide + 1) % slides.length;
+                showSlide(next);
+            });
+        }
+
+        thumbnails.forEach((thumb, index) => {
+            thumb.addEventListener('click', () => showSlide(index));
+        });
+        </script>
+        {% endif %}
+
         <div class="text-center mt-8">
             <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="inline-flex items-center px-6 py-3 bg-primary hover:bg-primary-light text-white rounded-full font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

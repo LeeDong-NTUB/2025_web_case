@@ -4,11 +4,11 @@ from django.contrib.admin import SimpleListFilter
 
 from web_case_2025.models.Product import Product, ProductType
 from web_case_2025.models.Order import Order, OrderItem
-from web_case_2025.models.News import News
+from web_case_2025.models.News import News, NewsImage
 from web_case_2025.models.Slide import Slide
 from web_case_2025.models.Accounting import AccountCategory, AccountEntry
 from web_case_2025.models.ContactMessage import ContactMessage
-
+from web_case_2025.models.BusinessInfo import BusinessInfo, BusinessHour
 from django.contrib import admin
 from django.db.models import Sum
 
@@ -59,13 +59,17 @@ class ProductAdmin(admin.ModelAdmin):
 class ProductTypeAdmin(admin.ModelAdmin):
     list_display = ('name', 'created_at')
 
-# 最新消息
+class NewsImageInline(admin.TabularInline):
+    model = NewsImage
+    extra = 1
+
 @admin.register(News)
 class NewsAdmin(admin.ModelAdmin):
-    list_display = ('title', 'created_at', 'release_date', 'category')
+    list_display = ('title', 'is_pinned', 'created_at', 'release_date', 'category')
     search_fields = ('title', 'summary', 'content')
-    list_filter = ('category', 'release_date')
-    ordering = ('-release_date',)
+    list_filter = ('category', 'release_date', 'is_pinned')
+    ordering = ('-is_pinned', '-release_date')
+    inlines = [NewsImageInline]
 
 # 輪播圖
 @admin.register(Slide)
@@ -199,3 +203,13 @@ class ContactMessageAdmin(admin.ModelAdmin):
     def message_summary(self, obj):
         return (obj.message[:20] + '...') if len(obj.message) > 20 else obj.message
     message_summary.short_description = "留言摘要"
+
+
+class BusinessHourInline(admin.TabularInline):
+    model = BusinessHour
+    extra = 1
+
+class BusinessInfoAdmin(admin.ModelAdmin):
+    inlines = [BusinessHourInline]
+
+admin.site.register(BusinessInfo, BusinessInfoAdmin)
