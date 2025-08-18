@@ -2,6 +2,7 @@ from django.db import models
 
 class BusinessInfo(models.Model):
     address = models.CharField("地址", max_length=255)
+    about = models.TextField("關於我們", max_length=10000)
     phone = models.CharField("電話", max_length=20)
     email = models.EmailField("電子郵件")
 

@@ -142,15 +142,15 @@ def checkout(request):
             }, status=400)
 
 
-def contact(request):
+def about(request):
     success = None
     if request.method == 'POST':
         form = ContactMessageForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('/contact/?success=1')
+            return redirect('/about/?success=1')
         else:
-            return render(request, 'pages/contact.html', {
+            return render(request, 'pages/about.html', {
                 'form': form,
             })
     else:
