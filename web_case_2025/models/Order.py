@@ -10,7 +10,7 @@ class Order(models.Model):
     customer_name = models.CharField("顧客姓名", max_length=100)
     customer_phone = models.CharField("顧客電話", max_length=20)
     customer_email = models.EmailField("顧客 Email", max_length=100)
-    shipping_address = models.CharField("運送地址", max_length=255)
+    shipping_address = models.CharField("運送地址", max_length=255, blank=True)
     shipping_store = models.CharField("運送全家門市", max_length=255)
 
     created_at = models.DateTimeField("建立時間", auto_now_add=True)

@@ -118,14 +118,14 @@ class OrderAdmin(OrderAdminForm):
         'customer_name',
         'customer_phone',
         'customer_email',
-        'shipping_address',
+        'shipping_store',
         'created_at',
         'total_price',
         'payment_method',
         'display_payment_status',
     )
     list_filter = (PaidStatusFilter, 'payment_method', 'created_at')
-    search_fields = ('customer_name', 'customer_phone', 'customer_email', 'shipping_address')
+    search_fields = ('customer_name', 'customer_phone', 'customer_email', 'shipping_store')
     inlines = [OrderItemInline]
 
     def display_payment_status(self, obj):

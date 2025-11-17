@@ -98,10 +98,10 @@
                     <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">電話號碼</label>
                     <input type="tel" id="phone" name="phone" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg">
                 </div>
-                <div>
+                <!-- <div>
                     <label for="address" class="block text-sm font-medium text-gray-700 mb-1">配送地址</label>
                     <input type="text" id="address" name="address" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg">
-                </div>
+                </div> -->
                 <div>
                     <label for="store" class="block text-sm font-medium text-gray-700 mb-1">取貨全家門市</label>
                     <input placeholder="填寫方便取貨的全家門市；例：溪湖金羊店" type="text" id="store" name="store" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg">
@@ -167,10 +167,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const store = document.getElementById('store').value.trim();
         const phone = document.getElementById('phone').value.trim();
         const email = document.getElementById('email').value.trim();
-        const address = document.getElementById('address').value.trim();
+        //const address = document.getElementById('address').value.trim();
         const payment = document.querySelector('input[name="payment"]:checked')?.value;
 
-        if (!name || !phone || !email || !address || !payment) {
+        if (!name || !phone || !email || !payment) {
             showNotification('請完整填寫所有結帳資訊');
             return;
         }
@@ -185,7 +185,6 @@ document.addEventListener('DOMContentLoaded', function () {
             phone,
             email,
             store,
-            address,
             payment,
             items: itemsForBackend
         };
