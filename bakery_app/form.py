@@ -31,11 +31,13 @@ class OrderForm(forms.ModelForm):
             'customer_phone',
             'customer_email',
             'shipping_address',
+            'shipping_store',
             'payment_method',
         ]
         labels = {
             'customer_name': '顧客姓名',
             'shipping_address': '運送地址',
+            'shipping_store': '取貨全家門市',
             'payment_method': '付款方式',
         }
         widgets = {

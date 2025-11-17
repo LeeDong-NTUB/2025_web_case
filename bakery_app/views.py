@@ -70,6 +70,7 @@ def checkout(request):
             'customer_phone': data.get('phone'),
             'customer_email': data.get('email'),
             'shipping_address': data.get('address'),
+            'shipping_store': data.get('store'),
             'payment_method': data.get('payment', 'cod'),
         })
 
@@ -90,6 +91,7 @@ def checkout(request):
             order = order_form.save(commit=False)
             order.total_price = 0
 
+            # 庫存檢查
             for form in order_item_formset:
                 product = form.cleaned_data['product']
                 quantity = form.cleaned_data['quantity']
@@ -101,6 +103,7 @@ def checkout(request):
 
             order.save()
 
+            # 計算商品總價
             total_price = 0
             for form in order_item_formset:
                 order_item = form.save(commit=False)
@@ -109,12 +112,19 @@ def checkout(request):
                 order_item.save()
                 total_price += order_item.price * order_item.quantity
 
+                # 扣庫存
                 order_item.product.stock -= order_item.quantity
                 order_item.product.save()
 
-            order.total_price = total_price
+            # 加運費（滿 1800 免運）
+            shipping_fee = 0 if total_price >= 1800 else 120
+            final_price = total_price + shipping_fee
+
+            # 最終金額寫回 DB
+            order.total_price = final_price
             order.save()
 
+            # 記帳
             income_category, created = AccountCategory.objects.get_or_create(
                 name='訂單收入',
                 defaults={'is_income': True}
@@ -123,7 +133,7 @@ def checkout(request):
             AccountEntry.objects.create(
                 category=income_category,
                 subject=f"訂單編號 #{order.id} 收入",
-                amount=order.total_price,
+                amount=final_price,
                 source_type='Order',
                 source_id=str(order.id)
             )
@@ -131,7 +141,9 @@ def checkout(request):
             return JsonResponse({
                 'success': True,
                 'order_id': order.id,
-                'message': '訂單已成功提交',
+                'message': f"訂單已成功提交（含運費：{shipping_fee} 元）",
+                'shipping_fee': shipping_fee,
+                'total_price': final_price,
                 'redirect_url': f'/order/success/?id={order.id}'
             })
         else:
@@ -140,7 +152,6 @@ def checkout(request):
                 'errors': order_form.errors,
                 'formset_errors': order_item_formset.errors
             }, status=400)
-
 
 def about(request):
     success = None

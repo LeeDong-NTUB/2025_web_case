@@ -49,9 +49,23 @@
                     <span id="cart-subtotal" class="font-bold text-xl">NT$0</span>
                 </div>
             </div>
+            <div class="flex justify-between text-primary w-full max-w-xs ml-auto py-2">
+                <span class="text-lg">運費</span>
+                <span id="cart-shipping" class="font-bold text-xl">NT$0</span>
+            </div>
+            <div id="free-shipping-notice" class="text-sm text-green-600 text-right mb-2" style="display: none;">
+                已達免運門檻！
+            </div>
+            <div id="shipping-progress" class="text-sm text-gray-600 text-right mb-2" style="display: none;">
+                再消費 <span id="remaining-amount" class="font-bold text-primary"></span> 即可免運
+            </div>
             <div class="w-full mb-4 h-0.5 bg-cream-dark"></div>
+            <div class="flex justify-between text-primary w-full max-w-xs ml-auto py-2 text-xl font-bold">
+                <span>總計</span>
+                <span id="cart-total">NT$0</span>
+            </div>
             <button id="checkout-btn-page"
-                    class="w-full bg-secondary hover:bg-secondary-light text-white py-3 rounded-lg font-medium text-lg transition-all duration-300 transform hover:scale-101 flex items-center justify-center">
+                    class="w-full bg-secondary hover:bg-secondary-light text-white py-3 rounded-lg font-medium text-lg transition-all duration-300 transform hover:scale-101 flex items-center justify-center mt-4">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
                      stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
@@ -76,7 +90,7 @@
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-1">姓名</label>
                     <input type="text" id="name" name="name" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg">
                 </div>
-                                <div>
+                <div>
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-1">電子郵件</label>
                     <input type="email" id="email" name="email" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg">
                 </div>
@@ -87,6 +101,10 @@
                 <div>
                     <label for="address" class="block text-sm font-medium text-gray-700 mb-1">配送地址</label>
                     <input type="text" id="address" name="address" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg">
+                </div>
+                <div>
+                    <label for="store" class="block text-sm font-medium text-gray-700 mb-1">取貨全家門市</label>
+                    <input placeholder="填寫方便取貨的全家門市；例：溪湖金羊店" type="text" id="store" name="store" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-3">付款方式</label>
@@ -116,6 +134,9 @@
 <script src="{% static 'js/utils.js' %}"></script>
 <script src="{% static 'js/cart.js' %}"></script>
 <script>
+const SHIPPING_FEE = 120;
+const FREE_SHIPPING_THRESHOLD = 1800;
+
 const products = {
     {% for product in products %}
         '{{ product.id }}': {
@@ -125,6 +146,7 @@ const products = {
         },
     {% endfor %}
 }
+
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('checkout-btn-page').addEventListener('click', function () {
         if (cart.length > 0) {
@@ -138,10 +160,11 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('checkout-modal').classList.add('hidden');
     });
 
-document.getElementById('checkout-form').addEventListener('submit', function (e) {
+    document.getElementById('checkout-form').addEventListener('submit', function (e) {
         e.preventDefault();
 
         const name = document.getElementById('name').value.trim();
+        const store = document.getElementById('store').value.trim();
         const phone = document.getElementById('phone').value.trim();
         const email = document.getElementById('email').value.trim();
         const address = document.getElementById('address').value.trim();
@@ -161,6 +184,7 @@ document.getElementById('checkout-form').addEventListener('submit', function (e)
             name,
             phone,
             email,
+            store,
             address,
             payment,
             items: itemsForBackend
@@ -207,7 +231,6 @@ document.getElementById('checkout-form').addEventListener('submit', function (e)
         });
     });
 
-
     renderCartPage();
 });
 
@@ -215,9 +238,34 @@ function renderCartPage() {
     const cartItemsContainer = document.getElementById('cart-items-container');
     const emptyCartMessage = document.getElementById('empty-cart-message');
     const cartSubtotal = document.getElementById('cart-subtotal');
+    const cartShipping = document.getElementById('cart-shipping');
+    const cartTotal = document.getElementById('cart-total');
+    const freeShippingNotice = document.getElementById('free-shipping-notice');
+    const shippingProgress = document.getElementById('shipping-progress');
+    const remainingAmount = document.getElementById('remaining-amount');
+    
     cartItemsContainer.innerHTML = '';
     emptyCartMessage.style.display = cart.length === 0 ? 'block' : 'none';
-    cartSubtotal.textContent = `NT$${cart.reduce((sum, item) => sum + (products[item.id].price * item.quantity), 0)}`;
+    
+    const subtotal = cart.reduce((sum, item) => sum + (products[item.id].price * item.quantity), 0);
+    const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
+    const total = subtotal + shipping;
+    
+    cartSubtotal.textContent = `NT$${subtotal}`;
+    cartShipping.textContent = shipping === 0 ? '免運' : `NT$${shipping}`;
+    cartTotal.textContent = `NT$${total}`;
+    
+    if (subtotal >= FREE_SHIPPING_THRESHOLD) {
+        freeShippingNotice.style.display = 'block';
+        shippingProgress.style.display = 'none';
+    } else if (subtotal > 0) {
+        freeShippingNotice.style.display = 'none';
+        shippingProgress.style.display = 'block';
+        remainingAmount.textContent = `NT$${FREE_SHIPPING_THRESHOLD - subtotal}`;
+    } else {
+        freeShippingNotice.style.display = 'none';
+        shippingProgress.style.display = 'none';
+    }
 
     cart.forEach(item => {
         const cartItemElement = document.createElement('div');
