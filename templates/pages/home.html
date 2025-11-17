@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}宏農·手工之家 - 每天現蒸，用心好味{% endblock %}
+
+{% block content %}
+<section class="relative overflow-hidden">
+    <div class="relative" id="slider-container">
+        {% for slide in slides %}
+        <div class="relative bg-cover bg-center h-96 w-full transition-opacity duration-500 ease-in-out hidden" 
+             style="background-image: url('{{ slide.image.url }}');" 
+             data-slide-index="{{ forloop.counter0 }}">
+            <div class="absolute inset-0 bg-black opacity-30"></div>
+            <div class="container mx-auto px-4 h-full flex items-center justify-start relative z-10">
+                <div class="text-left text-white ml-4 md:ml-12">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-5">
+                        <span class="block">{{ slide.title }}</span>
+                        <span class="block mt-4">{{ slide.sub_title }}</span>
+                    </h1>
+                    {% if slide.link %}
+                    <a href="{{ slide.link }}" class="bg-primary hover:bg-primary-light text-white px-6 py-2 rounded-md inline-block transition duration-300">了解更多</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        
+        <button class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-70 p-2 rounded-full shadow-md z-20 focus:outline-none" id="prev-button">
+            <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"></path>
+            </svg>
+        </button>
+        <button class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-70 p-2 rounded-full shadow-md z-20 focus:outline-none" id="next-button">
+            <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path>
+            </svg>
+        </button>
+        
+        <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-20" id="slider-dots">
+            {% for slide in slides %}
+            <button class="w-3 h-3 rounded-full bg-white bg-opacity-50 hover:bg-opacity-100 transition-all duration-300" 
+                    data-dots-index="{{ forloop.counter0 }}"></button>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- 產品系列 -->
+{% include 'includes/products-list.html' with categories=categories %}
+
+<section class="py-16 bg-cream-dark">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 text-primary relative">
+            <span class="inline-block pb-2 border-b-2 border-secondary">我們的特色</span>
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                <div class="flex items-start">
+                    <div class="w-16 h-16 mr-4 p-3 bg-cream rounded-full text-secondary flex-shrink-0">
+                        <svg class="w-full h-full" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9.5 4.5L9.5 6.5L10.5 6.5L10.5 18.5L13.5 18.5L13.5 6.5L14.5 6.5L14.5 4.5L9.5 4.5ZM3.5 7.5L3.5 9.5L4.5 9.5L4.5 18.5L7.5 18.5L7.5 9.5L8.5 9.5L8.5 7.5L3.5 7.5ZM15.5 10.5L15.5 12.5L16.5 12.5L16.5 18.5L19.5 18.5L19.5 12.5L20.5 12.5L20.5 10.5L15.5 10.5Z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-left">
+                        <h3 class="text-xl font-bold mb-3 text-primary">手工製作</h3>
+                        <p class="text-gray-700">每一個產品都經過匠人細心手工製作，堅持傳統工藝，保留食物原味。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                <div class="flex items-start">
+                    <div class="w-16 h-16 mr-4 p-3 bg-cream rounded-full text-secondary flex-shrink-0">
+                        <svg class="w-full h-full" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.5 5.6L5 7L5 20L19 20L19 7L16.5 5.6L16.5 3C16.5 2.4 16.1 2 15.5 2L8.5 2C7.9 2 7.5 2.4 7.5 3L7.5 5.6ZM15 7L15 5L9 5L9 7L15 7Z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-left">
+                        <h3 class="text-xl font-bold mb-3 text-primary">使用本地食材</h3>
+                        <p class="text-gray-700">精選當地新鮮食材，支持在地農業，讓您品嚐最純正的味道。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                <div class="flex items-start">
+                    <div class="w-16 h-16 mr-4 p-3 bg-cream rounded-full text-secondary flex-shrink-0">
+                        <svg class="w-full h-full" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2L4 5V11C4 16.5 7.8 21.7 12 23C16.2 21.7 20 16.5 20 11V5L12 2ZM16 13H8V11H16V13Z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-left">
+                        <h3 class="text-xl font-bold mb-3 text-primary">無防腐劑</h3>
+                        <p class="text-gray-700">不添加人工色素和防腐劑，讓您吃得健康，吃得安心。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% include 'includes/popular-products.html' %}
+
+<section class="py-16 bg-cream-dark">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 text-primary relative">
+            <span class="inline-block pb-2 border-b-2 border-secondary">最新消息</span>
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {% for news_item in news_list %}
+                {% include 'includes/the-news.html' with news=news_item %}
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-10">
+            <a href="{% url 'latest-news-list' %}" class="inline-block bg-secondary hover:bg-primary-light text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                查看全部消息
+            </a>
+        </div>
+    </div>
+</section>
+
+<script>
+    // 輪播功能
+    document.addEventListener('DOMContentLoaded', function() {
+        const slides = document.querySelectorAll('[data-slide-index]');
+        const productSlides = document.querySelectorAll('[data-slide-index]');
+        const dots = document.querySelectorAll('[data-dots-index]');
+        const prevButton = document.getElementById('prev-button');
+        const nextButton = document.getElementById('next-button');
+        let currentIndex = 0;
+        const slideCount = slides.length;
+        
+        if (slideCount === 0) return;
+        
+        function showSlide(index) {
+            slides.forEach(slide => {
+                slide.classList.add('hidden');
+                slide.classList.remove('block');
+            });
+            
+            dots.forEach(dot => {
+                dot.classList.remove('bg-opacity-100');
+                dot.classList.add('bg-opacity-50');
+            });
+            
+            slides[index].classList.remove('hidden');
+            slides[index].classList.add('block');
+            
+            dots[index].classList.remove('bg-opacity-50');
+            dots[index].classList.add('bg-opacity-100');
+            
+            currentIndex = index;
+        }
+        
+        function nextSlide() {
+            showSlide((currentIndex + 1) % slideCount);
+        }
+        
+        // 上一個幻燈片
+        function prevSlide() {
+            showSlide((currentIndex - 1 + slideCount) % slideCount);
+        }
+        
+        // 設置事件監聽器
+        prevButton.addEventListener('click', prevSlide);
+        nextButton.addEventListener('click', nextSlide);
+        
+        // 為導航點設置點擊事件
+        dots.forEach(dot => {
+            dot.addEventListener('click', function() {
+                const slideIndex = parseInt(this.getAttribute('data-dots-index'));
+                showSlide(slideIndex);
+            });
+        });
+
+        // 初始化顯示第一個幻燈片
+        slides[0].classList.remove('hidden');
+        slides[0].classList.add('block');
+        dots[0].classList.remove('bg-opacity-50');
+        dots[0].classList.add('bg-opacity-100');
+        
+        // 自動輪播（可選）
+        let interval = setInterval(nextSlide, 5000);
+        
+        // 滑鼠懸停時暫停自動輪播
+        const sliderContainer = document.getElementById('slider-container');
+        sliderContainer.addEventListener('mouseenter', () => {
+            clearInterval(interval);
+        });
+        
+        sliderContainer.addEventListener('mouseleave', () => {
+            interval = setInterval(nextSlide, 5000);
+        });
+    });
+</script>
+{% endblock %}

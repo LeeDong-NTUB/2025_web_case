@@ -1,0 +1,7 @@
+django
+django-mathfilters
+django-simple-captcha
+djangorestframework-simplejwt
+django-cors-headers
+python-dotenv
+git+https://github.com/assem-ch/django-jet-reboot

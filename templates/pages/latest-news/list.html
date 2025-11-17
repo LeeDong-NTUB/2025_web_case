@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}宏農·手工之家 - 每天現蒸，用心好味{% endblock %}
+
+{% block content %}
+<section class="py-16 bg-cream">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 text-primary relative">
+            <span class="inline-block pb-2 border-b-2 border-secondary">最新消息</span>
+        </h2>
+
+        <div class="grid gap-8 max-w-4xl mx-auto">
+            {% if news_list %}
+                {% for news_item in news_list %}
+                    {% include 'includes/the-news.html' with news=news_item %}
+                {% endfor %}
+            {% else %}
+                <div class="text-center text-gray-400 text-xl italic py-16">
+                    尚未有任何最新消息，敬請期待！
+                </div>
+            {% endif %}
+        </div>
+
+        {% if news_list.has_other_pages %}
+        <div class="mt-8 text-center space-x-2">
+            {% if news_list.has_previous %}
+                <a href="?page={{ news_list.previous_page_number }}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">上一頁</a>
+            {% endif %}
+            <span class="text-primary font-medium">第 {{ news_list.number }} 頁</span>
+            {% if news_list.has_next %}
+                <a href="?page={{ news_list.next_page_number }}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">下一頁</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

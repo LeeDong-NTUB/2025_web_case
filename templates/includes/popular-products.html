@@ -1,0 +1,91 @@
+
+<!-- 熱銷排行榜輪播 -->
+<section class="py-16 bg-cream">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12 text-primary">熱銷排行榜</h2>
+        
+        <div class="relative overflow-hidden" id="bestseller-slider-container">
+            <div class="flex transition-transform duration-500 ease-in-out" id="bestseller-slider">
+                {% for product in hot_products %}
+                    <div class="w-full md:w-1/4 flex-shrink-0 px-2">
+                        <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                            <h3 class="text-lg font-bold text-primary">{{ product.name }}</h3>
+                            <p class="text-secondary font-medium">NT$ {{ product.price }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            
+            
+            <!-- 導航按鈕 -->
+            <button class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-70 p-2 rounded-full shadow-md z-20 focus:outline-none" id="bestseller-prev-button">
+                <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"></path>
+                </svg>
+            </button>
+            <button class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 hover:bg-opacity-70 p-2 rounded-full shadow-md z-20 focus:outline-none" id="bestseller-next-button">
+                <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const slider = document.getElementById('bestseller-slider');
+    const prevButton = document.getElementById('bestseller-prev-button');
+    const nextButton = document.getElementById('bestseller-next-button');
+    const sliderContainer = document.getElementById('bestseller-slider-container');
+    
+    let currentIndex = 0;
+    const totalProducts = document.querySelectorAll('#bestseller-slider > div').length;
+    
+    // 計算每個產品的寬度百分比（根據螢幕寬度）
+    function getItemWidth() {
+        return window.innerWidth >= 768 ? 25 : 100; // md螢幕以上每個產品佔25%，小螢幕佔100%
+    }
+    
+    // 計算最大可移動的索引
+    function getMaxIndex() {
+        const itemWidth = getItemWidth();
+        const visibleItems = Math.floor(100 / itemWidth); // 可見產品數量
+        return Math.max(0, totalProducts - visibleItems);
+    }
+    
+    // 更新滑塊位置
+    function updateSlider() {
+        const itemWidth = getItemWidth();
+        slider.style.transform = `translateX(-${currentIndex * itemWidth}%)`;
+    }
+    
+    // 下一個
+    function nextSlide() {
+        const maxIndex = getMaxIndex();
+        currentIndex = currentIndex >= maxIndex ? 0 : currentIndex + 1;
+        updateSlider();
+    }
+    
+    // 上一個
+    function prevSlide() {
+        const maxIndex = getMaxIndex();
+        currentIndex = currentIndex <= 0 ? maxIndex : currentIndex - 1;
+        updateSlider();
+    }
+    
+    // 綁定事件
+    nextButton.addEventListener('click', nextSlide);
+    prevButton.addEventListener('click', prevSlide);
+    
+    // 響應式調整
+    window.addEventListener('resize', updateSlider);
+    
+    // 初始化
+    updateSlider();
+});
+</script>

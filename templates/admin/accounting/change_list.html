@@ -1,0 +1,16 @@
+{% extends "admin/change_list.html" %}
+
+{% block content_title %}
+  {{ block.super }}
+  {% if summary %}
+    <div style="margin: 10px 0; padding: 10px; background: #f3f3f3; border-left: 4px solid #444;">
+      <strong>統計摘要：</strong><br>
+      收入合計：<strong>{{ summary.income|floatformat:0 }}</strong> 元<br>
+      支出合計：<strong>{{ summary.cost|floatformat:0 }}</strong> 元<br>
+      淨利潤：
+      <strong style="color: {% if summary.profit >= 0 %}green{% else %}red{% endif %};">
+        {{ summary.profit|floatformat:0 }} 元
+      </strong>
+    </div>
+  {% endif %}
+{% endblock %}

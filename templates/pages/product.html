@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}宏農·手工之家 - 每天現蒸，用心好味{% endblock %}
+{% block content %}
+<div class="bg-cream min-h-screen pb-10">
+    <!-- 頂部導航 -->
+    <nav class="bg-gradient-to-r from-primary to-primary-light text-white p-4 shadow-lg relative">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- 標誌和品牌名稱 -->
+            <div class="flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15.9A11.971 11.971 0 0112 20c-5.78 0-10.79-4.09-11.82-9.75C.19 9.55.05 8.53 0 7.5h5.25a4.5 4.5 0 018.25-2.96A4.5 4.5 0 0119 7.5h5c-.14 1.61-.49 3.16-1 4.5" />
+                </svg>
+                <h1 class="text-2xl font-bold">甜點小舖</h1>
+            </div>
+            
+            <!-- 購物車圖標 -->
+            <a href="{% url 'order' %}">
+              <div class="relative" >
+                <div class="bg-white bg-opacity-20 rounded-full p-2 hover:bg-opacity-30 transition-all duration-300 cursor-pointer transform hover:scale-105">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+                <span id="cart-count" class="absolute -top-2 -right-2 bg-secondary text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold shadow-md transform transition-transform duration-300 hover:scale-110">0</span>
+              </div>
+            </a>
+        </div>
+    </nav>
+
+    <!-- 歡迎訊息區塊 -->
+    <div class="container mx-auto px-4 pt-10 pb-6">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-primary">今日手工甜點</h2>
+            <p class="text-secondary-light mt-2">每一口都是幸福的滋味</p>
+            <div class="w-24 h-1 bg-secondary mx-auto mt-3"></div>
+        </div>
+    </div>
+
+    <!-- 產品類別選擇 - 精美樣式 -->
+    <div class="container mx-auto px-4 mb-8">
+        <div class="bg-cream-dark rounded-xl p-2 shadow-inner flex space-x-3 overflow-x-auto scrollbar-hide">
+            <a href="?" class="{% if not request.GET.category %}bg-primary{% else %}bg-secondary{% endif %} text-white px-6 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 transform hover:scale-105 shadow-md inline-block whitespace-nowrap">全部</a>
+            {% for category in categories %}
+                <a href="?category={{ category.name }}" class="{% if request.GET.category == category.name %}bg-primary{% else %}bg-secondary{% endif %} text-white px-6 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 transform hover:scale-105 shadow-md inline-block whitespace-nowrap">
+                    {{ category.name }}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- 產品列表 -->
+    <div class="container mx-auto px-4">
+        {% if products %}
+        <!-- 有產品時顯示網格列表 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="products-container">
+            {% for product in products %}
+            <div class="product-card bg-paper rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 transform" data-id="{{ product.id }}" data-type="{{ product.product_type }}">
+                <div class="relative">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-48 object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                    <div class="product-quantity absolute top-3 right-3 bg-primary text-white rounded-full w-7 h-7 flex items-center justify-center text-sm font-bold hidden shadow-lg border-2 border-white">0</div>
+                </div>
+                <div class="p-5">
+                    <h3 class="text-xl font-bold text-primary truncate">{{ product.name }}</h3>
+                    <p class="text-gray-600 text-sm mb-4 h-10 overflow-hidden">{{ product.description }}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-primary font-bold text-lg">NT${{ product.price }}</span>
+                        {% if product.stock <= 0 %}
+                        <button disabled class="bg-gray-300 text-white px-4 py-1.5 rounded-lg text-sm font-medium cursor-not-allowed">
+                            缺貨中
+                        </button>
+                        {% else %}
+                        <button class="add-to-cart bg-secondary hover:bg-secondary-light text-white px-4 py-1.5 rounded-lg text-sm font-medium">
+                            加入購物車
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="bg-paper rounded-xl shadow-md p-10 text-center my-8">
+            <div class="flex flex-col items-center">
+                <div class="bg-cream-dark rounded-full p-5 mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-primary mb-4">目前沒有產品</h3>
+                <p class="text-secondary-light mb-6 max-w-md">抱歉，目前在此類別中沒有可用的產品。請選擇其他類別或稍後再回來查看。</p>
+                
+                {% if request.GET.category %}
+                <a href="?" class="bg-primary hover:bg-primary-light text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 shadow-md inline-flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                    </svg>
+                    查看全部產品
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        <div class="text-center mt-10">
+            <a href="{% url 'order' %}">
+                <button id="cart-open-btn" class="bg-primary hover:bg-primary-light text-white px-8 py-3 rounded-full inline-flex items-center transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <span class="font-medium text-lg">查看購物車</span>
+                </button>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/utils.js' %}"></script>
+<script src="{% static 'js/cart.js' %}"></script>
+<script>
+updateCartDisplay();
+
+const sampleProducts = [
+    {% for product in products %}
+    {
+        id: {{ product.id }},
+        name: "{{ product.name }}",
+        price: {{ product.price }},
+        description: "{{ product.description }}",
+        image: "{{ product.image.url }}",
+        type: "{{ product.product_type }}"
+    },
+    {% endfor %}
+];
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', function() {
+            const productCard = this.closest('.product-card');
+            const productId = parseInt(productCard.dataset.id);
+            const product = sampleProducts.find(p => p.id === productId)
+            if (product.stock <= 0) {
+                showNotification(`${product.name} 缺貨中，無法加入購物車`);
+                return;
+            }
+            
+            if (product) {
+                const existingItemIndex = cart.findIndex(item => item.id === productId);
+                
+                if (existingItemIndex > -1) {
+                    cart[existingItemIndex].quantity += 1;
+                } else {
+                    cart.push({
+                        id: product.id,
+                        quantity: 1,
+                    });
+                }
+                
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartDisplay();
+                showNotification(`${product.name} 已加入購物車`);
+            }
+        });
+    });
+
+
+});
+
+// 更新購物車顯示
+function updateCartDisplay() {
+    const cartCountElement = document.getElementById('cart-count');
+    
+    // 更新購物車計數
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    cartCountElement.textContent = totalItems;
+    
+    // 更新產品卡片上的數量指示器
+    document.querySelectorAll('.product-card').forEach(card => {
+        const productId = parseInt(card.dataset.id);
+        const quantityElement = card.querySelector('.product-quantity');
+        const cartItem = cart.find(item => item.id === productId);
+        
+        if (cartItem && cartItem.quantity > 0) {
+            quantityElement.textContent = cartItem.quantity;
+            quantityElement.classList.remove('hidden');
+        } else {
+            quantityElement.classList.add('hidden');
+        }
+    });
+}
+
+
+</script>
+
+{% endblock %}
