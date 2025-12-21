@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}填寫訂購資料 - 宏農·手工之家{% endblock %}
+
+{% block content %}
+
+<div class="min-h-screen pb-32">
+
+    <div class="bg-[#f3e5dc] text-[#7b6a63] py-4 px-4 md:px-8 shadow-sm">
+        <div class="container mx-auto flex justify-center items-center">
+            <h1 class="text-xl md:text-2xl font-bold tracking-widest flex items-center">
+                <span class="mr-3 w-8 h-8 rounded-full border-2 border-[#7b6a63] flex items-center justify-center text-sm">✎</span>
+                填寫訂購資料
+            </h1>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 md:px-8 mt-8 max-w-8xl">
+        
+        <form id="checkout-form" class="space-y-8 md:space-y-12">
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                
+                <div class="flex flex-col gap-3">
+                    <label class="flex items-center text-[#7b6a63] font-bold text-lg">
+                        <span class="w-8 h-8 rounded-full bg-[#7b6a63] text-white flex items-center justify-center mr-2 text-sm font-sans">1</span>
+                        姓名
+                    </label>
+                    <input type="text" name="name" required placeholder="請輸入真實姓名" 
+                           class="w-full bg-white border-2 border-[#d4bcb0] px-4 py-3 text-[#7b6a63] placeholder-[#7b6a63]/50 focus:outline-none focus:border-[#A67052] transition-colors rounded-none">
+                </div>
+
+                <div class="flex flex-col gap-3">
+                    <label class="flex items-center text-[#7b6a63] font-bold text-lg">
+                        <span class="w-8 h-8 rounded-full bg-[#7b6a63] text-white flex items-center justify-center mr-2 text-sm font-sans">2</span>
+                        電話
+                    </label>
+                    <input type="tel" name="phone" required placeholder="請輸入手機號碼" 
+                           class="w-full bg-white border-2 border-[#d4bcb0] px-4 py-3 text-[#7b6a63] placeholder-[#7b6a63]/50 focus:outline-none focus:border-[#A67052] transition-colors rounded-none">
+                </div>
+
+                <div class="flex flex-col gap-3 relative">
+                    <label class="flex items-center text-[#7b6a63] font-bold text-lg">
+                        <span class="w-8 h-8 rounded-full bg-[#7b6a63] text-white flex items-center justify-center mr-2 text-sm font-sans">3</span>
+                        電子郵件
+                        <span class="ml-2 text-sm text-[#A67052] font-normal border border-[#A67052] px-2 py-0.5 transform scale-90 origin-left rounded-none">選填</span>
+                    </label>
+                    <input type="email" name="email" placeholder="example@email.com" 
+                           class="w-full bg-white border-2 border-[#d4bcb0] px-4 py-3 text-[#7b6a63] placeholder-[#7b6a63]/50 focus:outline-none focus:border-[#A67052] transition-colors rounded-none">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-start">
+                
+                <div class="space-y-4 md:h-full flex flex-col">
+                    <label class="flex items-center text-[#7b6a63] font-bold text-lg">
+                        <span class="w-8 h-8 rounded-full bg-[#7b6a63] text-white flex items-center justify-center mr-2 text-sm font-sans">4</span>
+                        運送方式
+                    </label>
+                    
+                    <div class="border-2 border-[#d4bcb0] bg-white p-5 relative shadow-sm rounded-none h-auto md:h-full flex flex-col">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-8 h-8 bg-[#009845] border-t-4 border-[#0060aa] flex items-center justify-center text-white text-[10px] font-bold overflow-hidden rounded-none flex-shrink-0">
+                                Family
+                            </div>
+                            <span class="text-[#7b6a63] font-bold text-lg tracking-wide">全家冷凍店到店</span>
+                        </div>
+                        
+                        <div class="text-[#A67052] text-sm font-medium mb-4 flex items-center">
+                            <span class="inline-block w-1.5 h-1.5 bg-[#A67052] mr-2 rounded-none"></span>
+                            滿 $1,800 免運費
+                        </div>
+
+                        <div class="mt-auto">
+                            <label class="block text-sm font-bold text-[#7b6a63] mb-2">請輸入取貨門市名稱：</label>
+                            <input type="text" name="store_name_input" required placeholder="例：溪湖金羊店" 
+                                   class="w-full bg-[#fffbf8] border-2 border-[#A67052] px-4 py-3 text-[#7b6a63] placeholder-[#7b6a63]/40 focus:outline-none focus:ring-2 focus:ring-[#A67052]/20 transition-all font-medium rounded-none">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <label class="flex items-center text-[#7b6a63] font-bold text-lg">
+                        <span class="w-8 h-8 rounded-full bg-[#7b6a63] text-white flex items-center justify-center mr-2 text-sm font-sans">5</span>
+                        付款方式
+                    </label>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <label class="payment-option cursor-pointer group relative">
+                            <input type="radio" name="payment_method" value="cod" class="hidden peer" checked>
+                            <div class="h-20 border-2 border-[#a67152] bg-white rounded-xl p-4 flex items-center justify-center text-[#7b6a63] font-bold text-lg tracking-wide transition-all duration-300 
+                                      hover:border-[#7b6a63]
+                                      peer-checked:bg-[#a67152] peer-checked:border-[#a67152] peer-checked:text-white peer-checked:shadow-md">
+                                貨到付款
+                            </div>
+                        </label>
+
+                        <label class="payment-option cursor-pointer group relative">
+                            <input type="radio" name="payment_method" value="linepay" class="hidden peer">
+                            <div class="h-20 border-2 border-[#a67152] bg-white rounded-xl p-4 flex items-center justify-center text-[#7b6a63] font-bold text-lg tracking-wide transition-all duration-300 
+                                      hover:border-[#7b6a63]
+                                      peer-checked:bg-[#a67152] peer-checked:border-[#a67152] peer-checked:text-white peer-checked:shadow-md">
+                                <span class="flex items-center gap-2">
+                                    Line Pay
+                                </span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="space-y-4 md:h-full">
+                    <label class="flex items-center text-[#7b6a63] font-bold text-lg">
+                        <span class="w-8 h-8 rounded-full bg-[#7b6a63] text-white flex items-center justify-center mr-2 text-sm font-sans">6</span>
+                        備註
+                        <span class="ml-2 text-sm text-[#A67052] font-normal border border-[#A67052] px-2 py-0.5 transform scale-90 origin-left rounded-none">選填</span>
+                    </label>
+
+                    <textarea name="note" rows="8" placeholder="有什麼想特別交代的嗎？" 
+                              class="w-full md:h-full min-h-[11rem] bg-white border-2 border-[#d4bcb0] p-4 text-[#7b6a63] placeholder-[#7b6a63]/50 focus:outline-none focus:border-[#A67052] transition-colors resize-none rounded-none"></textarea>
+                </div>
+            </div>
+
+            <div class="mt-16 text-center" style="margin-top: 150px;">
+                <button type="submit" id="submit-btn" class="inline-flex items-center gap-3 bg-[#7b6a63] hover:bg-[#6a5a53] text-white px-10 py-3 transition-all duration-300 shadow-md border-2 border-white outline outline-2 outline-[#7b6a63] hover:outline-[#6a5a53] group">
+                    <span class="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center text-white transition-colors">
+                        $
+                    </span>
+                    <span class="font-bold tracking-[0.2em] text-xl">完成付款</span>
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('checkout-form');
+    const submitBtn = document.getElementById('submit-btn');
+    
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        if (cart.length === 0) {
+            alert('購物車是空的，無法結帳');
+            window.location.href = "{% url 'product' %}";
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="animate-spin">⟳</span> 處理中...';
+        
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+        
+        const orderData = {
+            name: data.name,
+            phone: data.phone,
+            email: data.email,
+            address: data.store_name_input, 
+            store: data.store_name_input,
+            payment: data.payment_method,
+            note: data.note,
+            items: cart.map(item => ({
+                product_id: item.id,
+                quantity: item.quantity
+            }))
+        };
+
+        fetch(window.location.pathname, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify(orderData)
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                localStorage.removeItem('cart');
+                window.dispatchEvent(new Event('cartUpdated'));
+                window.location.href = result.redirect_url;
+            } else {
+                alert('訂單建立失敗：' + (result.error || '未知錯誤'));
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `
+                    <span class="w-8 h-8 rounded-full border-2 border-[#d4bcb0] flex items-center justify-center text-[#d4bcb0] group-hover:text-white group-hover:border-white transition-colors">$</span>
+                    <span class="font-bold tracking-[0.2em] text-xl">完成付款</span>
+                `;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('發生系統錯誤，請稍後再試');
+            submitBtn.disabled = false;
+        });
+    });
+});
+</script>
+
+{% endblock %}

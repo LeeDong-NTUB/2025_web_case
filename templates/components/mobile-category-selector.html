@@ -1,0 +1,31 @@
+<div class="py-2" style="padding-left: 10%; padding-right: 10%;">
+    <div class="bg-[#d4bcb0] border-4 border-white outline outline-2 outline-[#A67052] shadow-md overflow-hidden relative">
+        
+        <div class="flex items-center overflow-x-auto no-scrollbar px-6 py-3 gap-8">
+            
+            <a href="{% url 'product' %}" 
+               class="flex-shrink-0 font-bold tracking-widest text-lg transition-all duration-300 whitespace-nowrap
+                      {% if not request.GET.category %}
+                        text-[#a97659] border-b-2 border-[#a97659]
+                      {% else %}
+                        text-[#a97659]/70 border-b-2 border-transparent
+                      {% endif %}">
+               所有產品
+            </a>
+
+            {% for category in categories %}
+            <a href="?category={{ category.id }}" 
+               class="flex-shrink-0 font-bold tracking-widest text-lg transition-all duration-300 whitespace-nowrap
+                      {% if request.GET.category|stringformat:'s' == category.id|stringformat:'s' %}
+                        text-[#a97659] border-b-2 border-[#a97659]
+                      {% else %}
+                        text-[#a97659]/70 border-b-2 border-transparent
+                      {% endif %}">
+               {{ category.name }}
+            </a>
+            {% endfor %}
+            
+            <div class="w-2 flex-shrink-0"></div>
+        </div>
+    </div>
+</div>

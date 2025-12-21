@@ -20,3 +20,8 @@ python manage.py collectstatic      # 收集靜態資源
 python manage.py makemigrations     # 產生資料庫遷移檔
 python manage.py migrate            # 執行資料庫遷移
 python manage.py runserver          # 啟動本地開發伺服器（預設 http://127.0.0.1:8000/）
+
+## 正式機手動啟動
+cd /media/hungnung/DATA/2025_web_case-master
+source venv/bin/activate
+gunicorn --bind 127.0.0.1:8000 web_case_2025.wsgi:application

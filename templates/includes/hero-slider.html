@@ -1,0 +1,60 @@
+{% load static %}
+<section class="relative overflow-hidden" style="margin-bottom: 50px;">
+    <div class="relative w-full aspect-video md:aspect-[30/7]" id="slider-container">
+        <div class="relative w-full h-full overflow-hidden group">
+            {% for slide in slides %}
+            <div class="absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out hidden opacity-0" 
+                 data-slide-index="{{ forloop.counter0 }}">
+                <img src="{{ slide.image.url }}" alt="{{ slide.title }}" class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/20"></div>
+                
+                {% if slide.title or slide.sub_title or slide.link %}
+                <div class="absolute inset-0 flex items-center justify-center md:justify-start container mx-auto px-6 md:px-16 z-10">
+                    <div class="text-center md:text-left text-white max-w-3xl">
+                        <div class="p-8 md:p-12 rounded-lg inline-block">
+                            {% if slide.title %}
+                            <h2 class="text-3xl md:text-5xl lg:text-6xl font-serif font-bold mb-5 tracking-widest leading-snug text-[#fdf8f2]">
+                                {{ slide.title }}
+                            </h2>
+                            {% endif %}
+                            
+                            {% if slide.sub_title %}
+                            <div class="w-12 h-1 bg-[#d4bcb0] mb-6 mx-auto md:mx-0 rounded-full"></div>
+                            <p class="text-lg md:text-2xl font-light tracking-wider mb-8 text-[#f9f3e8]/90">
+                                {{ slide.sub_title }}
+                            </p>
+                            {% endif %}
+                            
+                            {% if slide.link %}
+                            <a href="{{ slide.link }}" class="inline-block border-2 border-[#d4bcb0] text-[#d4bcb0] hover:bg-[#d4bcb0] hover:text-[#552b1a] px-10 py-3 rounded-full transition-all duration-300 font-medium tracking-[0.2em] uppercase text-sm md:text-base">
+                                了解更多
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            
+            <button class="absolute left-2 md:left-8 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white p-2 md:p-3 rounded-full backdrop-blur-sm transition-all duration-300 z-20 focus:outline-none group-hover:scale-110" id="prev-button">
+                <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <button class="absolute right-2 md:right-8 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white p-2 md:p-3 rounded-full backdrop-blur-sm transition-all duration-300 z-20 focus:outline-none group-hover:scale-110" id="next-button">
+                <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </button>
+            
+            <div class="absolute bottom-6 left-0 right-0 flex justify-center gap-3 z-20" id="slider-dots">
+                {% for slide in slides %}
+                <button class="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full transition-all duration-300 border border-white bg-white/50 hover:bg-white" 
+                        data-dots-index="{{ forloop.counter0 }}"></button>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+<script src="{% static 'js/slider.js' %}"></script>

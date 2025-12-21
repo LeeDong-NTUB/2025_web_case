@@ -15,5 +15,6 @@ urlpatterns = [
     path('product/', views.product, name='product'),
     path('order/', views.order, name='order'),
     path('checkout/', views.checkout, name='checkout'),
-    path("order/success/", views.order_success, name="order_success")
+    path("order/success/", views.order_success, name="order_success"),
+    path('api/cart-details/', views.get_cart_details, name='api_cart_details'),
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

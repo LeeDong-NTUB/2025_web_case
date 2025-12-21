@@ -1,0 +1,104 @@
+{% load static %}
+<div id="product-modal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    
+    <div class="fixed inset-0 bg-[#7b6a63]/60 backdrop-blur-sm transition-opacity opacity-0 modal-backdrop" aria-hidden="true"></div>
+
+    <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+        <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+            
+            <div class="relative transform overflow-hidden rounded-2xl bg-[#ffffff] text-left shadow-2xl transition-all sm:my-8 w-full max-w-lg min-[1000px]:max-w-6xl opacity-0 scale-95 modal-panel border-[6px] border-[#d4bcb0]">
+                
+                <button type="button" class="absolute right-3 top-3 z-30 text-[#7b6a63]/60 hover:text-[#7b6a63] bg-white/80 hover:bg-white rounded-full p-1 transition-colors modal-close-btn shadow-sm">
+                    <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
+                <div class="grid grid-cols-1 min-[1000px]:grid-cols-2 gap-x-8 gap-y-4 p-6 min-[1000px]:p-10 max-h-[85vh] overflow-y-auto min-[1000px]:overflow-visible">
+                    
+                    <div class="order-1 min-[1000px]:col-start-1 min-[1000px]:row-start-1 w-full">
+                        <div class="relative w-full aspect-[4/3] min-[1000px]:aspect-square rounded-xl overflow-hidden bg-white shadow-inner">
+                            <img id="modal-img" src="" alt="Product Image" class="absolute inset-0 w-full h-full object-cover">
+                        </div>
+                    </div>
+
+                    <div class="order-2 min-[1000px]:col-start-1 min-[1000px]:row-start-2 w-full flex items-center justify-between mt-2 min-[1000px]:mt-0">
+                        <h3 id="modal-title" class="text-xl text-2xl font-bold text-[#a97659] font-serif tracking-wide inline-block pb-1">
+                            </h3>
+
+                        <div class="flex items-center gap-3">
+                            <button id="modal-decrease" class="w-8 h-8 min-[1000px]:w-10 min-[1000px]:h-10 rounded-full bg-[#f3e5dc] text-[#7b6a63] hover:bg-[#d4bcb0] hover:text-white flex items-center justify-center transition-colors shadow-sm font-bold text-xl min-[1000px]:text-2xl leading-none no-select">
+                                −
+                            </button>
+                            
+                            <div class="relative px-2">
+                                <span id="modal-qty" class="text-lg min-[1000px]:text-xl font-bold text-[#7b6a63] font-mono leading-none min-w-[1.2rem] min-[1000px]:min-w-[1.5rem] text-center inline-block">1</span>
+                                <div class="absolute bottom-[-4px] left-0 w-full h-[2px] bg-[#8c6a56]"></div>
+                            </div>
+                            
+                            <button id="modal-increase" class="w-8 h-8 min-[1000px]:w-10 min-[1000px]:h-10 rounded-full bg-[#f3e5dc] text-[#7b6a63] hover:bg-[#d4bcb0] hover:text-white flex items-center justify-center transition-colors shadow-sm font-bold text-xl min-[1000px]:text-2xl leading-none no-select">
+                                +
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="order-3 min-[1000px]:col-start-2 min-[1000px]:row-start-1 min-[1000px]:row-span-3 w-full h-40 min-[1000px]:h-full min-h-[150px] bg-white/50 rounded-xl p-4 flex flex-col">
+                        <h4 class="text-2xl font-bold text-[#7b6a63] mb-2 min-[1000px]:mb-4 flex items-center border-b border-[#d4bcb0]/30 pb-2">
+                            產品介紹
+                        </h4>
+                        <div class="overflow-y-auto custom-scrollbar flex-grow pr-2">
+                            <p id="modal-desc" class="text-[#7b6a63]/90 text-sm min-[1000px]:text-2xl leading-relaxed tracking-wide whitespace-pre-line">
+                                </p>
+                        </div>
+                    </div>
+
+                    <div class="order-4 min-[1000px]:col-start-1 min-[1000px]:row-start-3 w-full pt-4 min-[1000px]:pt-0 border-t min-[1000px]:border-t-0 border-[#d4bcb0]/30 mt-2 min-[1000px]:mt-0">
+                        <div class="flex flex-row items-center justify-between gap-2">
+                            <p id="modal-price" class="text-xl sm:text-2xl min-[1000px]:text-3xl font-bold text-[#a97659] font-mono tracking-wider flex-shrink-0">
+                                </p>
+
+                            <div class="flex items-center gap-2 min-[1000px]:gap-3">
+                                <button id="modal-cart-btn" class="group flex items-center gap-2 bg-[#d4bcb0] hover:bg-[#7b6a63] text-white px-4 min-[1000px]:px-6 py-2 min-[1000px]:py-2.5 transition-all duration-300 shadow-md border-2 border-white outline outline-2 outline-[#d4bcb0] hover:outline-[#7b6a63] active:scale-95">
+                                    <div class="bg-white rounded-full p-1 text-[#d4bcb0] group-hover:text-[#7b6a63] transition-colors">
+                                        <svg class="w-4 h-4 min-[1000px]:w-5 min-[1000px]:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                        </svg>
+                                    </div>
+                                    <span class="font-bold tracking-widest text-sm min-[1000px]:text-lg">加入購物車</span>
+                                </button>
+
+                                <button id="modal-delete-btn" class="w-10 h-10 min-[1000px]:w-12 min-[1000px]:h-12 flex-shrink-0 rounded-lg bg-[#e8a69b] hover:bg-[#d68578] text-white flex items-center justify-center shadow-md transition-all transform active:scale-95" title="從購物車移除">
+                                    <svg class="w-5 h-5 min-[1000px]:w-6 min-[1000px]:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: rgba(212, 188, 176, 0.1);
+        border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(140, 106, 86, 0.4);
+        border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(140, 106, 86, 0.6);
+    }
+    .no-select {
+        user-select: none;
+    }
+</style>
+<script src="{% static 'js/modal-interaction.js' %}"></script>

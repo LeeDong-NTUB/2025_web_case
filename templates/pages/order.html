@@ -1,346 +1,305 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}宏農·手工之家 - 每天現蒸，用心好味{% endblock %}
+{% block title %}我的購物車 - 宏農·手工之家{% endblock %}
 
 {% block content %}
-<div id="cart-page" class="bg-cream min-h-screen flex flex-col">
-    <nav class="bg-gradient-to-r from-primary to-primary-light text-white p-4 shadow-md relative">
-        <div class="container mx-auto flex items-center">
-            <a href="{% url 'product' %}" class="flex items-center">
-                <button class="text-white bg-white bg-opacity-20 rounded-full p-2 hover:bg-opacity-30 transition-all duration-300 mr-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                    </svg>
-                </button>
-            </a>
-            <h1 class="text-2xl font-bold flex items-center absolute right-0 mr-5">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
+
+<div class="min-h-screen pb-32">
+
+    <div class="bg-[#f3e5dc] text-[#7b6a63] py-4 px-4 md:px-8 shadow-sm">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-bold tracking-widest flex items-center">
                 我的購物車
             </h1>
-        </div>
-    </nav>
-
-    <div class="container mx-auto px-4 pt-8">
-        <div id="empty-cart-message" class="text-center py-16 text-gray-500" style="display: none;">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-300 mb-4" fill="none"
-                 viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-            <p class="text-xl">購物車是空的</p>
-            <p class="mt-2 text-gray-400">快去選購喜愛的甜點吧！</p>
+            <div class="text-sm md:text-base font-medium tracking-wide">
+                合計共 <span id="header-total-count" class="font-bold text-[#A67052]">0</span> 份產品
+            </div>
         </div>
     </div>
 
-    <div class="container mx-auto px-4 py-4 grow overflow-auto">
-        <div id="cart-items-container"></div>
-    </div>
+    <div class="container mx-auto px-4 md:px-8 mt-4 md:mt-8 max-w-[1600px]">
 
-    <div class="bg-white p-6 border-t border-gray-200 flex-none shadow-lg">
-        <div class="container mx-auto">
-            <div class="flex flex-col md:flex-row items-center justify-between">
-                <h3 class="font-bold text-primary text-xl">訂單摘要</h3>
-                <div class="flex justify-between text-primary w-full max-w-xs py-3">
-                    <span class="text-lg">小計</span>
-                    <span id="cart-subtotal" class="font-bold text-xl">NT$0</span>
-                </div>
-            </div>
-            <div class="flex justify-between text-primary w-full max-w-xs ml-auto py-2">
-                <span class="text-lg">運費</span>
-                <span id="cart-shipping" class="font-bold text-xl">NT$0</span>
-            </div>
-            <div id="free-shipping-notice" class="text-sm text-green-600 text-right mb-2" style="display: none;">
-                已達免運門檻！
-            </div>
-            <div id="shipping-progress" class="text-sm text-gray-600 text-right mb-2" style="display: none;">
-                再消費 <span id="remaining-amount" class="font-bold text-primary"></span> 即可免運
-            </div>
-            <div class="w-full mb-4 h-0.5 bg-cream-dark"></div>
-            <div class="flex justify-between text-primary w-full max-w-xs ml-auto py-2 text-xl font-bold">
-                <span>總計</span>
-                <span id="cart-total">NT$0</span>
-            </div>
-            <button id="checkout-btn-page"
-                    class="w-full bg-secondary hover:bg-secondary-light text-white py-3 rounded-lg font-medium text-lg transition-all duration-300 transform hover:scale-101 flex items-center justify-center mt-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
-                     stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                進行結帳
-            </button>
+        <div id="loading-skeleton" class="animate-pulse grid grid-cols-1 2xl:grid-cols-3 gap-8">
+            <div class="h-64 bg-gray-200 rounded-xl"></div>
+            <div class="h-64 bg-gray-200 rounded-xl"></div>
+            <div class="h-64 bg-gray-200 rounded-xl"></div>
         </div>
-    </div>
 
-    <div id="checkout-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
-        <div class="bg-paper p-8 rounded-xl shadow-2xl w-full max-w-md transform transition-all duration-300 scale-100">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-primary">結帳資訊</h2>
-                <button id="cancel-checkout" class="text-gray-400 hover:text-primary transition-colors duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
+        <div id="cart-content-section" class="hidden">
+            
+            <div id="cart-items-container" class="grid grid-cols-1 2xl:grid-cols-3 gap-x-8 gap-y-12 mb-8 border-b-2 border-[#A67052] pb-12">
             </div>
-            <form id="checkout-form" class="space-y-5">
+
+            <div class="w-full mt-8 py-8">
+                
                 <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">姓名</label>
-                    <input type="text" id="name" name="name" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg">
-                </div>
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">電子郵件</label>
-                    <input type="email" id="email" name="email" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg">
-                </div>
-                <div>
-                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">電話號碼</label>
-                    <input type="tel" id="phone" name="phone" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg">
-                </div>
-                <!-- <div>
-                    <label for="address" class="block text-sm font-medium text-gray-700 mb-1">配送地址</label>
-                    <input type="text" id="address" name="address" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg">
-                </div> -->
-                <div>
-                    <label for="store" class="block text-sm font-medium text-gray-700 mb-1">取貨全家門市</label>
-                    <input placeholder="填寫方便取貨的全家門市；例：溪湖金羊店" type="text" id="store" name="store" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-3">付款方式</label>
-                    <div class="space-y-3">
-                        <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors duration-200 has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50">
-                            <input type="radio" name="payment" value="cod" required 
-                                class="w-4 h-4 text-blue-600 focus:ring-blue-500 focus:ring-2">
-                            <div class="ml-3 flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                                </svg>
-                                <span class="font-medium text-gray-800">貨到付款</span>
-                            </div>
-                        </label>
+                    
+                    <div class="space-y-4 text-[#A67052] tracking-wide text-2xl">
+                        <div class="flex justify-between items-center">
+                            <span>小計</span>
+                            <span class="font-medium text-xl" id="summary-subtotal">NT$0</span>
+                        </div>
+                        <div class="flex justify-between items-center text-base opacity-90">
+                            <span>營業稅(已含在產品內)</span>
+                            <span id="summary-tax">NT$0</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span>運費</span>
+                            <span class="font-medium text-xl" id="summary-shipping">NT$0</span>
+                        </div>
+                        <br>
+                        <div id="discount-row" class="flex justify-between items-center text-[#A67052]">
+                            <span class="font-bold">折扣</span>
+                            <span class="font-medium text-xl" id="summary-discount">- NT$0</span>
+                        </div>
+                    </div>
+
+                    <div class="border-t-2 border-[#A67052] my-6"></div>
+
+                    <div class="flex justify-between items-end">
+                        <span class="text-2xl font-bold text-[#A67052] tracking-widest">
+                            總金額
+                        </span>
+                        <span class="text-3xl font-bold text-[#A67052] tracking-wider" id="summary-total">
+                            NT$0
+                        </span>
                     </div>
                 </div>
-                <div class="pt-4">
-                    <button type="submit" class="w-full bg-primary hover:bg-primary-light text-white py-3 rounded-lg font-medium text-lg">
-                        確認訂單
-                    </button>
+
+                <div class="border-t-2 border-[#A67052] mt-6 mb-12"></div>
+
+                <div class="text-center">
+                    <a href="{% url 'checkout' %}" class="inline-flex items-center gap-3 bg-[#7b6a63] hover:bg-[#6a5a53] text-white px-10 py-3 transition-all duration-300 shadow-md border-2 border-white outline outline-2 outline-[#7b6a63] hover:outline-[#6a5a53] group">
+                        <span class="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center text-white transition-colors">
+                            $
+                        </span>
+                        <span class="font-bold tracking-[0.2em] text-xl">前往付款</span>
+                    </a>
                 </div>
-            </form>
+            </div>
         </div>
+
+        <div id="empty-cart-section" class="bg-white rounded-2xl shadow-sm border border-[#d4bcb0]/30 p-16 text-center hidden">
+            <svg class="w-24 h-24 mx-auto text-[#d4bcb0] mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+            <h2 class="text-2xl font-bold text-[#7b6a63] mb-4">您的購物車是空的</h2>
+            <p class="text-[#7b6a63]/80 mb-8">快去挑選一些美味的手工食品吧！</p>
+            <a href="{% url 'product' %}" class="inline-block bg-[#d4bcb0] hover:bg-[#A67052] text-white font-bold py-3 px-8 rounded-full transition-colors shadow-md">
+                繼續購物
+            </a>
+        </div>
+
     </div>
 </div>
 
-<script src="{% static 'js/utils.js' %}"></script>
-<script src="{% static 'js/cart.js' %}"></script>
+<script src="{% static 'js/cart-interaction.js' %}"></script>
+
 <script>
-const SHIPPING_FEE = 120;
-const FREE_SHIPPING_THRESHOLD = 1800;
-
-const products = {
-    {% for product in products %}
-        '{{ product.id }}': {
-            'name': '{{ product.name }}',
-            'price': {{ product.price }},
-            'image': '{{ product.image.url }}'
-        },
-    {% endfor %}
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('checkout-btn-page').addEventListener('click', function () {
-        if (cart.length > 0) {
-            document.getElementById('checkout-modal').classList.remove('hidden');
-        } else {
-            showNotification('購物車是空的，請先添加商品');
-        }
-    });
-
-    document.getElementById('cancel-checkout').addEventListener('click', function () {
-        document.getElementById('checkout-modal').classList.add('hidden');
-    });
-
-    document.getElementById('checkout-form').addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        const name = document.getElementById('name').value.trim();
-        const store = document.getElementById('store').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        const email = document.getElementById('email').value.trim();
-        //const address = document.getElementById('address').value.trim();
-        const payment = document.querySelector('input[name="payment"]:checked')?.value;
-
-        if (!name || !phone || !email || !payment) {
-            showNotification('請完整填寫所有結帳資訊');
-            return;
-        }
-
-        const itemsForBackend = cart.map(item => ({
-            product_id: item.id,
-            quantity: item.quantity
-        }));
-
-        const orderData = {
-            name,
-            phone,
-            email,
-            store,
-            payment,
-            items: itemsForBackend
-        };
-
-        fetch('/checkout/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            body: JSON.stringify(orderData)
-        })
-        .then(response => response.json().then(data => ({ status: response.status, data })))
-        .then(({ status, data }) => {
-            if (status === 200 && data.success) {
-                localStorage.removeItem('cart');
-                window.location.href = data.redirect_url;
-            } else {
-                if (data.errors || data.formset_errors) {
-                    let messages = [];
-                    for (let field in data.errors) {
-                        messages.push(`${field}: ${data.errors[field].join(', ')}`);
-                    }
-                    if (Array.isArray(data.formset_errors)) {
-                        data.formset_errors.forEach((formError, index) => {
-                            if (Object.keys(formError).length > 0) {
-                                messages.push(`商品第 ${index + 1} 筆錯誤：`);
-                                for (let f in formError) {
-                                    messages.push(`- ${f}: ${formError[f].join(', ')}`);
-                                }
-                            }
-                        });
-                    }
-                    showNotification(messages.join('<br>'), true);
-                } else {
-                    showNotification(data.error || '訂單提交失敗', true);
-                }
-            }
-        })
-        .catch(error => {
-            console.error('訂單提交錯誤:', error);
-            showNotification('訂單提交失敗，請稍後再試');
-        });
-    });
-
-    renderCartPage();
+document.addEventListener('DOMContentLoaded', function() {
+    fetchCartDetails();
+    window.addEventListener('storage', fetchCartDetails);
 });
 
-function renderCartPage() {
-    const cartItemsContainer = document.getElementById('cart-items-container');
-    const emptyCartMessage = document.getElementById('empty-cart-message');
-    const cartSubtotal = document.getElementById('cart-subtotal');
-    const cartShipping = document.getElementById('cart-shipping');
-    const cartTotal = document.getElementById('cart-total');
-    const freeShippingNotice = document.getElementById('free-shipping-notice');
-    const shippingProgress = document.getElementById('shipping-progress');
-    const remainingAmount = document.getElementById('remaining-amount');
-    
-    cartItemsContainer.innerHTML = '';
-    emptyCartMessage.style.display = cart.length === 0 ? 'block' : 'none';
-    
-    const subtotal = cart.reduce((sum, item) => sum + (products[item.id].price * item.quantity), 0);
-    const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
-    const total = subtotal + shipping;
-    
-    cartSubtotal.textContent = `NT$${subtotal}`;
-    cartShipping.textContent = shipping === 0 ? '免運' : `NT$${shipping}`;
-    cartTotal.textContent = `NT$${total}`;
-    
-    if (subtotal >= FREE_SHIPPING_THRESHOLD) {
-        freeShippingNotice.style.display = 'block';
-        shippingProgress.style.display = 'none';
-    } else if (subtotal > 0) {
-        freeShippingNotice.style.display = 'none';
-        shippingProgress.style.display = 'block';
-        remainingAmount.textContent = `NT$${FREE_SHIPPING_THRESHOLD - subtotal}`;
-    } else {
-        freeShippingNotice.style.display = 'none';
-        shippingProgress.style.display = 'none';
+let currentCartData = [];
+
+function fetchCartDetails() {
+    const localCart = JSON.parse(localStorage.getItem('cart')) || [];
+    const loading = document.getElementById('loading-skeleton');
+    const content = document.getElementById('cart-content-section');
+    const empty = document.getElementById('empty-cart-section');
+
+    if (localCart.length === 0) {
+        loading.classList.add('hidden');
+        content.classList.add('hidden');
+        empty.classList.remove('hidden');
+        updateHeaderCount(0);
+        return;
     }
 
-    cart.forEach(item => {
-        const cartItemElement = document.createElement('div');
-        cartItemElement.className = 'bg-white mb-4 rounded-xl overflow-hidden max-w-3xl mx-auto shadow-md transform transition-all duration-300 hover:shadow-lg';
-        const product = products[item.id];
-        cartItemElement.innerHTML = `
-            <div class="flex flex-col md:flex-row overflow-hidden">
-                <div class="w-full md:w-1/4 p-4 flex justify-center items-center bg-cream-dark bg-opacity-20">
-                    <img src="${product.image}" alt="${product.name}" class="w-24 h-24 object-cover rounded-lg shadow-md">
-                </div>
-                <div class="w-full md:w-3/4 p-4 md:pl-4">
-                    <div class="flex justify-between items-start mb-3">
-                        <h2 class="text-xl font-bold text-primary">${product.name}</h2>
-                        <span class="text-primary font-bold">NT$${product.price}</span>
+    const ids = localCart.map(item => item.id);
+
+    fetch("{% url 'api_cart_details' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ ids: ids })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.products) {
+            currentCartData = data.products.map(product => {
+                const localItem = localCart.find(i => i.id === product.id);
+                return {
+                    ...product,
+                    quantity: localItem ? localItem.quantity : 1
+                };
+            });
+            renderCartUI();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    })
+    .finally(() => {
+        loading.classList.add('hidden');
+        if (currentCartData.length > 0) {
+            content.classList.remove('hidden');
+            empty.classList.add('hidden');
+        } else {
+            content.classList.add('hidden');
+            empty.classList.remove('hidden');
+            updateHeaderCount(0);
+        }
+    });
+}
+
+function renderCartUI() {
+    const container = document.getElementById('cart-items-container');
+    container.innerHTML = '';
+    
+    let subtotal = 0;
+    let totalItems = 0;
+
+    currentCartData.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+        totalItems += item.quantity;
+
+        const imgSrc = item.image_url || "https://via.placeholder.com/150?text=No+Image";
+
+        let html = `
+        <div class="flex flex-row gap-4 md:gap-6 pb-6 relative">
+            
+            <div class="relative w-24 h-24 md:w-32 md:h-32 flex-shrink-0 bg-[#f3e5dc] rounded-xl overflow-hidden border border-[#d4bcb0]/50">
+                <img src="${imgSrc}" alt="${item.name}" class="w-full h-full object-cover">
+            </div>
+
+            <div class="flex flex-col flex-grow justify-between py-1">
+                
+                <div class="flex justify-between items-start">
+                    <div class="space-y-1 pr-8">
+                        <h3 class="text-xl md:text-2xl font-bold text-[#A67052] tracking-wide leading-tight">
+                            ${item.name}
+                        </h3>
+                        <div class="text-[#A67052] text-base md:text-lg">
+                            NT$${Number(item.price).toLocaleString()}
+                        </div>
                     </div>
-                    <div class="flex flex-wrap justify-between items-center mt-4">
-                        <div class="flex items-center space-x-1 bg-cream-dark bg-opacity-30 rounded-lg overflow-hidden">
-                            <button class="cart-decrease text-primary w-10 h-10 flex items-center justify-center hover:bg-cream-dark" data-id="${item.id}">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                                </svg>
-                            </button>
-                            <span class="w-10 h-10 flex items-center justify-center text-primary font-medium">${item.quantity}</span>
-                            <button class="cart-increase text-primary w-10 h-10 flex items-center justify-center hover:bg-cream-dark" data-id="${item.id}">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="flex items-center mt-3 md:mt-0">
-                            <div class="text-primary font-medium mr-4">小計: <span class="font-bold">NT$${product.price * item.quantity}</span></div>
-                            <button class="cart-remove flex items-center text-red-500 hover:text-red-700" data-id="${item.id}">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                                移除
-                            </button>
-                        </div>
+                    
+                    <button type="button" onclick="removeItem(${item.id})" class="absolute top-0 right-0 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="flex justify-between items-end">
+                    
+                    <div class="flex items-center gap-3 select-none">
+                        <button onclick="updateQuantity(${item.id}, -1)" class="w-6 h-6 rounded-full bg-[#f3e5dc] text-[#7b6a63] flex items-center justify-center hover:bg-[#d4bcb0] hover:text-white transition-colors">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"/>
+                            </svg>
+                        </button>
+                        
+                        <span class="font-bold text-[#7b6a63] text-base md:text-lg border-b-2 border-[#7b6a63] px-2 min-w-[1.5rem] text-center">
+                            ${item.quantity}
+                        </span>
+
+                        <button onclick="updateQuantity(${item.id}, 1)" class="w-6 h-6 rounded-full bg-[#f3e5dc] text-[#7b6a63] flex items-center justify-center hover:bg-[#d4bcb0] hover:text-white transition-colors">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div class="text-[#A67052] font-bold text-xl md:text-2xl">
+                        NT$${itemTotal.toLocaleString()}
                     </div>
                 </div>
             </div>
+        </div>
         `;
-        cartItemsContainer.appendChild(cartItemElement);
+
+        if ((index + 1) % 3 === 0 && index !== currentCartData.length - 1) {
+            html += `
+                <div class="hidden 2xl:block col-span-3 w-full h-px border-b-2 border-[#A67052] my-2"></div>
+            `;
+        }
+
+        container.insertAdjacentHTML('beforeend', html);
     });
 
-    document.querySelectorAll('.cart-increase').forEach(button => {
-        button.addEventListener('click', function () {
-            increaseQuantity(parseInt(this.dataset.id));
-            showNotification('已增加 1 件商品');
-            renderCartPage();
-        });
-    });
-
-    document.querySelectorAll('.cart-decrease').forEach(button => {
-        button.addEventListener('click', function () {
-            decreaseQuantity(parseInt(this.dataset.id));
-            showNotification('已減少 1 件商品');
-            renderCartPage();
-        });
-    });
-
-    document.querySelectorAll('.cart-remove').forEach(button => {
-        button.addEventListener('click', function () {
-            removeItem(parseInt(this.dataset.id));
-            showNotification('已從購物車移除該商品');
-            renderCartPage();
-        });
-    });
+    updateSummary(subtotal);
+    updateHeaderCount(totalItems);
 }
 
-function removeItem(productId) {
-    const idx = cart.findIndex(item => item.id === productId);
-    if (idx > -1) {
-        cart.splice(idx, 1);
-        localStorage.setItem('cart', JSON.stringify(cart));
+function updateHeaderCount(count) {
+    const headerCount = document.getElementById('header-total-count');
+    if (headerCount) headerCount.textContent = count;
+}
+
+function updateQuantity(id, change) {
+    const product = currentCartData.find(p => p.id === id);
+    if (product) {
+        product.quantity += change;
+        if (product.quantity < 1) product.quantity = 1;
+    }
+
+    const localCart = JSON.parse(localStorage.getItem('cart')) || [];
+    const itemIndex = localCart.findIndex(item => item.id === id);
+    if (itemIndex > -1) {
+        localCart[itemIndex].quantity += change;
+        if (localCart[itemIndex].quantity < 1) localCart[itemIndex].quantity = 1;
+        localStorage.setItem('cart', JSON.stringify(localCart));
+    }
+    
+    window.dispatchEvent(new Event('cartUpdated'));
+    renderCartUI();
+}
+
+function removeItem(id) {
+    currentCartData = currentCartData.filter(p => p.id !== id);
+    let localCart = JSON.parse(localStorage.getItem('cart')) || [];
+    localCart = localCart.filter(item => item.id !== id);
+    localStorage.setItem('cart', JSON.stringify(localCart));
+    
+    window.dispatchEvent(new Event('cartUpdated'));
+
+    if (currentCartData.length === 0) {
+        document.getElementById('cart-content-section').classList.add('hidden');
+        document.getElementById('empty-cart-section').classList.remove('hidden');
+        updateHeaderCount(0);
+    } else {
+        renderCartUI();
     }
 }
+
+function updateSummary(subtotal) {
+    const shipping = subtotal >= 1800 ? 0 : 120; 
+    const tax = Math.round(subtotal * 0.05); 
+    const total = subtotal + shipping;
+
+    document.getElementById('summary-subtotal').textContent = `NT$${subtotal.toLocaleString()}`;
+    document.getElementById('summary-tax').textContent = `NT$${tax.toLocaleString()}`;
+    document.getElementById('summary-shipping').textContent = `NT$${shipping.toLocaleString()}`;
+    document.getElementById('summary-total').textContent = `NT$${total.toLocaleString()}`;
+}
 </script>
+
+<style>
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+        -webkit-appearance: none; 
+        margin: 0; 
+    }
+    input[type=number] {
+        -moz-appearance:textfield;
+    }
+</style>
+
 {% endblock %}
