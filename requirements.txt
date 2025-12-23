@@ -6,4 +6,5 @@ django-cors-headers
 python-dotenv
 mysqlclient
 Pillow
+requests
 git+https://github.com/assem-ch/django-jet-reboot

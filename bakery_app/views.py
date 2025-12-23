@@ -1,3 +1,6 @@
+import base64
+import hashlib
+import hmac
 import json
 from django.shortcuts import get_object_or_404, redirect, render
 from django.http import JsonResponse
@@ -235,3 +238,62 @@ def get_cart_details(request):
             return JsonResponse({'error': str(e)}, status=400)
             
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+from web_case_2025 import settings
+import requests
+from django.views.decorators.csrf import csrf_exempt
+import time
+
+def generate_linepay_signature(channel_secret, uri, body_str, nonce):
+    signature_raw = channel_secret + uri + body_str + nonce
+    signature = base64.b64encode(
+        hmac.new(channel_secret.encode('utf-8'), signature_raw.encode('utf-8'), hashlib.sha256).digest()
+    ).decode('utf-8')
+    return signature
+
+
+@csrf_exempt
+def linepay_confirm(request):
+    order_id = request.GET.get("order_id")
+    transaction_id = request.GET.get("transactionId")
+
+    if not order_id or not transaction_id:
+        return JsonResponse({"success": False, "error": "缺少必要參數"}, status=400)
+
+    try:
+        order = Order.objects.get(id=order_id)
+    except Order.DoesNotExist:
+        return JsonResponse({"success": False, "error": "訂單不存在"}, status=404)
+
+    # 準備請求資料
+    uri_path = f"/v3/payments/{transaction_id}/confirm"
+    nonce = str(int(time.time() * 1000))
+    body = {
+        "amount": int(order.total_price),
+        "currency": "TWD"
+    }
+    body_str = json.dumps(body, separators=(',', ':'), ensure_ascii=False)
+    signature = generate_linepay_signature(
+        settings.LINE_PAY['channel_secret'], uri_path, body_str, nonce
+    )
+
+    headers = {
+        "Content-Type": "application/json; charset=UTF-8",
+        "X-LINE-ChannelId": settings.LINE_PAY["channel_id"],
+        "X-LINE-Authorization-Nonce": nonce,
+        "X-LINE-Authorization": signature
+    }
+
+    confirm_url = f"{settings.LINE_PAY['api_base']}{uri_path}"
+    res = requests.post(confirm_url, headers=headers, data=body_str.encode("utf-8"))
+    res_data = res.json()
+
+    if res.status_code == 200 and res_data.get("returnCode") == "0000":
+        order.paid_at = now()
+        order.save()
+        return render(request, "pages/payment_success.html", {"order": order})
+    else:
+        return render(request, "pages/payment_failed.html", {
+            "order": order,
+            "error": res_data.get("returnMessage", "付款確認失敗")
+        })

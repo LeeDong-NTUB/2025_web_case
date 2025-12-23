@@ -17,4 +17,6 @@ urlpatterns = [
     path('checkout/', views.checkout, name='checkout'),
     path("order/success/", views.order_success, name="order_success"),
     path('api/cart-details/', views.get_cart_details, name='api_cart_details'),
+    path("linepay/confirm/", views.linepay_confirm, name="linepay_confirm"),
+    path("order/success/", views.order_success, name="order_success")
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

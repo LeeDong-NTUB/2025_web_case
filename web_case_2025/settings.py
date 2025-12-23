@@ -28,7 +28,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "fallback-secret")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1","localhost", "honhnonh.com", "www.honhnonh.com", "192.168.105.63", "59.126.244.193"]
+ALLOWED_HOSTS = ["127.0.0.1","localhost", "honhnonh.com", "www.honhnonh.com", "192.168.105.63", "59.126.244.193", "49.159.20.196"]
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
@@ -153,3 +153,20 @@ EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True") == "True"
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER)
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://shop.shiding-jishun.org',
+    'https://www.shop.shiding-jishun.org',
+]
+
+
+LINE_PAY = {
+    "channel_id": "2007602223",
+    "channel_secret": "23871de159dfac80e071988aa1bf9cf4",
+    "merchant_id": "23871de159dfac80e071988aa1bf9cf4",
+    "api_base": "https://sandbox-api-pay.line.me",
+    "confirm_url": "https://shop.shiding-jishun.org/linepay/confirm/",
+    "cancel_url": "https://shop.shiding-jishun.org/linepay/cancel/"
+}

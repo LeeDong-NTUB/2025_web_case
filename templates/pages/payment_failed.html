@@ -1,0 +1,20 @@
+@@ -0,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}付款失敗 - 宏農·手工之家{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-red-50 flex flex-col justify-center items-center py-16 px-4">
+    <div class="bg-white shadow-xl rounded-xl p-8 max-w-lg w-full text-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-red-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+        <h1 class="text-2xl font-bold text-red-600 mb-2">付款失敗</h1>
+        <p class="text-gray-700 text-lg mb-4">很抱歉，您的付款未能成功。</p>
+        {% if error %}
+            <p class="text-sm text-gray-500 mb-4">原因：{{ error }}</p>
+        {% endif %}
+        <a href="{% url 'order' %}" class="inline-block bg-secondary hover:bg-secondary-light text-white font-medium py-2 px-4 rounded transition">返回訂購頁</a>
+    </div>
+</div>
+{% endblock %}
