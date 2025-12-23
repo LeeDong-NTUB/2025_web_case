@@ -1,93 +1,89 @@
 {% load static %}
 <header class="bg-[#d4bcb0] text-secondary shadow-md sticky top-0 z-50">
-    <div class="container mx-auto px-4 md:px-8">
-        <div class="flex justify-between items-center h-16">
-            <a href="{% url 'home' %}" class="flex items-center group">
-                <div class="w-10 h-10 mr-2 relative overflow-hidden rounded-full border border-secondary/30 bg-white">
-                     <svg class="w-full h-full text-[#7b6a63] p-1" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2L2 7l10 5 10-5-10-5zm0 9l2.5-1.25L12 8.5l-2.5 1.25L12 11zm0 2.5l-5-2.5-5 2.5L12 22l10-8.5-5-2.5-5 2.5z"/>
-                    </svg>
-                </div>
-                <div class="flex flex-col">
-                    <span class="text-xl font-serif font-bold text-[#7b6a63] tracking-wide group-hover:text-primary transition-colors">宏農·手工之家</span>
-                </div>
-            </a>
-            
-            <div class="flex items-center gap-4">
-                <nav class="hidden md:flex items-center space-x-6 mr-4">
-                    <a href="{% url 'home' %}" class="text-[#7b6a63] font-medium hover:text-primary relative group border-b-2 border-transparent hover:border-[#7b6a63] transition-all duration-300 py-1">首頁</a>
-                    <a href="{% url 'latest-news-list' %}" class="text-[#7b6a63] font-medium hover:text-primary relative group border-b-2 border-transparent hover:border-[#7b6a63] transition-all duration-300 py-1">最新消息</a>
-                    <a href="{% url 'product' %}" class="text-[#7b6a63] font-medium hover:text-primary relative group border-b-2 border-transparent hover:border-[#7b6a63] transition-all duration-300 py-1">產品系列</a>
-                    <a href="{% url 'about'%}" class="text-[#7b6a63] font-medium hover:text-primary relative group border-b-2 border-transparent hover:border-[#7b6a63] transition-all duration-300 py-1">關於我們</a>
-                </nav>
-                
-                <a href="{% url 'order'%}" class="relative group flex-shrink-0">
-                    <div id="cart-icon-container" class="bg-[#fdf8f2] text-[#7b6a63] rounded-full p-2 hover:bg-white transition-all duration-300 cursor-pointer shadow-sm group-hover:shadow-md border border-[#7b6a63]/20">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
-                    </div>
-                    <span id="cart-count" class="absolute -bottom-1 -right-1 bg-[#7b6a63] text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-md border-2 border-[#d4bcb0] transform group-hover:scale-110 transition-transform hidden">0</span>
-                </a>
-                
-                <button type="button" class="md:hidden text-[#7b6a63] hover:text-primary focus:outline-none p-1" id="mobile-menu-button">
-                    <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
+  <div class="container mx-auto px-4 md:px-8">
+            <div class="flex justify-between items-center py-4">
+        <a href="{% url 'home' %}" class="flex items-center group">
+            <div class="w-20 h-20 mr-4 relative overflow-hidden rounded-xl bg-white">
+            <img src="{% static 'images/logo.png' %}" 
+                alt="宏農·手工之家 Logo" 
+                class="w-full h-full object-cover">
             </div>
-        </div>
+      </a>
+      <div class="flex items-center gap-4">
+        <nav class="hidden md:flex items-center space-x-6 mr-4">
+          <a href="{% url 'home' %}" class="text-[#7b6a63] font-medium hover:text-primary relative group border-b-2 border-transparent hover:border-[#7b6a63] transition-all duration-300 py-1">首頁</a>
+          <a href="{% url 'latest-news-list' %}" class="text-[#7b6a63] font-medium hover:text-primary relative group border-b-2 border-transparent hover:border-[#7b6a63] transition-all duration-300 py-1">最新消息</a>
+          <a href="{% url 'product' %}" class="text-[#7b6a63] font-medium hover:text-primary relative group border-b-2 border-transparent hover:border-[#7b6a63] transition-all duration-300 py-1">產品系列</a>
+          <a href="{% url 'about'%}" class="text-[#7b6a63] font-medium hover:text-primary relative group border-b-2 border-transparent hover:border-[#7b6a63] transition-all duration-300 py-1">關於我們</a>
+        </nav>
         
-        <div class="hidden md:hidden border-t border-[#7b6a63]/20 bg-[#fdf8f2] absolute left-0 w-full shadow-lg" id="mobile-menu">
-            <div class="flex flex-col py-2">
-                <a href="{% url 'home' %}" class="px-6 py-3 text-[#7b6a63] font-medium hover:bg-[#d4bcb0]/30 transition-colors border-l-4 border-transparent hover:border-[#7b6a63]">首頁</a>
-                <a href="{% url 'latest-news-list' %}" class="px-6 py-3 text-[#7b6a63] font-medium hover:bg-[#d4bcb0]/30 transition-colors border-l-4 border-transparent hover:border-[#7b6a63]">最新消息</a>
-                <a href="{% url 'product' %}" class="px-6 py-3 text-[#7b6a63] font-medium hover:bg-[#d4bcb0]/30 transition-colors border-l-4 border-transparent hover:border-[#7b6a63]">產品系列</a>
-                <a href="{% url 'about'%}" class="px-6 py-3 text-[#7b6a63] font-medium hover:bg-[#d4bcb0]/30 transition-colors border-l-4 border-transparent hover:border-[#7b6a63]">關於我們</a>
-            </div>
-        </div>
+        <a href="{% url 'order'%}" class="relative group flex-shrink-0">
+          <div id="cart-icon-container" class="bg-[#fdf8f2] text-[#7b6a63] rounded-full p-2 hover:bg-white transition-all duration-300 cursor-pointer shadow-sm group-hover:shadow-md border border-[#7b6a63]/20">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+          </div>
+          <span id="cart-count" class="absolute -bottom-1 -right-1 bg-[#7b6a63] text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-md border-2 border-[#d4bcb0] transform group-hover:scale-110 transition-transform hidden">0</span>
+        </a>
+        
+        <button type="button" class="md:hidden text-[#7b6a63] hover:text-primary focus:outline-none p-1" id="mobile-menu-button">
+          <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
     </div>
+    
+    <div class="hidden md:hidden border-t border-[#7b6a63]/20 bg-[#fdf8f2] absolute left-0 w-full shadow-lg" id="mobile-menu">
+      <div class="flex flex-col py-2">
+        <a href="{% url 'home' %}" class="px-6 py-3 text-[#7b6a63] font-medium hover:bg-[#d4bcb0]/30 transition-colors border-l-4 border-transparent hover:border-[#7b6a63]">首頁</a>
+        <a href="{% url 'latest-news-list' %}" class="px-6 py-3 text-[#7b6a63] font-medium hover:bg-[#d4bcb0]/30 transition-colors border-l-4 border-transparent hover:border-[#7b6a63]">最新消息</a>
+        <a href="{% url 'product' %}" class="px-6 py-3 text-[#7b6a63] font-medium hover:bg-[#d4bcb0]/30 transition-colors border-l-4 border-transparent hover:border-[#7b6a63]">產品系列</a>
+        <a href="{% url 'about'%}" class="px-6 py-3 text-[#7b6a63] font-medium hover:bg-[#d4bcb0]/30 transition-colors border-l-4 border-transparent hover:border-[#7b6a63]">關於我們</a>
+      </div>
+    </div>
+  </div>
 </header>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        
-        mobileMenuButton.addEventListener('click', function(e) {
-            e.stopPropagation();
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        document.addEventListener('click', function(e) {
-            if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) {
-                mobileMenu.classList.add('hidden');
-            }
-        });
-        
-        const cartCountElement = document.getElementById('cart-count');
-        const cartIconContainer = document.getElementById('cart-icon-container');
-        
-        function updateCartCount() {
-            const cartData = JSON.parse(localStorage.getItem('cart')) || [];
-            const totalItems = cartData.reduce((sum, item) => sum + item.quantity, 0);
-            
-            if (totalItems > 0) {
-                cartCountElement.textContent = totalItems;
-                cartCountElement.classList.remove('hidden');
-
-                cartIconContainer.classList.remove('bg-[#fdf8f2]', 'text-[#7b6a63]', 'hover:bg-white');
-                cartIconContainer.classList.add('bg-[#7b6a63]', 'text-white', 'hover:bg-[#6a5a53]');
-            } else {
-                cartCountElement.classList.add('hidden');
-
-                cartIconContainer.classList.add('bg-[#fdf8f2]', 'text-[#7b6a63]', 'hover:bg-white');
-                cartIconContainer.classList.remove('bg-[#7b6a63]', 'text-white', 'hover:bg-[#6a5a53]');
-            }
-        }
-
-        updateCartCount();
-        window.addEventListener('storage', updateCartCount);
-        window.addEventListener('cartUpdated', updateCartCount);
+  document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    mobileMenuButton.addEventListener('click', function(e) {
+      e.stopPropagation();
+      mobileMenu.classList.toggle('hidden');
     });
+
+    document.addEventListener('click', function(e) {
+      if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) {
+        mobileMenu.classList.add('hidden');
+      }
+    });
+    
+    const cartCountElement = document.getElementById('cart-count');
+    const cartIconContainer = document.getElementById('cart-icon-container');
+    
+    function updateCartCount() {
+      const cartData = JSON.parse(localStorage.getItem('cart')) || [];
+      const totalItems = cartData.reduce((sum, item) => sum + item.quantity, 0);
+      
+      if (totalItems > 0) {
+        cartCountElement.textContent = totalItems;
+        cartCountElement.classList.remove('hidden');
+
+        cartIconContainer.classList.remove('bg-[#fdf8f2]', 'text-[#7b6a63]', 'hover:bg-white');
+        cartIconContainer.classList.add('bg-[#7b6a63]', 'text-white', 'hover:bg-[#6a5a53]');
+      } else {
+        cartCountElement.classList.add('hidden');
+
+        cartIconContainer.classList.add('bg-[#fdf8f2]', 'text-[#7b6a63]', 'hover:bg-white');
+        cartIconContainer.classList.remove('bg-[#7b6a63]', 'text-white', 'hover:bg-[#6a5a53]');
+      }
+    }
+
+    updateCartCount();
+    window.addEventListener('storage', updateCartCount);
+    window.addEventListener('cartUpdated', updateCartCount);
+  });
 </script>

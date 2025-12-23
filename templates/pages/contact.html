@@ -6,30 +6,37 @@
 {% block content %}
 
 <div class="min-h-screen bg-[#fdf8f2] pb-32">
-
+{% if brand_histories %}
     <div class="container mx-auto px-4 md:px-8 pt-16 md:pt-24 max-w-6xl">
         
+        
         <div class="flex items-center justify-center gap-4 text-[#A67052] mb-6">
-             <span class="h-[2px] w-12 md:w-24 bg-[#A67052]"></span>
-             <span class="text-4xl font-bold tracking-[0.1em]">品牌歷史</span>
-             <span class="h-[2px] w-12 md:w-24 bg-[#A67052]"></span>
+            <span class="h-[2px] w-12 md:w-24 bg-[#A67052]"></span>
+            <span class="text-4xl font-bold tracking-[0.1em]">品牌歷史</span>
+            <span class="h-[2px] w-12 md:w-24 bg-[#A67052]"></span>
         </div>
-
-        <div class="h-full border-[3px] border-[#a67052] bg-[#fdf5f0] p-1.5 shadow-md hover:shadow-lg transition-transform duration-300 hover:-translate-y-1" style="margin-bottom: 75px;">
-            <span class=" bg-[#d9c7bd] h-full w-full p-8 flex items-center text-[#a97659] leading-loose tracking-wide text-justify md:text-2xl">
-                宏農手工之家成立於2025年，致力於將最純粹的美味帶給每一個家庭。我們堅持使用天然食材，不添加人工色素與防腐劑，每一道工序都由經驗豐富的師傅親手製作。從產地到餐桌，我們嚴格把關，只為了讓您吃到最安心、最溫暖的味道。這裡可以填寫更多關於品牌的創業故事、理念或是未來的展望...
-            </span>
-        </div>
-
-        <div class="w-full aspect-video md:aspect-[21/9] bg-[#ffcfcf] border-2 border-white shadow-sm flex items-center justify-center text-[#7b6a63]/50 rounded-none relative overflow-hidden group">
-            <span class="z-10 font-bold tracking-widest text-xl group-hover:scale-110 transition-transform duration-500">介紹圖片</span>
+            <div class="h-24 md:h-16 flex flex-col items-center justify-center"></div>
+       
+        <div class="space-y-12">
+            {% for item in brand_histories %}
+                {% if item.content %}
+                <div class="h-full border-[3px] border-[#a67052] bg-[#fdf5f0] p-1.5 shadow-md hover:shadow-lg transition-transform duration-300 hover:-translate-y-1" style="margin-bottom: 75px;">
+                <span class=" bg-[#d9c7bd] h-full w-full p-8 flex items-center text-[#a97659] leading-loose tracking-wide text-justify md:text-2xl">
+                    {{ item.content|linebreaksbr }}
+                </span>
+                </div>
+                {% endif %}
+                {% if item.image %}
+                <div class="w-full bg-[#ffcfcf] border-2 border-white shadow-sm flex items-center justify-center rounded-none relative overflow-hidden group">
+                        <img src="{{ item.image.url }}" alt="{{ item.title }}" class="w-full h-auto object-contain">
+                </div>
+                {% endif %}
+                <div class="h-24 md:h-16 flex flex-col items-center justify-center"></div>
+            {% endfor %}
         </div>
 
     </div>
-    
-    <div class="h-24 md:h-32 flex flex-col items-center justify-center">
-    </div>
-
+   {% endif %}  
 
     <div class="container mx-auto px-4 md:px-8 max-w-8xl">
         
@@ -38,7 +45,6 @@
                 <span class="inline-block pb-2 border-b-4 border-[#a67051] text-[#a97659]">聯絡我們</span>
             </h2>
             <span class="inline-block pb-2 text-[#a97659] text-2xl" style="margin-top: -20px;">
-                透過下方表單傳遞訊息給我們<br>
                 透過下方表單傳遞訊息給我們
             </span>
         </div>

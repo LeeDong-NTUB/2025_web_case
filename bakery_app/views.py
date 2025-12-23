@@ -8,15 +8,22 @@ from web_case_2025.models.Product import Product, ProductType
 from web_case_2025.models.Accounting import AccountCategory, AccountEntry
 from web_case_2025.models.Slide import Slide
 from django.core.paginator import Paginator
+from web_case_2025.models.BusinessInfo import BusinessInfo
 
 def home(request):
+    news_qs = News.objects.filter(release_date__lte=now()).order_by('-release_date')[:4]
     product_types = ProductType.objects.all()
     hot_products = Product.objects.filter(is_hot=True)
     slides = Slide.objects.all()
+    
+    business = BusinessInfo.objects.first()
+
     return render(request, 'pages/home.html', {
+        'news_list': news_qs,
         'slides': slides,
         'categories': product_types,
-        'hot_products': hot_products
+        'hot_products': hot_products,
+        'business': business
     })
 
 def latestNewsList(request):
@@ -48,6 +55,7 @@ def order(request):
 def product(request):
     category_id = request.GET.get('category')
     product_types = ProductType.objects.all()
+    business = BusinessInfo.objects.first()
 
     if category_id:
         filtered_products = Product.objects.filter(product_type__id=category_id)
@@ -56,7 +64,8 @@ def product(request):
 
     return render(request, 'pages/product.html', {
         'products': filtered_products,
-        'categories': product_types
+        'categories': product_types,
+        'business':business
     })
 
 
@@ -182,14 +191,16 @@ def about(request):
             return redirect('/about/?success=1')
         else:
             return render(request, 'pages/about.html', {
+                'business': business,
                 'form': form,
             })
     else:
         form = ContactMessageForm()
-
+    business = BusinessInfo.objects.first()
     success_param = request.GET.get('success')
     return render(request, 'pages/contact.html', {
         'form': form,
+        'brand_histories': business.brand_histories.all() if business else [],
         'success': success_param,
     })
 

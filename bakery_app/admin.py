@@ -8,13 +8,11 @@ from web_case_2025.models.News import News, NewsImage
 from web_case_2025.models.Slide import Slide
 from web_case_2025.models.Accounting import AccountCategory, AccountEntry
 from web_case_2025.models.ContactMessage import ContactMessage
-from web_case_2025.models.BusinessInfo import BusinessInfo, BusinessHour
+from web_case_2025.models.BusinessInfo import BrandHistory, BusinessInfo, BusinessHour
 from django.contrib import admin
 from django.db.models import Sum
 
-# 移除不必要的 Group 模型
 admin.site.unregister(Group)
-
 
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
@@ -105,7 +103,6 @@ class PaidStatusFilter(SimpleListFilter):
 
 class OrderAdminForm(admin.ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
-        # 如果已經勾選 is_expected_income_loss，就設為唯讀
         if obj and obj.is_expected_income_loss:
             return self.readonly_fields + ('is_expected_income_loss',)
         return self.readonly_fields
@@ -204,12 +201,22 @@ class ContactMessageAdmin(admin.ModelAdmin):
         return (obj.message[:20] + '...') if len(obj.message) > 20 else obj.message
     message_summary.short_description = "留言摘要"
 
-
 class BusinessHourInline(admin.TabularInline):
     model = BusinessHour
     extra = 1
 
-class BusinessInfoAdmin(admin.ModelAdmin):
-    inlines = [BusinessHourInline]
+class BrandHistoryInline(admin.StackedInline):
+    model = BrandHistory
+    extra = 1
 
-admin.site.register(BusinessInfo, BusinessInfoAdmin)
+@admin.register(BusinessInfo)
+class BusinessInfoAdmin(admin.ModelAdmin):
+    inlines = [BusinessHourInline, BrandHistoryInline]
+    fieldsets = (
+        ("基本資訊", {"fields": ("address", "phone", "email", "ship", "fb_link", "ig_link", "line_link")}),
+        ("首頁特色設定", {"fields": (
+            ("feature_title_1", "feature_content_1"),
+            ("feature_title_2", "feature_content_2"),
+            ("feature_title_3", "feature_content_3"),
+        )}),
+    )
