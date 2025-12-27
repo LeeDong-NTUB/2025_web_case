@@ -2,9 +2,11 @@ import base64
 import hashlib
 import hmac
 import json
+import uuid
 from django.shortcuts import get_object_or_404, redirect, render
 from django.http import JsonResponse
 from django.utils.timezone import now
+from bakery_app.utils.email_utils import send_order_confirmation
 from web_case_2025.models import Order
 from web_case_2025.models.News import News
 from web_case_2025.models.Product import Product, ProductType
@@ -75,13 +77,10 @@ def product(request):
 from .form import ContactMessageForm, OrderForm, OrderItemFormSet
 
 # views.py
-
 def checkout(request):
-    # 1. 處理 GET 請求：顯示結帳頁面
     if request.method == 'GET':
         return render(request, 'pages/checkout.html')
 
-    # 2. 處理 POST 請求：接收訂單資料 (維持您原有的邏輯)
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -89,10 +88,10 @@ def checkout(request):
                 'customer_name': data.get('name'),
                 'customer_phone': data.get('phone'),
                 'customer_email': data.get('email'),
-                'shipping_address': data.get('address'), # 店到店時這裡可能會存門市名稱
-                'shipping_store': data.get('store'),     # 門市 ID 或代號
+                'shipping_address': data.get('address'),
+                'shipping_store': data.get('store'),
                 'payment_method': data.get('payment', 'cod'),
-                'note': data.get('note'),                # 新增備註欄位
+                'note': data.get('note'),
             })
 
             formset_data = {
@@ -112,7 +111,6 @@ def checkout(request):
                 order = order_form.save(commit=False)
                 order.total_price = 0
 
-                # 庫存檢查
                 for form in order_item_formset:
                     product = form.cleaned_data['product']
                     quantity = form.cleaned_data['quantity']
@@ -124,28 +122,23 @@ def checkout(request):
 
                 order.save()
 
-                # 計算商品總價
                 total_price = 0
                 for form in order_item_formset:
                     order_item = form.save(commit=False)
                     order_item.order = order
-                    order_item.price = order_item.product.price
+                    order_item.price = order_item.product.current_price
                     order_item.save()
                     total_price += order_item.price * order_item.quantity
 
-                    # 扣庫存
                     order_item.product.stock -= order_item.quantity
                     order_item.product.save()
 
-                # 加運費（滿 1800 免運）
                 shipping_fee = 0 if total_price >= 1800 else 120
                 final_price = total_price + shipping_fee
 
-                # 最終金額寫回 DB
                 order.total_price = final_price
                 order.save()
 
-                # 記帳邏輯 (維持原樣)
                 income_category, created = AccountCategory.objects.get_or_create(
                     name='訂單收入',
                     defaults={'is_income': True}
@@ -158,7 +151,82 @@ def checkout(request):
                     source_type='Order',
                     source_id=str(order.id)
                 )
-                
+                if order.payment_method == 'cod':
+                    send_order_confirmation(order)
+                if order.payment_method == 'linepay':
+                    try:
+                        uri_path = "/v3/payments/request"
+                        nonce = str(int(time.time() * 1000))
+                        order_uuid = str(uuid.uuid4())
+
+                        body = {
+                            "amount": int(order.total_price),
+                            "currency": "TWD",
+                            "orderId": str(order.id),
+                            "packages": [{
+                                "id": "package-1",
+                                "name": "宏農手工之家線上訂單",
+                                "amount": int(order.total_price),
+                                "products": [{
+                                    "id": f"order-{order.id}",
+                                    "name": "宏農手工之家線上訂單",
+                                    "quantity": 1,
+                                    "price": int(order.total_price),
+                                    "originalPrice": int(order.total_price),
+                                }]
+                            }],
+                            "redirectUrls": {
+                                "confirmUrl": f"{settings.LINE_PAY['confirm_url']}?order_id={order.id}",
+                                "cancelUrl": settings.LINE_PAY["cancel_url"]
+                            },
+                            "options": {
+                                "display": {
+                                    "locale": "zh_TW",
+                                    "checkConfirmUrlBrowser": False
+                                }
+                            }
+                        }
+
+                        body_str = json.dumps(body, separators=(',', ':'), ensure_ascii=False)
+                        signature = generate_linepay_signature(
+                            settings.LINE_PAY['channel_secret'], uri_path, body_str, nonce
+                        )
+
+                        headers = {
+                            "Content-Type": "application/json; charset=UTF-8",
+                            "X-LINE-ChannelId": settings.LINE_PAY["channel_id"],
+                            "X-LINE-Authorization-Nonce": nonce,
+                            "X-LINE-Authorization": signature
+                        }
+
+                        response = requests.post(
+                            f"{settings.LINE_PAY['api_base']}{uri_path}",
+                            headers=headers,
+                            data=body_str.encode('utf-8')
+                        )
+                        res_data = response.json()
+
+                        if response.status_code == 200 and res_data.get("returnCode") == "0000":
+                            return JsonResponse({
+                                "success": True,
+                                "payment_url": res_data["info"]["paymentUrl"]["web"],
+                                "order_id": order.id
+                            })
+                        else:
+                            print(res_data)
+                            return JsonResponse({
+                                "success": False,
+                                "error": "LINE Pay 建立付款失敗",
+                                "detail": res_data
+                            }, status=500)
+                    except Exception as e:
+                        print(e)
+                        return JsonResponse({
+                            "success": False,
+                            "error": "LINE Pay 錯誤",
+                            "detail": str(e)
+                        }, status=500)
+
                 return JsonResponse({
                     'success': True,
                     'order_id': order.id,
@@ -220,7 +288,6 @@ def get_cart_details(request):
             data = json.loads(request.body)
             product_ids = data.get('ids', [])
             
-            # 從資料庫查詢這些 ID 的產品
             products = Product.objects.filter(id__in=product_ids)
             
             response_data = []
@@ -228,7 +295,9 @@ def get_cart_details(request):
                 response_data.append({
                     'id': product.id,
                     'name': product.name,
-                    'price': product.price, 
+                    'price': product.price,
+                    'special_price': product.special_price if product.is_on_sale else None,
+                    'current_price': product.current_price,
                     'image_url': product.image.url if product.image else '',
                     'stock': product.stock, 
                 })
@@ -265,7 +334,6 @@ def linepay_confirm(request):
     except Order.DoesNotExist:
         return JsonResponse({"success": False, "error": "訂單不存在"}, status=404)
 
-    # 準備請求資料
     uri_path = f"/v3/payments/{transaction_id}/confirm"
     nonce = str(int(time.time() * 1000))
     body = {
@@ -291,6 +359,7 @@ def linepay_confirm(request):
     if res.status_code == 200 and res_data.get("returnCode") == "0000":
         order.paid_at = now()
         order.save()
+        send_order_confirmation(order)
         return render(request, "pages/payment_success.html", {"order": order})
     else:
         return render(request, "pages/payment_failed.html", {

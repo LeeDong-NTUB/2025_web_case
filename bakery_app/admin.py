@@ -49,9 +49,10 @@ class MonthFilter(admin.SimpleListFilter):
 # 產品管理
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'product_type', 'price', 'stock', 'created_at')
+    list_display = ('name', 'product_type', 'price', 'special_price', 'stock', 'is_hot')
+    list_filter = ('product_type', 'is_hot')
     search_fields = ('name',)
-    list_filter = ('product_type',)
+    list_editable = ('price', 'special_price', 'stock', 'is_hot')
 
 @admin.register(ProductType)
 class ProductTypeAdmin(admin.ModelAdmin):

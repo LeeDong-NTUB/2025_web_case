@@ -1,27 +1,27 @@
-<div class="cart-control-wrapper relative z-20 flex items-center" 
+<div class="cart-control-wrapper relative z-20 flex items-center flex-nowrap" 
      data-id="{{ product.id }}" 
      data-name="{{ product.name }}" 
      data-price="{{ product.price }}"
      data-image="{{ product.image.url }}">
 
-    <button class="add-to-cart-btn w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#fdf8f2] text-[#7b6a63] hover:bg-[#d4bcb0] hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm border border-[#d4bcb0]/30 transform hover:scale-110"
+    <button class="add-to-cart-btn w-10 h-10 md:w-14 md:h-14 rounded-full bg-[#fdf8f2] text-[#7b6a63] hover:bg-[#d4bcb0] hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm border border-[#d4bcb0]/30 transform hover:scale-110"
             title="加入購物車">
-        <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-5 h-5 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
         </svg>
     </button>
 
-    <div class="qty-control hidden flex items-center gap-1 md:gap-3 h-8 md:h-10">
-        <button class="decrease-btn w-7 h-7 md:w-9 md:h-9 rounded-full bg-[#fdf8f2] text-[#7b6a63] hover:bg-[#d4bcb0] hover:text-white flex items-center justify-center transition-colors shadow-sm font-bold text-lg md:text-xl leading-none">
+    <div class="qty-control hidden flex items-center gap-1 md:gap-2 h-10 md:h-14">
+        <button class="decrease-btn w-8 h-8 md:w-12 md:h-12 rounded-full bg-[#fdf8f2] text-[#7b6a63] hover:bg-[#d4bcb0] hover:text-white flex items-center justify-center transition-colors shadow-sm font-bold text-lg md:text-2xl leading-none border-0">
             −
         </button>
         
-        <div class="relative px-1">
-            <span class="qty-display text-base md:text-lg font-bold text-[#7b6a63] font-mono leading-none min-w-[1.2rem] md:min-w-[1.5rem] text-center inline-block">1</span>
+        <div class="relative px-1 md:px-2">
+            <span class="qty-display text-base md:text-xl font-bold text-[#7b6a63] font-mono leading-none min-w-[1.2rem] md:min-w-[1.5rem] text-center inline-block">1</span>
             <div class="absolute bottom-[-4px] left-0 w-full h-[2px] bg-[#8c6a56]"></div>
         </div>
         
-        <button class="increase-btn w-7 h-7 md:w-9 md:h-9 rounded-full bg-[#fdf8f2] text-[#7b6a63] hover:bg-[#d4bcb0] hover:text-white flex items-center justify-center transition-colors shadow-sm font-bold text-lg md:text-xl leading-none">
+        <button class="increase-btn w-8 h-8 md:w-12 md:h-12 rounded-full bg-[#fdf8f2] text-[#7b6a63] hover:bg-[#d4bcb0] hover:text-white flex items-center justify-center transition-colors shadow-sm font-bold text-lg md:text-2xl leading-none border-0">
             +
         </button>
     </div>

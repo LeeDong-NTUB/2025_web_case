@@ -28,7 +28,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "fallback-secret")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1","localhost", "honhnonh.com", "www.honhnonh.com", "192.168.105.63", "59.126.244.193", "49.159.20.196"]
+ALLOWED_HOSTS = ["127.0.0.1","localhost", "honhnonh.com", "www.honhnonh.com", "192.168.105.63", "59.126.244.193", "49.159.20.196", "shop.shiding-jishun.org"]
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
@@ -134,7 +134,6 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = "/srv/webcase/static"
 
-# 可保留你自己的開發靜態資料夾
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
 MEDIA_URL = '/media/'
@@ -156,17 +155,19 @@ DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER)
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://shop.shiding-jishun.org',
-    'https://www.shop.shiding-jishun.org',
-]
+# CSRF_TRUSTED_ORIGINS
+csrf_trusted_origins_env = os.environ.get('CSRF_TRUSTED_ORIGINS', '')
+if csrf_trusted_origins_env:
+    CSRF_TRUSTED_ORIGINS = csrf_trusted_origins_env.split(',')
+else:
+    CSRF_TRUSTED_ORIGINS = []
 
-
+# LINE_PAY 設定
 LINE_PAY = {
-    "channel_id": "2007602223",
-    "channel_secret": "23871de159dfac80e071988aa1bf9cf4",
-    "merchant_id": "23871de159dfac80e071988aa1bf9cf4",
-    "api_base": "https://sandbox-api-pay.line.me",
-    "confirm_url": "https://shop.shiding-jishun.org/linepay/confirm/",
-    "cancel_url": "https://shop.shiding-jishun.org/linepay/cancel/"
+    "channel_id": os.environ.get("LINE_PAY_CHANNEL_ID"),
+    "channel_secret": os.environ.get("LINE_PAY_CHANNEL_SECRET"),
+    "merchant_id": os.environ.get("LINE_PAY_MERCHANT_ID"),
+    "api_base": os.environ.get("LINE_PAY_API_BASE", "https://sandbox-api-pay.line.me"),
+    "confirm_url": os.environ.get("LINE_PAY_CONFIRM_URL"),
+    "cancel_url": os.environ.get("LINE_PAY_CANCEL_URL")
 }

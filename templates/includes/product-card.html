@@ -2,28 +2,52 @@
 <div class="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-[#d4bcb0]/30 transform hover:-translate-y-1 relative h-full flex flex-col">
     
     <div class="relative w-full aspect-square overflow-hidden bg-[#fdf8f2] cursor-pointer product-trigger"
-         data-id="{{ product.id }}"
-         data-name="{{ product.name }}"
-         data-price="{{ product.price }}"
-         data-image="{{ product.image.url }}"
-         data-description="{{ product.description }}"> <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+        data-id="{{ product.id }}"
+        data-name="{{ product.name }}"
+        data-price="{{ product.current_price }}"
+        data-original-price="{{ product.price }}"
+        data-is-sale="{{ product.is_on_sale|yesno:'true,false' }}"
+        data-image="{{ product.image.url }}"
+        data-description="{{ product.description }}">
+         
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
         <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
     </div>
     
-    <div class="p-3 md:p-4 flex-grow flex flex-row items-center justify-between gap-3">
+    <div class="p-3 md:p-4 flex flex-col flex-grow">
         
-        <div class="flex flex-col justify-center gap-1 md:gap-2 min-w-0">
+        <div class="mb-4">
             <h3 class="text-lg md:text-xl lg:text-2xl font-bold text-primary leading-tight font-serif">
-                <span class="text-2xl font-bold text-[#a97659] font-serif tracking-wide inline-block pb-1">{{ product.name }}</span>
+                <span class="text-2xl font-bold text-[#a97659] font-serif tracking-wide inline-block pb-1">
+                    {{ product.name }}
+                </span>
             </h3>
-            <p class="text-2xl md:text-2xl font-bold text-[#a97659] font-mono tracking-wider">
-                NT${{ product.price|to_currency }}
-            </p>
-        </div>
-
-        <div class="flex-shrink-0">
-            {% include 'components/cart-control.html' with product=product %}
         </div>
         
+        <div class="mt-auto flex items-center justify-between gap-2">
+            <!--特價顯示-->
+            
+            <div class="flex flex-col">
+                {% if product.is_on_sale %} 
+                    <div class="flex items-baseline flex-wrap gap-x-2">
+                        <span class="text-2xl font-bold text-[#d63031] font-mono tracking-wider">
+                            NT${{ product.current_price|to_currency }}
+                        </span>
+                        <span class="text-sm text-gray-400 line-through font-mono">
+                            NT${{ product.price|to_currency }}
+                        </span>
+                    </div>
+                {% else %}
+                    <p class="text-2xl font-bold text-[#a97659] font-mono tracking-wider">
+                        NT${{ product.price|to_currency }}
+                    </p>
+                {% endif %}
+            </div>
+
+            <div class="flex-shrink-0 z-20">
+                {% include 'components/cart-control.html' with product=product %}
+            </div>
+            
+        </div>
     </div>
 </div>

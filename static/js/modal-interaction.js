@@ -1,3 +1,4 @@
+// 特價顯示
 document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('product-modal');
     const backdrop = modal.querySelector('.modal-backdrop');
@@ -28,6 +29,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 id: parseInt(trigger.dataset.id),
                 name: trigger.dataset.name,
                 price: parseInt(trigger.dataset.price),
+                originalPrice: parseInt(trigger.dataset.originalPrice),
+                isSale: trigger.dataset.isSale === 'true',
                 image: trigger.dataset.image,
                 description: trigger.dataset.description || '暫無商品介紹。堅持手工製作，使用天然食材，無添加人工防腐劑。'
             };
@@ -35,7 +38,17 @@ document.addEventListener('DOMContentLoaded', function() {
             modalImg.src = currentProduct.image;
             modalTitle.textContent = currentProduct.name;
             modalDesc.textContent = currentProduct.description;
-            modalPrice.textContent = `NT$${Number(currentProduct.price).toLocaleString()}`;
+
+            if (currentProduct.isSale) {
+                modalPrice.innerHTML = `
+                    <span class="text-[#d63031]">NT$${Number(currentProduct.price).toLocaleString()}</span>
+                    <span class="text-base text-gray-400 line-through font-normal">NT$${Number(currentProduct.originalPrice).toLocaleString()}</span>
+                `;
+            } else {
+                modalPrice.innerHTML = `
+                    <span class="text-[#a97659]">NT$${Number(currentProduct.price).toLocaleString()}</span>
+                `;
+            }
 
             initModalState();
 

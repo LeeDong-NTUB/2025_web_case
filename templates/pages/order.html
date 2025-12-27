@@ -165,11 +165,23 @@ function renderCartUI() {
     let totalItems = 0;
 
     currentCartData.forEach((item, index) => {
-        const itemTotal = item.price * item.quantity;
+        let price = item.current_price;
+        const itemTotal = price * item.quantity;
         subtotal += itemTotal;
         totalItems += item.quantity;
 
         const imgSrc = item.image_url || "https://via.placeholder.com/150?text=No+Image";
+        // 特價顯示
+        const priceHtml = item.special_price 
+            ? `<div class="flex flex-col items-start">
+                   <span class="text-[#d63031] font-bold text-lg">NT$${Number(item.current_price).toLocaleString()}</span>
+                   <span class="text-xs text-gray-400 line-through">NT$${Number(item.price).toLocaleString()}</span>
+               </div>`
+            : `<div class="text-[#A67052] text-base md:text-lg">
+                   NT$${Number(item.price).toLocaleString()}
+               </div>`;
+
+        const totalColorClass = item.special_price ? 'text-[#d63031]' : 'text-[#A67052]';
 
         let html = `
         <div class="flex flex-row gap-4 md:gap-6 pb-6 relative">
@@ -185,9 +197,7 @@ function renderCartUI() {
                         <h3 class="text-xl md:text-2xl font-bold text-[#A67052] tracking-wide leading-tight">
                             ${item.name}
                         </h3>
-                        <div class="text-[#A67052] text-base md:text-lg">
-                            NT$${Number(item.price).toLocaleString()}
-                        </div>
+                        ${priceHtml}
                     </div>
                     
                     <button type="button" onclick="removeItem(${item.id})" class="absolute top-0 right-0 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-sm">
