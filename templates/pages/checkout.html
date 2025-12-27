@@ -146,6 +146,10 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        // --- 新增：讀取購物車頁面存下的折扣碼 ---
+        const couponCode = localStorage.getItem('checkout_coupon') || '';
+        // ------------------------------------
+
         submitBtn.disabled = true;
         submitBtn.innerHTML = `
             <span class="animate-spin inline-block w-6 h-6 border-2 border-white border-t-transparent rounded-full"></span>
@@ -163,6 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
             store: data.store_name_input,
             payment: data.payment_method,
             note: data.note,
+            discount_code: couponCode,
             items: cart.map(item => ({
                 product_id: item.id,
                 quantity: item.quantity
@@ -181,6 +186,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(result => {
             if (result.success) {
                 localStorage.removeItem('cart');
+                localStorage.removeItem('checkout_coupon');
                 window.dispatchEvent(new Event('cartUpdated'));
 
                 if (result.payment_url) {

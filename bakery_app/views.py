@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from django.utils.timezone import now
 from bakery_app.utils.email_utils import send_order_confirmation
 from web_case_2025.models import Order
+from web_case_2025.models.Discount import DiscountCode
 from web_case_2025.models.News import News
 from web_case_2025.models.Product import Product, ProductType
 from web_case_2025.models.Accounting import AccountCategory, AccountEntry
@@ -122,19 +123,48 @@ def checkout(request):
 
                 order.save()
 
-                total_price = 0
+                item_total_price = 0
                 for form in order_item_formset:
                     order_item = form.save(commit=False)
                     order_item.order = order
-                    order_item.price = order_item.product.current_price
+                    order_item.price = order_item.product.price
                     order_item.save()
-                    total_price += order_item.price * order_item.quantity
+                    item_total_price += order_item.price * order_item.quantity
 
                     order_item.product.stock -= order_item.quantity
                     order_item.product.save()
 
-                shipping_fee = 0 if total_price >= 1800 else 120
-                final_price = total_price + shipping_fee
+                discount_code_str = data.get('discount_code', '').strip()
+                discount_amount = 0
+                
+                if discount_code_str:
+                    discount_obj = DiscountCode.objects.filter(code=discount_code_str, is_active=True).first()
+                    if discount_obj:
+                        if item_total_price >= discount_obj.min_spend:
+                            discount_amount = discount_obj.amount
+                            order.discount_name = discount_obj.name
+                            order.discount_amount = discount_amount
+                        else:
+                             return JsonResponse({
+                                'success': False,
+                                'error': f"折扣碼 '{discount_obj.name}' 最低消費需達 ${discount_obj.min_spend}"
+                            }, status=400)
+                    else:
+                        return JsonResponse({
+                            'success': False,
+                            'error': "無效的折扣碼"
+                        }, status=400)
+
+                business_info = BusinessInfo.objects.first()
+                shipping_fee_config = business_info.shipping_fee if business_info else 120
+                free_threshold = business_info.free_shipping_threshold if business_info else 1800
+
+                discounted_item_total = item_total_price - discount_amount
+                if discounted_item_total < 0:
+                    discounted_item_total = 0
+
+                shipping_fee = 0 if discounted_item_total >= free_threshold else shipping_fee_config
+                final_price = discounted_item_total + shipping_fee
 
                 order.total_price = final_price
                 order.save()
@@ -151,14 +181,18 @@ def checkout(request):
                     source_type='Order',
                     source_id=str(order.id)
                 )
+
                 if order.payment_method == 'cod':
-                    send_order_confirmation(order)
+                    try:
+                        send_order_confirmation(order)
+                    except ImportError:
+                        pass
+
                 if order.payment_method == 'linepay':
                     try:
                         uri_path = "/v3/payments/request"
                         nonce = str(int(time.time() * 1000))
-                        order_uuid = str(uuid.uuid4())
-
+                        
                         body = {
                             "amount": int(order.total_price),
                             "currency": "TWD",
@@ -234,7 +268,6 @@ def checkout(request):
                 })
             else:
                 errors = dict(order_form.errors.items())
-                
                 error_msgs = []
                 for field, messages in errors.items():
                     if field == '__all__':
@@ -366,3 +399,35 @@ def linepay_confirm(request):
             "order": order,
             "error": res_data.get("returnMessage", "付款確認失敗")
         })
+
+@csrf_exempt
+def validate_coupon(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            code = data.get('code', '').strip()
+            cart_total = int(data.get('total', 0))
+
+            discount = DiscountCode.objects.filter(code=code, is_active=True).first()
+
+            if not discount:
+                return JsonResponse({'success': False, 'message': '無效的折扣碼'})
+
+            if cart_total < discount.min_spend:
+                return JsonResponse({
+                    'success': False, 
+                    'message': f'未達本折扣最低消費門檻 (需滿 NT${discount.min_spend})',
+                    'min_spend': discount.min_spend
+                })
+
+            return JsonResponse({
+                'success': True,
+                'code': discount.code,
+                'name': discount.name,
+                'amount': discount.amount,
+                'min_spend': discount.min_spend,
+                'message': f'已套用折扣：{discount.name}'
+            })
+
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': '系統錯誤'}, status=500)

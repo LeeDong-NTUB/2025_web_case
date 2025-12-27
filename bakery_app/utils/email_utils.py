@@ -4,9 +4,6 @@ from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 
 class EmailThread(threading.Thread):
-    """
-    使用多執行緒發送郵件，避免讓使用者在結帳頁面等待太久
-    """
     def __init__(self, subject, body, from_email, recipient_list, html_message=None, attachment_path=None):
         self.subject = subject
         self.body = body
@@ -33,9 +30,6 @@ class EmailThread(threading.Thread):
             print(f"郵件發送失敗: {e}")
 
 def send_order_confirmation(order):
-    """
-    發送訂單確認信
-    """
     if not order.customer_email:
         return
 
@@ -53,12 +47,15 @@ def send_order_confirmation(order):
     else:
         items = order.orderitem_set.all()
 
+    items_subtotal = 0
     items_text_list = ""
     items_html_rows = ""
 
     for item in items:
         original_price = item.product.price
         deal_price = item.price
+        row_total = deal_price * item.quantity
+        items_subtotal += row_total
         
         price_display_text = f"NT${deal_price}"
         if deal_price < original_price:
@@ -80,7 +77,32 @@ def send_order_confirmation(order):
             <td style="padding: 8px; text-align: right;">{price_display_html}</td>
         </tr>
         """
+
+    discount_amount = order.discount_amount if order.discount_amount else 0
+    shipping_fee = int(order.total_price) - (items_subtotal - discount_amount)
     
+    if shipping_fee < 0: 
+        shipping_fee = 0
+
+    items_text_list += "--------------------------------\n"
+    items_text_list += f"小計：NT${items_subtotal}\n"
+    
+    if discount_amount > 0:
+        d_name = order.discount_name if order.discount_name else "優惠活動"
+        items_text_list += f"折扣 ({d_name})：-NT${discount_amount}\n"
+        
+    items_text_list += f"運費：NT${shipping_fee}\n"
+
+    discount_html_row = ""
+    if discount_amount > 0:
+        d_name = order.discount_name if order.discount_name else "優惠活動"
+        discount_html_row = f"""
+        <tr>
+            <td colspan="2" style="padding: 10px; text-align: right; font-weight: bold; color: #27ae60;">折扣 ({d_name})</td>
+            <td style="padding: 10px; text-align: right; color: #27ae60;">-NT${discount_amount}</td>
+        </tr>
+        """
+
     items_html_table = f"""
     <table style="width: 100%; border-collapse: collapse; max-width: 600px; margin-top: 10px;">
         <tr style="background-color: #f3e5dc; color: #7b6a63;">
@@ -90,12 +112,17 @@ def send_order_confirmation(order):
         </tr>
         {items_html_rows}
         <tr>
+            <td colspan="2" style="padding: 10px; text-align: right; font-weight: bold; border-top: 2px solid #eee;">小計</td>
+            <td style="padding: 10px; text-align: right; border-top: 2px solid #eee;">NT${items_subtotal}</td>
+        </tr>
+        {discount_html_row}
+        <tr>
             <td colspan="2" style="padding: 10px; text-align: right; font-weight: bold;">運費</td>
-            <td style="padding: 10px; text-align: right;">NT${int(order.total_price) - sum(item.price * item.quantity for item in items)}</td>
+            <td style="padding: 10px; text-align: right;">NT${shipping_fee}</td>
         </tr>
         <tr>
-            <td colspan="2" style="padding: 10px; text-align: right; font-weight: bold; color: #d63031;">總金額</td>
-            <td style="padding: 10px; text-align: right; font-weight: bold; color: #d63031;">NT${int(order.total_price)}</td>
+            <td colspan="2" style="padding: 10px; text-align: right; font-weight: bold; color: #d63031; font-size: 1.1em;">總金額</td>
+            <td style="padding: 10px; text-align: right; font-weight: bold; color: #d63031; font-size: 1.1em;">NT${int(order.total_price)}</td>
         </tr>
     </table>
     """

@@ -9,6 +9,9 @@ class BusinessInfo(models.Model):
     line_link = models.TextField("LINE連結", max_length=10000)
     ship = models.TextField("運送/保存方式", max_length=100000)
 
+    shipping_fee = models.IntegerField("預設運費", default=120)
+    free_shipping_threshold = models.IntegerField("免運門檻", default=1800)
+
     feature_title_1 = models.CharField("首頁特色1-標題", max_length=100, default="手工製作")
     feature_content_1 = models.TextField("首頁特色1-內容", max_length=5000, default="堅持傳統工藝\n保留食物原味")
     

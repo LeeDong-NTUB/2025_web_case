@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% load static %}
 
 {% block title %}我的購物車 - 宏農·手工之家{% endblock %}
@@ -34,7 +35,19 @@
             <div class="w-full mt-8 py-8">
                 
                 <div>
-                    
+                    <div class="max-w-md ml-auto mb-6">
+                        <label class="block text-[#7b6a63] font-bold mb-2">折扣碼</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="coupon-input" placeholder="輸入優惠代碼" 
+                                class="flex-1 border-2 border-[#d4bcb0] rounded-lg px-4 py-2 focus:outline-none focus:border-[#A67052] text-[#7b6a63]">
+                            <button onclick="verifyCoupon()" 
+                                class="bg-[#7b6a63] text-white px-6 py-2 rounded-lg hover:bg-[#6a5a53] transition-colors font-medium">
+                                套用
+                            </button>
+                        </div>
+                        <p id="coupon-message" class="text-sm mt-2 min-h-[20px]"></p>
+                    </div>
+
                     <div class="space-y-4 text-[#A67052] tracking-wide text-2xl">
                         <div class="flex justify-between items-center">
                             <span>小計</span>
@@ -44,14 +57,21 @@
                             <span>營業稅(已含在產品內)</span>
                             <span id="summary-tax">NT$0</span>
                         </div>
+                        
+                        <div id="discount-row" class="flex justify-between items-center text-[#d63031] hidden">
+                            <span class="font-bold flex items-center">
+                                折扣 <span id="discount-name" class="text-sm ml-2 bg-[#d63031] text-white px-2 py-0.5 rounded-full"></span>
+                            </span>
+                            <span class="font-medium text-xl" id="summary-discount">- NT$0</span>
+                        </div>
+
                         <div class="flex justify-between items-center">
                             <span>運費</span>
                             <span class="font-medium text-xl" id="summary-shipping">NT$0</span>
                         </div>
-                        <br>
-                        <div id="discount-row" class="flex justify-between items-center text-[#A67052]">
-                            <span class="font-bold">折扣</span>
-                            <span class="font-medium text-xl" id="summary-discount">- NT$0</span>
+                        
+                        <div id="shipping-progress" class="text-right text-sm text-[#7b6a63] opacity-80 hidden">
+                            再消費 <span id="remain-for-free" class="font-bold"></span> 即可免運
                         </div>
                     </div>
 
@@ -70,7 +90,7 @@
                 <div class="border-t-2 border-[#A67052] mt-6 mb-12"></div>
 
                 <div class="text-center">
-                    <a href="{% url 'checkout' %}" class="inline-flex items-center gap-3 bg-[#7b6a63] hover:bg-[#6a5a53] text-white px-10 py-3 transition-all duration-300 shadow-md border-2 border-white outline outline-2 outline-[#7b6a63] hover:outline-[#6a5a53] group">
+                    <a href="javascript:proceedToCheckout()" class="inline-flex items-center gap-3 bg-[#7b6a63] hover:bg-[#6a5a53] text-white px-10 py-3 transition-all duration-300 shadow-md border-2 border-white outline outline-2 outline-[#7b6a63] hover:outline-[#6a5a53] group">
                         <span class="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center text-white transition-colors">
                             $
                         </span>
@@ -97,12 +117,16 @@
 <script src="{% static 'js/cart-interaction.js' %}"></script>
 
 <script>
+const SHIPPING_FEE_CONFIG = Number(`{{ business_info.shipping_fee|default:120 }}`);
+const FREE_SHIPPING_THRESHOLD = Number(`{{ business_info.free_threshold|default:1800 }}`);
+
+let appliedCoupon = null;
+let currentCartData = [];
+
 document.addEventListener('DOMContentLoaded', function() {
     fetchCartDetails();
     window.addEventListener('storage', fetchCartDetails);
 });
-
-let currentCartData = [];
 
 function fetchCartDetails() {
     const localCart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -171,7 +195,6 @@ function renderCartUI() {
         totalItems += item.quantity;
 
         const imgSrc = item.image_url || "https://via.placeholder.com/150?text=No+Image";
-        // 特價顯示
         const priceHtml = item.special_price 
             ? `<div class="flex flex-col items-start">
                    <span class="text-[#d63031] font-bold text-lg">NT$${Number(item.current_price).toLocaleString()}</span>
@@ -181,66 +204,42 @@ function renderCartUI() {
                    NT$${Number(item.price).toLocaleString()}
                </div>`;
 
-        const totalColorClass = item.special_price ? 'text-[#d63031]' : 'text-[#A67052]';
-
         let html = `
         <div class="flex flex-row gap-4 md:gap-6 pb-6 relative">
-            
             <div class="relative w-24 h-24 md:w-32 md:h-32 flex-shrink-0 bg-[#f3e5dc] rounded-xl overflow-hidden border border-[#d4bcb0]/50">
                 <img src="${imgSrc}" alt="${item.name}" class="w-full h-full object-cover">
             </div>
-
             <div class="flex flex-col flex-grow justify-between py-1">
-                
                 <div class="flex justify-between items-start">
                     <div class="space-y-1 pr-8">
-                        <h3 class="text-xl md:text-2xl font-bold text-[#A67052] tracking-wide leading-tight">
-                            ${item.name}
-                        </h3>
+                        <h3 class="text-xl md:text-2xl font-bold text-[#A67052] tracking-wide leading-tight">${item.name}</h3>
                         ${priceHtml}
                     </div>
-                    
                     <button type="button" onclick="removeItem(${item.id})" class="absolute top-0 right-0 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-sm">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                         </svg>
                     </button>
                 </div>
-
                 <div class="flex justify-between items-end">
-                    
                     <div class="flex items-center gap-3 select-none">
                         <button onclick="updateQuantity(${item.id}, -1)" class="w-6 h-6 rounded-full bg-[#f3e5dc] text-[#7b6a63] flex items-center justify-center hover:bg-[#d4bcb0] hover:text-white transition-colors">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"/>
-                            </svg>
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"/></svg>
                         </button>
-                        
-                        <span class="font-bold text-[#7b6a63] text-base md:text-lg border-b-2 border-[#7b6a63] px-2 min-w-[1.5rem] text-center">
-                            ${item.quantity}
-                        </span>
-
+                        <span class="font-bold text-[#7b6a63] text-base md:text-lg border-b-2 border-[#7b6a63] px-2 min-w-[1.5rem] text-center">${item.quantity}</span>
                         <button onclick="updateQuantity(${item.id}, 1)" class="w-6 h-6 rounded-full bg-[#f3e5dc] text-[#7b6a63] flex items-center justify-center hover:bg-[#d4bcb0] hover:text-white transition-colors">
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-                            </svg>
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                         </button>
                     </div>
-                    
-                    <div class="text-[#A67052] font-bold text-xl md:text-2xl">
-                        NT$${itemTotal.toLocaleString()}
-                    </div>
+                    <div class="text-[#A67052] font-bold text-xl md:text-2xl">NT$${itemTotal.toLocaleString()}</div>
                 </div>
             </div>
         </div>
         `;
 
         if ((index + 1) % 3 === 0 && index !== currentCartData.length - 1) {
-            html += `
-                <div class="hidden 2xl:block col-span-3 w-full h-px border-b-2 border-[#A67052] my-2"></div>
-            `;
+            html += `<div class="hidden 2xl:block col-span-3 w-full h-px border-b-2 border-[#A67052] my-2"></div>`;
         }
-
         container.insertAdjacentHTML('beforeend', html);
     });
 
@@ -289,15 +288,118 @@ function removeItem(id) {
     }
 }
 
+function verifyCoupon() {
+    const input = document.getElementById('coupon-input');
+    const msgEl = document.getElementById('coupon-message');
+    const code = input.value.trim();
+    
+    const subtotal = currentCartData.reduce((sum, item) => sum + (item.current_price * item.quantity), 0);
+
+    if (!code) {
+        msgEl.textContent = '請輸入折扣碼';
+        msgEl.className = 'text-sm mt-2 text-red-500 font-bold';
+        return;
+    }
+
+    fetch("{% url 'api_validate_coupon' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ 
+            code: code,
+            total: subtotal
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            msgEl.textContent = data.message;
+            msgEl.className = 'text-sm mt-2 text-green-600 font-bold';
+            
+            appliedCoupon = {
+                code: data.code,
+                name: data.name,
+                amount: data.amount,
+                min_spend: data.min_spend
+            };
+            
+            updateSummary(subtotal);
+        } else {
+            msgEl.textContent = data.message;
+            msgEl.className = 'text-sm mt-2 text-red-500 font-bold';
+            appliedCoupon = null;
+            updateSummary(subtotal);
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        msgEl.textContent = '驗證時發生錯誤';
+        msgEl.className = 'text-sm mt-2 text-red-500';
+    });
+}
+
 function updateSummary(subtotal) {
-    const shipping = subtotal >= 1800 ? 0 : 120; 
-    const tax = Math.round(subtotal * 0.05); 
-    const total = subtotal + shipping;
+    let discountAmount = 0;
+    const msgEl = document.getElementById('coupon-message');
+
+    if (appliedCoupon) {
+        if (subtotal >= appliedCoupon.min_spend) {
+            discountAmount = appliedCoupon.amount;
+        } else {
+            msgEl.textContent = `金額未達折扣門檻 (需滿 NT$${appliedCoupon.min_spend})`;
+            msgEl.className = 'text-sm mt-2 text-red-500 font-bold';
+            discountAmount = 0; 
+        }
+    }
+
+    const totalAfterDiscount = subtotal - discountAmount;
+    const shipping = totalAfterDiscount >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE_CONFIG;
+    const tax = Math.round(totalAfterDiscount * 0.05); 
+    const total = totalAfterDiscount + shipping;
 
     document.getElementById('summary-subtotal').textContent = `NT$${subtotal.toLocaleString()}`;
     document.getElementById('summary-tax').textContent = `NT$${tax.toLocaleString()}`;
-    document.getElementById('summary-shipping').textContent = `NT$${shipping.toLocaleString()}`;
+    
+    const discountRow = document.getElementById('discount-row');
+    const discountVal = document.getElementById('summary-discount');
+    const discountName = document.getElementById('discount-name');
+    
+    if (discountAmount > 0) {
+        discountRow.classList.remove('hidden');
+        discountVal.textContent = `- NT$${discountAmount.toLocaleString()}`;
+        discountName.textContent = appliedCoupon.name;
+    } else {
+        discountRow.classList.add('hidden');
+    }
+
+    const shippingEl = document.getElementById('summary-shipping');
+    const progressEl = document.getElementById('shipping-progress');
+    const remainEl = document.getElementById('remain-for-free');
+
+    shippingEl.textContent = shipping === 0 ? '免運' : `NT$${shipping.toLocaleString()}`;
+
+    if (totalAfterDiscount < FREE_SHIPPING_THRESHOLD) {
+        progressEl.classList.remove('hidden');
+        remainEl.textContent = `NT$${(FREE_SHIPPING_THRESHOLD - totalAfterDiscount).toLocaleString()}`;
+    } else {
+        progressEl.classList.add('hidden');
+    }
+
     document.getElementById('summary-total').textContent = `NT$${total.toLocaleString()}`;
+}
+
+function proceedToCheckout() {
+    if (currentCartData.length === 0) return;
+    
+    if (appliedCoupon) {
+        localStorage.setItem('checkout_coupon', appliedCoupon.code);
+    } else {
+        localStorage.removeItem('checkout_coupon');
+    }
+    
+    window.location.href = "{% url 'checkout' %}";
 }
 </script>
 

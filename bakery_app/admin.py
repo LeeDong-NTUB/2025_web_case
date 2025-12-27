@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.admin import SimpleListFilter
 
+from web_case_2025.models.Discount import DiscountCode
 from web_case_2025.models.Product import Product, ProductType
 from web_case_2025.models.Order import Order, OrderItem
 from web_case_2025.models.News import News, NewsImage
@@ -221,3 +222,9 @@ class BusinessInfoAdmin(admin.ModelAdmin):
             ("feature_title_3", "feature_content_3"),
         )}),
     )
+
+@admin.register(DiscountCode)
+class DiscountCodeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'code', 'amount', 'min_spend', 'is_active')
+    fields = ('name', 'amount', 'min_spend', 'is_active', 'code')
+    readonly_fields = ('code',)

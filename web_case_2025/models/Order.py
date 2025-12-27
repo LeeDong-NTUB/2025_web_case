@@ -12,11 +12,15 @@ class Order(models.Model):
     customer_email = models.EmailField("顧客 Email", max_length=100)
     shipping_address = models.CharField("運送地址", max_length=255, blank=True)
     shipping_store = models.CharField("運送全家門市", max_length=255)
-
+    
     created_at = models.DateTimeField("建立時間", auto_now_add=True)
     paid_at = models.DateTimeField("付款時間", null=True, blank=True)
     total_price = models.DecimalField("總金額", max_digits=10, decimal_places=0)
     payment_method = models.CharField("付款方式", max_length=10, choices=PAYMENT_METHODS, default='cod')
+
+    discount_name = models.CharField("折扣名稱", max_length=50, blank=True, null=True)
+    discount_amount = models.IntegerField("折扣金額", default=0)
+
     is_expected_income_loss = models.BooleanField("本訂單紀錄為費損", default=False)
 
     class Meta:
