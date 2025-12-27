@@ -1,6 +1,4 @@
-// 通知功能
 function showNotification(message) {
-  // 創建通知元素
   const notification = document.createElement("div");
   notification.className =
     "fixed bottom-4 right-4 bg-primary text-white px-5 py-3 rounded-lg shadow-lg transform transition-all duration-500 translate-y-0 z-50 flex items-center";
@@ -12,10 +10,8 @@ function showNotification(message) {
         ${message}
     `;
 
-  // 添加到頁面
   document.body.appendChild(notification);
 
-  // 3秒後淡出
   setTimeout(() => {
     notification.style.opacity = "0";
     notification.style.transform = "translateY(20px)";

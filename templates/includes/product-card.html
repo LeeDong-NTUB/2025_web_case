@@ -8,6 +8,7 @@
         data-original-price="{{ product.price }}"
         data-is-sale="{{ product.is_on_sale|yesno:'true,false' }}"
         data-image="{{ product.image.url }}"
+        data-images="{{ product.image.url }}{% for img in product.images.all %}|{{ img.image.url }}{% endfor %}"
         data-description="{{ product.description }}">
          
         <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">

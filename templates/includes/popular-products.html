@@ -14,8 +14,9 @@
             </div>
         </div>
 
-
-        <div class="grid grid-cols-2 2xl:grid-cols-4 gap-4 md:gap-8 max-w-[1600px] mx-auto mb-12">            {% for product in hot_products %}
+        {# 修改此處：將 lg:grid-cols-4 改為 min-[1300px]:grid-cols-4 #}
+        <div class="grid grid-cols-1 md:grid-cols-2 min-[1300px]:grid-cols-4 gap-4 md:gap-8 max-w-[1600px] mx-auto mb-12">
+            {% for product in hot_products %}
                 {% include 'includes/product-card.html' with product=product %}
             {% endfor %}
         </div>

@@ -1,7 +1,5 @@
-// 初始化購物車
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-// 增加數量
 function increaseQuantity(productId) {
     const itemIndex = cart.findIndex(item => item.id === productId);
     if (itemIndex > -1) {
@@ -10,7 +8,6 @@ function increaseQuantity(productId) {
     }
 }
 
-// 減少數量
 function decreaseQuantity(productId) {
     const itemIndex = cart.findIndex(item => item.id === productId);
     if (itemIndex > -1) {

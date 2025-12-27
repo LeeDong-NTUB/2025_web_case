@@ -146,9 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // --- 新增：讀取購物車頁面存下的折扣碼 ---
         const couponCode = localStorage.getItem('checkout_coupon') || '';
-        // ------------------------------------
 
         submitBtn.disabled = true;
         submitBtn.innerHTML = `

@@ -16,15 +16,29 @@
 
                 <div class="grid grid-cols-1 min-[1000px]:grid-cols-2 gap-x-8 gap-y-4 p-6 min-[1000px]:p-10 max-h-[85vh] overflow-y-auto min-[1000px]:overflow-visible">
                     
-                    <div class="order-1 min-[1000px]:col-start-1 min-[1000px]:row-start-1 w-full">
+                    <div class="order-1 min-[1000px]:col-start-1 min-[1000px]:row-start-1 w-full relative group select-none">
                         <div class="relative w-full aspect-[4/3] min-[1000px]:aspect-square rounded-xl overflow-hidden bg-white shadow-inner">
-                            <img id="modal-img" src="" alt="Product Image" class="absolute inset-0 w-full h-full object-cover">
+                            
+                            <div id="modal-slider-track" class="flex transition-transform duration-500 ease-in-out h-full">
+                                <img id="modal-img" src="" alt="Product Image" class="w-full h-full object-cover flex-shrink-0">
+                            </div>
+                            
+                            <button id="modal-prev-img" class="absolute left-2 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white p-2 rounded-full shadow-md transition-colors z-20 focus:outline-none hidden group-hover:block">
+                                <svg class="w-6 h-6 text-[#7b6a63]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            </button>
+                            
+                            <button id="modal-next-img" class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white p-2 rounded-full shadow-md transition-colors z-20 focus:outline-none hidden group-hover:block">
+                                <svg class="w-6 h-6 text-[#7b6a63]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </button>
+                            
+                            <div id="modal-slider-dots" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
+                                </div>
                         </div>
                     </div>
 
                     <div class="order-2 min-[1000px]:col-start-1 min-[1000px]:row-start-2 w-full flex items-center justify-between mt-2 min-[1000px]:mt-0">
                         <h3 id="modal-title" class="text-xl text-2xl font-bold text-[#a97659] font-serif tracking-wide inline-block pb-1">
-                            </h3>
+                        </h3>
 
                         <div class="flex items-center gap-3">
                             <button id="modal-decrease" class="w-8 h-8 min-[1000px]:w-10 min-[1000px]:h-10 rounded-full bg-[#f3e5dc] text-[#7b6a63] hover:bg-[#d4bcb0] hover:text-white flex items-center justify-center transition-colors shadow-sm font-bold text-xl min-[1000px]:text-2xl leading-none no-select">
@@ -48,14 +62,14 @@
                         </h4>
                         <div class="overflow-y-auto custom-scrollbar flex-grow pr-2">
                             <p id="modal-desc" class="text-[#7b6a63]/90 text-sm min-[1000px]:text-2xl leading-relaxed tracking-wide whitespace-pre-line">
-                                </p>
+                            </p>
                         </div>
                     </div>
 
                     <div class="order-4 min-[1000px]:col-start-1 min-[1000px]:row-start-3 w-full pt-4 min-[1000px]:pt-0 border-t min-[1000px]:border-t-0 border-[#d4bcb0]/30 mt-2 min-[1000px]:mt-0">
                         <div class="flex flex-row items-center justify-between gap-2">
                             <p id="modal-price" class="text-xl sm:text-2xl min-[1000px]:text-3xl font-bold font-mono tracking-wider flex-shrink-0">
-                                </p>
+                            </p>
 
                             <div class="flex items-center gap-2 min-[1000px]:gap-3">
                                 <button id="modal-cart-btn" class="group flex items-center gap-2 bg-[#d4bcb0] hover:bg-[#7b6a63] text-white px-4 min-[1000px]:px-6 py-2 min-[1000px]:py-2.5 transition-all duration-300 shadow-md border-2 border-white outline outline-2 outline-[#d4bcb0] hover:outline-[#7b6a63] active:scale-95">
@@ -101,4 +115,5 @@
         user-select: none;
     }
 </style>
+
 <script src="{% static 'js/modal-interaction.js' %}"></script>

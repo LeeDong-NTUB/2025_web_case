@@ -21,7 +21,7 @@ class Product(models.Model):
     description = models.TextField("商品說明", blank=True)
     price = models.DecimalField("價格", max_digits=6, decimal_places=0)
     special_price = models.IntegerField(verbose_name='特價價格', null=True, blank=True, help_text="若無特價請留空或填0")
-    image = models.ImageField("商品圖片", upload_to=upload_product_image)
+    image = models.ImageField(verbose_name="商品預覽圖片", upload_to=upload_product_image)
     created_at = models.DateTimeField("建立時間", auto_now_add=True)
     is_hot = models.BooleanField("是否為熱銷產品", default=False)
     stock = models.PositiveIntegerField("當前庫存數量(請謹慎維護)", default=0)
@@ -45,3 +45,15 @@ class Product(models.Model):
     
     def __str__(self):
         return self.name
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to=upload_product_image, verbose_name='商品輪播圖片')
+    
+    def __str__(self):
+        return f"{self.product.name} - Image"
+
+    class Meta:
+        app_label = 'bakery_app'
+        verbose_name = "產品輪播圖"
+        verbose_name_plural = "產品輪播圖"

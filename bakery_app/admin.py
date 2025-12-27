@@ -3,7 +3,7 @@ from django.contrib.auth.models import Group
 from django.contrib.admin import SimpleListFilter
 
 from web_case_2025.models.Discount import DiscountCode
-from web_case_2025.models.Product import Product, ProductType
+from web_case_2025.models.Product import Product, ProductImage, ProductType
 from web_case_2025.models.Order import Order, OrderItem
 from web_case_2025.models.News import News, NewsImage
 from web_case_2025.models.Slide import Slide
@@ -46,14 +46,19 @@ class MonthFilter(admin.SimpleListFilter):
             return queryset.filter(created_at__gte=start, created_at__lt=end)
         return queryset
 
-
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 1
+    
 # 產品管理
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    inlines = [ProductImageInline]
     list_display = ('name', 'product_type', 'price', 'special_price', 'stock', 'is_hot')
     list_filter = ('product_type', 'is_hot')
     search_fields = ('name',)
     list_editable = ('price', 'special_price', 'stock', 'is_hot')
+    
 
 @admin.register(ProductType)
 class ProductTypeAdmin(admin.ModelAdmin):
